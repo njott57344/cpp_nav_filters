@@ -142,6 +142,19 @@ Common/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/build
 .PHONY : Common/fast
 
+#=============================================================================
+# Target rules for targets named SvPvtTest
+
+# Build rule for target.
+SvPvtTest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SvPvtTest
+.PHONY : SvPvtTest
+
+# fast build rule for target.
+SvPvtTest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/build
+.PHONY : SvPvtTest/fast
+
 src/common.o: src/common.cpp.o
 .PHONY : src/common.o
 
@@ -169,6 +182,30 @@ src/common.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/src/common.cpp.s
 .PHONY : src/common.cpp.s
 
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -179,9 +216,13 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Common"
 	@echo "... CommonLib"
+	@echo "... SvPvtTest"
 	@echo "... src/common.o"
 	@echo "... src/common.i"
 	@echo "... src/common.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

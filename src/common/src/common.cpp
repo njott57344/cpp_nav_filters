@@ -15,10 +15,11 @@ namespace cpp_nav_filt
 
     void Common::receiveSvEphem(vec_1_27& ephem_in,const int& sv_in)
     {
+        // std::cout<<ephem_in<<std::endl;
         sv_ephem.block<1,27>(sv_in-1,0) = ephem_in;
     }
 
-    void Common::sendvEphem(vec_1_27& ephem_out,const int& desired_sv)
+    void Common::sendSvEphem(vec_1_27& ephem_out,const int& desired_sv)
     {
         ephem_out = sv_ephem.block<1,27>(desired_sv-1,0);
     }

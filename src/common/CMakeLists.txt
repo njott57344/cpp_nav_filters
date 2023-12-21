@@ -12,10 +12,14 @@ add_library(${PROJECT_NAME}
     src/common.cpp
 )
 
+add_executable(SvPvtTest
+    src/main.cpp
+)
+
 target_link_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/../build
 )
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(SvPvtTest
     CommonLib
 )

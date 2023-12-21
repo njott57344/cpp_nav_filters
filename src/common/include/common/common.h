@@ -19,6 +19,7 @@ typedef Eigen::Matrix<double,7,1> vec_7_1;
 /*
     To-Do:
     1) Function to Calculate SV States
+        [needs testing]
 */
 
 /*
@@ -64,7 +65,7 @@ namespace cpp_nav_filt
 
             // Getter and Passer for 
             void receiveSvEphem(vec_1_27& ephem_in,const int& sv_in);
-            void sendvEphem(vec_1_27& ephem_out,const int& desired_sv);
+            void sendSvEphem(vec_1_27& ephem_out,const int& desired_sv);
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
