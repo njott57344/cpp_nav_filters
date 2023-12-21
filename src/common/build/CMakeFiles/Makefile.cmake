@@ -11,17 +11,30 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.22.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.22.1/CMakeSystem.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/CMakeCCompiler.cmake.in"
+  "/usr/share/cmake-3.22/Modules/CMakeCCompilerABI.c"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCXXCompiler.cmake.in"
   "/usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp"
   "/usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCompilerIdDetection.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/CMakeDetermineCCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/CMakeDetermineCXXCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeDetermineCompileFeatures.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeDetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeDetermineCompilerABI.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeDetermineCompilerId.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/CMakeDetermineSystem.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/CMakeFindBinUtils.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake"
@@ -29,32 +42,61 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.22/Modules/CMakeParseImplicitIncludeInfo.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeParseImplicitLinkInfo.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeParseLibraryArchitecture.cmake"
+<<<<<<< HEAD
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeTestCXXCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeTestCompilerCommon.cmake"
+=======
+  "/usr/share/cmake-3.22/Modules/CMakeSystem.cmake.in"
+  "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeTestCCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeTestCXXCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeTestCompilerCommon.cmake"
+  "/usr/share/cmake-3.22/Modules/CMakeUnixFindMake.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/ADSP-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/ARMCC-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/ARMClang-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/AppleClang-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Borland-DetermineCompiler.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/Compiler/Bruce-C-DetermineCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Clang-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Clang-DetermineCompilerInternal.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/Compiler/Compaq-C-DetermineCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Cray-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Embarcadero-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Fujitsu-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GHS-DetermineCompiler.cmake"
+<<<<<<< HEAD
+=======
+  "/usr/share/cmake-3.22/Modules/Compiler/GNU-C-DetermineCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GNU-FindBinUtils.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/GNU.cmake"
+<<<<<<< HEAD
   "/usr/share/cmake-3.22/Modules/Compiler/HP-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/IAR-DetermineCompiler.cmake"
+=======
+  "/usr/share/cmake-3.22/Modules/Compiler/HP-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/HP-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/IAR-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Intel-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake"
@@ -65,12 +107,28 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.22/Modules/Compiler/PGI-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/PathScale-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/SCO-DetermineCompiler.cmake"
+<<<<<<< HEAD
   "/usr/share/cmake-3.22/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/TI-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/Watcom-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/XL-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake"
+=======
+  "/usr/share/cmake-3.22/Modules/Compiler/SDCC-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/SunPro-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/TI-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/Watcom-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/XL-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/XL-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/XLClang-C-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.22/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "/usr/share/cmake-3.22/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.22/Modules/Internal/FeatureTesting.cmake"
   "/usr/share/cmake-3.22/Modules/Platform/Linux-Determine-CXX.cmake"
@@ -89,7 +147,14 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+<<<<<<< HEAD
   "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
+=======
+  "CMakeFiles/3.22.1/CMakeSystem.cmake"
+  "CMakeFiles/3.22.1/CMakeCCompiler.cmake"
+  "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.22.1/CMakeCCompiler.cmake"
+>>>>>>> devel/common/ephem_struct
   "CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
