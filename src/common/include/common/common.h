@@ -69,13 +69,16 @@ namespace cpp_nav_filt
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
-        private:
             // GPS Constants
             const double gps_pi = M_PI; // PI
             const double omega_e_dot = pow(7.2921151467,-5); // rotation rate of earth
             const double GM = pow(3.986005,14);  
             const double F = pow(-4.442807633,-10);
             const int half_week = 302400; // [s]
+            const double c = 299792458.0; // [m/s] speed of light
+            
+        private:
+
 
             mat_32_27 sv_ephem; // matrix of satellite ephemeris
             vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv in
