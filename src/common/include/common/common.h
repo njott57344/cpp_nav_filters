@@ -71,9 +71,9 @@ namespace cpp_nav_filt
 
             // GPS Constants
             const double gps_pi = M_PI; // PI
-            const double omega_e_dot = pow(7.2921151467,-5); // rotation rate of earth
-            const double GM = pow(3.986005,14);  
-            const double F = pow(-4.442807633,-10);
+            const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
+            const double GM = 3.986005*pow(10,14);  
+            const double F = -4.442807633*pow(10,-10);
             const int half_week = 302400; // [s]
             const double c = 299792458.0; // [m/s] speed of light
             
@@ -87,9 +87,9 @@ namespace cpp_nav_filt
             int desired_sv_;
             double T_transmit_;
             double T_transit_;
-            double dt_;
-            double tk_;
-            double time_;
+            double dt;
+            double tk;
+            double time;
 
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code

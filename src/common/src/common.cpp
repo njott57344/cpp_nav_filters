@@ -60,24 +60,24 @@ namespace cpp_nav_filt
         double Delta_n   = current_ephem(7);
         double M_0       = current_ephem(8);
         double e         = current_ephem(9);
-        double A         = current_ephem(7);
+        double A         = current_ephem(6);
         double t_oe      = current_ephem(5);
         double Omega_0   = current_ephem(19);
         double i_0       = current_ephem(17);
         double omega     = current_ephem(10);
         double dot_Omega = current_ephem(20);
         double I_dot     = current_ephem(18);
+                
+        dt = checkT(T_transmit_ - t_oc);
         
-        dt_ = checkT(T_transmit_ - t_oc);
+        sv_state(6) = (a_f2*dt + a_f1)*dt + a_f0 - T_GD;
 
-        sv_state(6) = (a_f2*dt_ + a_f1)*dt_ + a_f0 - T_GD;
-
-        time_ = T_transmit_ - sv_state(6);
-        tk_ = checkT(time_ - t_oe);
+        time = T_transmit_ - sv_state(6);
+        tk = checkT(time - t_oe);
         
         double n0 = sqrt(GM/pow(A,3));
-        double n = n + Delta_n;
-        double M = M_0+n * tk_;
+        double n = n0 + Delta_n;
+        double M = M_0+n * tk;
 
         M = remainder(M + 2*gps_pi,2*gps_pi);
 
@@ -90,7 +90,7 @@ namespace cpp_nav_filt
             E = M + e*sin(E);
             dE = remainder(E - E_old,2*gps_pi);
 
-            if(abs(dE)<pow(1,-12))
+            if(abs(dE)<1*pow(10,-12))
             {
                 break;
             }
@@ -104,10 +104,10 @@ namespace cpp_nav_filt
         phi = remainder(phi,2*gps_pi);
 
         double u = phi + C_uc*cos(2*phi)+C_us*sin(2*phi);
-        double r = A*(1-e*cos(E)) + C_rc*cos(2*phi) + C_is*sin(2*phi);
-        double i = i_0 + I_dot * tk_ + C_ic * cos(2*phi) + C_is*sin(2*phi);
+        double r = A*(1-e*cos(E)) + C_rc*cos(2*phi) + C_rs*sin(2*phi);
+        double i = i_0 + I_dot * tk + C_ic * cos(2*phi) + C_is*sin(2*phi);
 
-        double Omega = Omega_0 + (dot_Omega - omega_e_dot)*tk_ - omega_e_dot*t_oe-omega_e_dot*T_transit_;
+        double Omega = Omega_0 + (dot_Omega - omega_e_dot)*tk - omega_e_dot*t_oe-omega_e_dot*T_transit_;
         Omega = remainder(Omega + 2*gps_pi,2*gps_pi);
 
         double X = r*cos(u);
@@ -134,7 +134,7 @@ namespace cpp_nav_filt
         sv_state(4) = Xdot*sin(Omega) + Ydot*cos(i)*cos(Omega) - Y*sin(i)*cos(Omega)*i_dot + x*Omega_dot;
         sv_state(5) = Ydot*sin(i) + Y*cos(i)*i_dot;
 
-        sv_state(6) = (a_f2*dt_ + a_f1)*dt_ + a_f0 - T_GD + dtr;
+        sv_state(6) = (a_f2*dt + a_f1)*dt + a_f0 - T_GD + dtr;
     }
 
     double Common::checkT(double time)

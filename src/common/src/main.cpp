@@ -34,7 +34,7 @@ int main(int argc,char **argv)
         {
             // cast read string to a double vector
             while(std::getline(s,ephem_word,','))
-            {                
+            {                                
                 ephemeride = std::stod(ephem_word);
                 ephem_vect.push_back(ephemeride);
             }
@@ -79,11 +79,23 @@ int main(int argc,char **argv)
 
         if(i == 1)
         {
+            /*
+            for(int j = 0;j<sv_measurements.size();j++)
+            {
+                std::cout<<sv_measurements[j]<<std::endl;
+            }
+            */
+
             vec_7_1 sv_pvt;
             double transit_time = sv_measurements[1]/common.c;
             double transmit_time = sv_measurements[0] - transit_time;
+
+            // std::cout<<transit_time<<" "<<std::to_string(transmit_time)<<" "<<sv_id_vect[1]<<std::endl;
+
             sv_pvt = common.sendSvStates(sv_id_vect[1],transmit_time,transit_time);
-            std::cout<<transit_time<<" "<<transmit_time<<std::endl;
+
+            std::cout<<sv_pvt<<std::endl;
+
         }
         i++;
     }
