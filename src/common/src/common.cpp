@@ -159,4 +159,38 @@ namespace cpp_nav_filt
 
         return dt;
     }
-}
+
+    void Common::sendUnitVectors(vec_4_1& X_hat,Eigen::MatrixXd& sv_pos,Eigen::MatrixXd& H)
+    {
+        x_hat_ = X_hat;
+        sv_pos_ = sv_pos;
+
+        double num_sv_pos = sv_pos_.rows();
+
+        calcUnitVectors(num_sv_pos);
+
+        H = H_;
+    }
+
+    void Common::calcUnitVectors(double num_measurements)
+    {
+        double x_comp,y_comp,z_comp,psr_hat;
+
+        for(int i = 0;i<num_measurements;i++)
+        {
+            x_comp = sv_pos_(i,0) - x_hat_[0];
+            y_comp = sv_pos_(i,1) - x_hat_[1];
+            z_comp = sv_pos_(i,2) - x_hat_[2];
+
+            psr_hat = sqrt(pow(x_comp,2) + pow(y_comp,2) + pow(z_comp,2)) + x_hat_[3];
+            
+            H_.conservativeResize(i+1,4);
+
+            H_(i,0) = -x_comp/psr_hat;
+            H_(i,1) = -y_comp/psr_hat;
+            H_(i,2) = -z_comp/psr_hat;
+            H_(i,3) = 1;
+        }
+    }
+
+}// end of namespace

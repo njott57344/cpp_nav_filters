@@ -15,6 +15,7 @@ typedef Eigen::Matrix<double,32,27> mat_32_27;
 typedef Eigen::Matrix<double,1,27> vec_1_27;
 typedef Eigen::Matrix<double,6,1> vec_6_1;
 typedef Eigen::Matrix<double,7,1> vec_7_1;
+typedef Eigen::Matrix<double,4,1> vec_4_1;
 
 /*
     To-Do:
@@ -63,9 +64,11 @@ namespace cpp_nav_filt
             Common();
             ~Common();
 
-            // Getter and Passer for 
+            // Getter and Passer for Common
             void receiveSvEphem(vec_1_27& ephem_in,const int& sv_in);
             void sendSvEphem(vec_1_27& ephem_out,const int& desired_sv);
+
+            void sendUnitVectors(vec_4_1& X_hat,Eigen::MatrixXd& sv_pos,Eigen::MatrixXd& H);
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
@@ -91,11 +94,17 @@ namespace cpp_nav_filt
             double tk;
             double time;
 
+            Eigen::MatrixXd psr_tilde_;
+            Eigen::MatrixXd sv_pos_;
+            Eigen::MatrixXd H_;
+            vec_4_1 x_hat_;
+
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
             void setCurrentEphem(vec_1_27& ephem,const int& sv);
             double checkT(double time);
-
+            void calcUnitVectors(double num_measurements);
+            
         protected:
 
 
