@@ -1,0 +1,2 @@
+/usr/bin/ar qc libGpsLeastSquares.a  CMakeFiles/GpsLeastSquares.dir/src/gps_least_squares.cpp.o
+/usr/bin/ranlib libGpsLeastSquares.a

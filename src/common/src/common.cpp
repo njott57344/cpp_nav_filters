@@ -160,32 +160,47 @@ namespace cpp_nav_filt
         return dt;
     }
 
-    void Common::sendUnitVectors(vec_4_1& X_hat,Eigen::MatrixXd& sv_pos,Eigen::MatrixXd& H)
+    void Common::sendUnitVectors(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H)
     {
+        // sending position states to state estimate
         x_hat_ = X_hat;
-        sv_pos_ = sv_pos;
 
-        double num_sv_pos = sv_pos_.rows();
+        num_sv_ = SvPVT.rows();
+        
+        sv_pos_.resize(num_sv_,7);
+        H_.resize(num_sv_,4); // resize H_ to be the size it needs to be
 
-        calcUnitVectors(num_sv_pos);
+        sv_pos_ = SvPVT;
+                
+        calcUnitVectors();
 
         H = H_;
     }
 
-    void Common::calcUnitVectors(double num_measurements)
+    void Common::sendMeasEst(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat)
     {
-        double x_comp,y_comp,z_comp,psr_hat;
+        x_hat_ = X_hat;
 
-        for(int i = 0;i<num_measurements;i++)
+        num_sv_ = SvPVT.rows();
+        
+        H_.resize(num_sv_,4);
+        sv_pos_.resize(num_sv_,7);
+        Yhat_.resize(num_sv_*2,1);
+
+        sv_pos_ = SvPVT;
+
+        calcUnitVectors();
+        calcMeasEst();
+
+        Yhat = Yhat_;
+    }
+
+    void Common::calcUnitVectors()
+    {
+        for(int i = 0;i<num_sv_;i++)
         {
-            x_comp = sv_pos_(i,0) - x_hat_[0];
-            y_comp = sv_pos_(i,1) - x_hat_[1];
-            z_comp = sv_pos_(i,2) - x_hat_[2];
-
-            psr_hat = sqrt(pow(x_comp,2) + pow(y_comp,2) + pow(z_comp,2)) + x_hat_[3];
+            calcPsr(i);
             
-            H_.conservativeResize(i+1,4);
-
             H_(i,0) = -x_comp/psr_hat;
             H_(i,1) = -y_comp/psr_hat;
             H_(i,2) = -z_comp/psr_hat;
@@ -193,4 +208,40 @@ namespace cpp_nav_filt
         }
     }
 
+    void Common::calcMeasEst()
+    {
+        for(int i = 0;i<num_sv_;i++)
+        {
+            calcPsr(i);
+            calcPsrRate(i);
+
+            Yhat_(i,0) = psr_hat;
+            Yhat_(i+num_sv_,0) = psr_rate_hat;
+        }
+    }
+
+    void Common::calcPsr(double sv_id)
+    {
+        x_comp = sv_pos_(sv_id,0) - x_hat_[0];
+        y_comp = sv_pos_(sv_id,1) - x_hat_[1];
+        z_comp = sv_pos_(sv_id,2) - x_hat_[2];
+
+        psr_hat = sqrt(pow(x_comp,2) + pow(y_comp,2) + pow(z_comp,2)) + x_hat_[3];
+    }
+
+    void Common::calcPsrRate(double sv_id)
+    {
+        vec_3_1 u; // unit vector to the sv_id satellite
+        vec_3_1 relative_velocity;
+
+        x_comp = sv_pos_(sv_id,3) - x_hat_[4];
+        y_comp = sv_pos_(sv_id,4) - x_hat_[5];
+        z_comp = sv_pos_(sv_id,5) - x_hat_[6];
+        
+        relative_velocity << x_comp,y_comp,z_comp;
+
+        u = H_.block<1,3>(sv_id,0);
+
+        psr_rate_hat = u.dot(relative_velocity) + x_hat_[7];        
+    }
 }// end of namespace

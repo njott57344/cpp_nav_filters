@@ -11,18 +11,23 @@ int main(int argc,char **argv)
     std::fstream sv_meas;
 
     // strings of files
-    std::string ephem_file = "/home/nicholas/devel/class_data/class_ephem.csv";
-    std::string meas_file = "/home/nicholas/devel/class_data/class_meas_data.csv";
+    std::string ephem_file = "/home/njo0004/devel/cpp_nav_filters_data/class_ephem.csv";
+    std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/class_meas_data.csv";
 
     sv_ephem.open(ephem_file,std::ios::in);
     sv_meas.open(meas_file,std::ios::in);
 
     // MRI antenna
-    vec_4_1 true_x;
+    vec_8_1 true_x;
     true_x(0) = 422593.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
     true_x(3) = 37.0937;
+    true_x(4) = 0.0;
+    true_x(5) = 0.0;
+    true_x(6) = 0.0;
+    true_x(7) = 0.0;
+    
     std::cout<<true_x<<std::endl;
 
     // ============== Reading Ephemeris ============== //

@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/SvPvtTest.dir/src/main.cpp.o -o SvPvtTest  libCommonLib.a 
+/usr/bin/c++     CMakeFiles/SvPvtTest.dir/src/main.cpp.o  -o SvPvtTest  libCommonLib.a 

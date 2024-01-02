@@ -8,6 +8,7 @@
 // CPP Headers
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 typedef Eigen::Matrix<double,3,1> vec_3_1;
 typedef Eigen::Matrix<double,32,3> mat_32_3;
@@ -16,6 +17,7 @@ typedef Eigen::Matrix<double,1,27> vec_1_27;
 typedef Eigen::Matrix<double,6,1> vec_6_1;
 typedef Eigen::Matrix<double,7,1> vec_7_1;
 typedef Eigen::Matrix<double,4,1> vec_4_1;
+typedef Eigen::Matrix<double,8,1> vec_8_1;
 
 /*
     To-Do:
@@ -68,7 +70,8 @@ namespace cpp_nav_filt
             void receiveSvEphem(vec_1_27& ephem_in,const int& sv_in);
             void sendSvEphem(vec_1_27& ephem_out,const int& desired_sv);
 
-            void sendUnitVectors(vec_4_1& X_hat,Eigen::MatrixXd& sv_pos,Eigen::MatrixXd& H);
+            void sendUnitVectors(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
+            void sendMeasEst(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
@@ -84,7 +87,7 @@ namespace cpp_nav_filt
 
 
             mat_32_27 sv_ephem; // matrix of satellite ephemeris
-            vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv in
+            vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv idx
 
             // Internal Variables
             int desired_sv_;
@@ -93,18 +96,26 @@ namespace cpp_nav_filt
             double dt;
             double tk;
             double time;
+            double x_comp,y_comp,z_comp,psr_hat;
+            double num_sv_;
+            double psr_rate_hat;
 
-            Eigen::MatrixXd psr_tilde_;
+            Eigen::MatrixXd Y_;
+            Eigen::MatrixXd Yhat_;
             Eigen::MatrixXd sv_pos_;
             Eigen::MatrixXd H_;
-            vec_4_1 x_hat_;
+            vec_8_1 x_hat_;
 
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
             void setCurrentEphem(vec_1_27& ephem,const int& sv);
             double checkT(double time);
-            void calcUnitVectors(double num_measurements);
-            
+
+            void calcUnitVectors();
+            void calcPsr(double sv_id);
+            void calcPsrRate(double sv_id);
+            void calcMeasEst();
+
         protected:
 
 
