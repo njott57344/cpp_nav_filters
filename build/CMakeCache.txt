@@ -145,7 +145,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=CPP_NAV_FILT
+CMAKE_PROJECT_NAME:STATIC=CppNavFilt
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -210,10 +210,10 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-CPP_NAV_FILT_BINARY_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters/build
+CppNavFilt_BINARY_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters/build
 
 //Value Computed by CMake
-CPP_NAV_FILT_SOURCE_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters
+CppNavFilt_SOURCE_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters
 
 
 ########################

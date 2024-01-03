@@ -1,0 +1,2 @@
+/usr/bin/ar qc libGpsLocalization.a  CMakeFiles/GpsLocalization.dir/src/common.cpp.o CMakeFiles/GpsLocalization.dir/src/gps_least_squares.cpp.o
+/usr/bin/ranlib libGpsLocalization.a
