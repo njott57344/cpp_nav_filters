@@ -189,18 +189,17 @@ namespace cpp_nav_filt
 
         sv_pos_ = SvPVT;
 
-        // std::cout<<sv_pos_<<std::endl;
-
         calcUnitVectors();
         
         calcMeasEst();
 
         Yhat = Yhat_;
+
     }
 
     void Common::calcUnitVectors()
     {
-        for(int i = 0;i<1;i++)
+        for(int i = 0;i<num_sv_;i++)
         {
             calcPsr(i);
             
@@ -237,14 +236,15 @@ namespace cpp_nav_filt
         vec_3_1 u; // unit vector to the sv_id satellite
         vec_3_1 relative_velocity;
 
-        x_comp = sv_pos_(sv_id,3) - x_hat_[4];
-        y_comp = sv_pos_(sv_id,4) - x_hat_[5];
-        z_comp = sv_pos_(sv_id,5) - x_hat_[6];
+        x_comp_vel = sv_pos_(sv_id,3) - x_hat_[4];
+        y_comp_vel = sv_pos_(sv_id,4) - x_hat_[5];
+        z_comp_vel = sv_pos_(sv_id,5) - x_hat_[6];
         
-        relative_velocity << x_comp,y_comp,z_comp;
+        relative_velocity << x_comp_vel,y_comp_vel,z_comp_vel;
 
         u = H_.block<1,3>(sv_id,0);
 
-        psr_rate_hat = u.dot(relative_velocity) + x_hat_[7];        
+        psr_rate_hat = (u.dot(relative_velocity) + x_hat_[7]);        
     }
+
 }// end of namespace

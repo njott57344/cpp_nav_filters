@@ -77,6 +77,11 @@ namespace cpp_nav_filt
             const int half_week = 302400; // [s]
             const double c = 299792458.0; // [m/s] speed of light
             
+            // Frequency Constant
+            const double f_l1 = 1.57542*pow(10,9);
+            const double f_l2 = 1.2276*pow(10,9);
+            const double f_l5 = 1.176*pow(10,9);
+
         private:
 
 
@@ -91,6 +96,7 @@ namespace cpp_nav_filt
             double tk;
             double time;
             double x_comp,y_comp,z_comp,psr_hat;
+            double x_comp_vel,y_comp_vel,z_comp_vel;
             double num_sv_;
             double psr_rate_hat;
 

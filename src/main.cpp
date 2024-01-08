@@ -21,7 +21,7 @@ int main(int argc,char **argv)
 
     // MRI antenna
     vec_8_1 true_x;
-    true_x(0) = 422593.629;
+    true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
     true_x(3) = 37.0937;
@@ -127,20 +127,15 @@ int main(int argc,char **argv)
 
             for(int j = 0;j<num_svs;j++)
             {
-                double transit_time = sv_measurements[j+1]/common.c;
-                double transmit_time = sv_measurements[0] - transit_time;
+                double transit_time = sv_measurements[j]/common.c;
+                double transmit_time = cur_time - transit_time;
                 sv_pvt = common.sendSvStates(sv_id_vect[j+1],transmit_time,transit_time);
                 sv_states.conservativeResize(j+1,7);
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
             }
 
-            std::cout<<sv_states<<std::endl;
-
-            // common.sendUnitVectors(true_x,sv_states,H);
-            // std::cout<<H<<std::endl;
-
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,true_x);
-            // std::cout<<state_calc_test<<std::endl;
+            std::cout<<true_x<<std::endl;
 
         }
 
