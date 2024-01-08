@@ -134,7 +134,9 @@ int main(int argc,char **argv)
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
             }
 
-            common.sendUnitVectors(true_x,sv_states,H);
+            std::cout<<sv_states<<std::endl;
+
+            // common.sendUnitVectors(true_x,sv_states,H);
             // std::cout<<H<<std::endl;
 
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,true_x);

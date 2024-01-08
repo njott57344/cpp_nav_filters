@@ -189,10 +189,10 @@ namespace cpp_nav_filt
 
         sv_pos_ = SvPVT;
 
+        // std::cout<<sv_pos_<<std::endl;
+
         calcUnitVectors();
         
-        std::cout<<H_<<std::endl;
-
         calcMeasEst();
 
         Yhat = Yhat_;
@@ -200,7 +200,7 @@ namespace cpp_nav_filt
 
     void Common::calcUnitVectors()
     {
-        for(int i = 0;i<num_sv_;i++)
+        for(int i = 0;i<1;i++)
         {
             calcPsr(i);
             
@@ -224,7 +224,7 @@ namespace cpp_nav_filt
     }
 
     void Common::calcPsr(double sv_id)
-    {
+    {        
         x_comp = sv_pos_(sv_id,0) - x_hat_[0];
         y_comp = sv_pos_(sv_id,1) - x_hat_[1];
         z_comp = sv_pos_(sv_id,2) - x_hat_[2];

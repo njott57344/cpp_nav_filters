@@ -52,7 +52,7 @@ namespace cpp_nav_filt
             H_.block(0,0,num_svs,4) = G_;
             H_.block(num_svs,4,num_svs,4) = G_;
             
-            delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
+            // delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
             
             delta_x_.block(4,0,4,0).setZero();
 
