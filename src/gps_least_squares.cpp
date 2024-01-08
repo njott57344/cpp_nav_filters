@@ -33,8 +33,8 @@ namespace cpp_nav_filt
         // applying clock corrections to pseudoranges
         Y_.block(0,0,num_svs,1) = Y_.block(0,0,num_svs,1) + common.c*SvPVT_.col(6);
 
-        Y_.block(num_svs,0,num_svs,0) = Y_.block(num_svs,0,num_svs,0)*(common.c/common.f_l1);
-
+        Y_.block(num_svs,0,num_svs,1) = -Y_.block(num_svs,0,num_svs,1)*(common.c/common.f_l1);
+        
         x_ = X;
         
         delta_x_.setOnes();
@@ -52,6 +52,8 @@ namespace cpp_nav_filt
             H_.block(0,0,num_svs,4) = G_;
             H_.block(num_svs,4,num_svs,4) = G_;
             
+            // std::cout<<deltaY_<<std::endl<<std::endl;
+
             // std::cout<<Yhat_<<std::endl;
 
             delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
