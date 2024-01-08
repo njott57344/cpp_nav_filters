@@ -182,7 +182,7 @@ namespace cpp_nav_filt
         x_hat_ = X_hat;
 
         num_sv_ = SvPVT.rows();
-        
+
         H_.resize(num_sv_,4);
         sv_pos_.resize(num_sv_,7);
         Yhat_.resize(num_sv_*2,1);
@@ -190,6 +190,9 @@ namespace cpp_nav_filt
         sv_pos_ = SvPVT;
 
         calcUnitVectors();
+        
+        std::cout<<H_<<std::endl;
+
         calcMeasEst();
 
         Yhat = Yhat_;

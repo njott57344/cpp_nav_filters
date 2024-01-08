@@ -1,10 +1,12 @@
 #include "common/common.h"
+#include "gps_least_squares/gps_least_squares.h"
 
 #include <fstream>
 
 int main(int argc,char **argv)
 {
     cpp_nav_filt::Common common;
+    cpp_nav_filt::GpsLeastSquares gps_least_squares;
 
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
@@ -72,12 +74,17 @@ int main(int argc,char **argv)
 
     std::string sv_meas_line,sv_meas_word;
     std::vector<double> sv_measurements;
+    std::vector<double> gps_time;
     std::vector<int> sv_id_vect;
     int sv_id;
-    double cur_meas;
+    double cur_meas,cur_time;
 
     Eigen::MatrixXd sv_states;
     Eigen::MatrixXd H;
+
+    int j = 0;
+
+    vec_8_1 state_calc_test;
 
     while(std::getline(sv_meas,sv_meas_line))
     {
@@ -92,15 +99,26 @@ int main(int argc,char **argv)
             }
             else
             {
-                cur_meas = std::stod(sv_meas_word);
-                sv_measurements.push_back(cur_meas);
+                if(j == 0)
+                {
+                    cur_time = std::stod(sv_meas_word);
+                    gps_time.push_back(cur_time);
+                }
+                else
+                {
+                    cur_meas = std::stod(sv_meas_word);
+                    sv_measurements.push_back(cur_meas);
+                }
+                j++;
             }
         }
 
+        j = 0;
+
         double num_measurements = sv_measurements.size();
         Eigen::Map<Eigen::MatrixXd> temp(sv_measurements.data(),1,num_measurements);
-        Eigen::MatrixXd meas_vect = temp;
-        
+        Eigen::MatrixXd meas_vect = temp.transpose();
+                
         if(i == 1)
         {        
             vec_7_1 sv_pvt;
@@ -117,8 +135,11 @@ int main(int argc,char **argv)
             }
 
             common.sendUnitVectors(true_x,sv_states,H);
-            std::cout<<H<<std::endl;
-        
+            // std::cout<<H<<std::endl;
+
+            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,true_x);
+            // std::cout<<state_calc_test<<std::endl;
+
         }
 
         sv_measurements.clear();

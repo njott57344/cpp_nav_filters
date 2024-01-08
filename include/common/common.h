@@ -20,12 +20,6 @@ typedef Eigen::Matrix<double,4,1> vec_4_1;
 typedef Eigen::Matrix<double,8,1> vec_8_1;
 
 /*
-    To-Do:
-    1) Function to Calculate SV States
-        [needs testing]
-*/
-
-/*
     Order of Ephemeris
     IODE_sf1
     IODE_sf2

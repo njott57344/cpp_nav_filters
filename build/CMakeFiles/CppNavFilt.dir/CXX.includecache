@@ -18,11 +18,7 @@ cmath
 vector
 -
 
-../include/gps_least_squares/gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/src/common.cpp
 common/common.h
-../include/gps_least_squares/common/common.h
-
-/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp
-gps_least_squares/gps_least_squares.h
-/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/src/common/common.h
 

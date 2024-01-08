@@ -30,19 +30,40 @@ namespace cpp_nav_filt
         Y_ = Y;
         SvPVT_ = SvPVT;
 
-        x_.setZero();
+        x_ = X;
+        
         delta_x_.setOnes();
         H_.setZero();
 
-        while(ctr_<100 && delta_x_.norm()>0.0001)
+        int rows_G_,cols_G_;
+        
+        while(ctr_<1 && delta_x_.norm()>0.0001)
         {
             common.sendUnitVectors(x_,SvPVT_,G_);
+            
+            rows_G_ = G_.rows();
+
+            cols_G_ = G_.cols();
+            
             common.sendMeasEst(x_,SvPVT_,Yhat_);
 
             deltaY_ = Y_ - Yhat_;
+            
+            H_.block(0,0,num_svs,4) = G_;
+            H_.block(num_svs,4,num_svs,4) = G_;
+            
+            delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
+            
+            delta_x_.block(4,0,4,0).setZero();
 
+            x_ = x_ + delta_x_;
+
+            ctr_++;
         }
+        //std::cout<<x_<<std::endl;
 
+        ctr_ = 0;
+        delta_x_.setOnes();
         X = x_; // setting output state to estimated state
     }
 
