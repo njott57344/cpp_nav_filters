@@ -134,8 +134,8 @@ int main(int argc,char **argv)
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
             }
 
-            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,true_x);
-            std::cout<<true_x<<std::endl;
+            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,state_calc_test);
+            // std::cout<<true_x<<std::endl;
 
         }
 

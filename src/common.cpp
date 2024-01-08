@@ -188,7 +188,7 @@ namespace cpp_nav_filt
         Yhat_.resize(num_sv_*2,1);
 
         sv_pos_ = SvPVT;
-
+        
         calcUnitVectors();
         
         calcMeasEst();
@@ -243,8 +243,8 @@ namespace cpp_nav_filt
         relative_velocity << x_comp_vel,y_comp_vel,z_comp_vel;
 
         u = H_.block<1,3>(sv_id,0);
-
-        psr_rate_hat = (u.dot(relative_velocity) + x_hat_[7]);        
+        
+        psr_rate_hat = (-u.dot(relative_velocity)) + x_hat_[7];
     }
 
 }// end of namespace
