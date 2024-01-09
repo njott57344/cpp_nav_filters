@@ -72,6 +72,7 @@ int main(int argc,char **argv)
     std::vector<double> sv_measurements;
     std::vector<double> gps_time;
     std::vector<int> sv_id_vect;
+    std::vector<int> valid_sv_id_vect;
     int sv_id;
     double cur_meas,cur_time;
 
@@ -107,7 +108,12 @@ int main(int argc,char **argv)
                 else
                 {
                     cur_meas = std::stod(sv_meas_word);
-                    sv_measurements.push_back(cur_meas);
+
+                    if(!std::isnan(cur_meas))
+                    {
+                        sv_measurements.push_back(cur_meas);
+                        valid_sv_id_vect.push_back(sv_id_vect[j]);
+                    }
                 }
                 j++;
             }
@@ -115,30 +121,34 @@ int main(int argc,char **argv)
 
         j = 0;
 
-        num_measurements = sv_measurements.size();
-        Eigen::Map<Eigen::MatrixXd> temp(sv_measurements.data(),1,num_measurements);
-        
-        meas_vect.resize(num_measurements,1);
-        meas_vect = temp.transpose();
-                    
-        vec_7_1 sv_pvt;
-
-        num_svs = (sv_measurements.size())*0.5;
-
-        for(int j = 0;j<num_svs;j++)
+        if(i>0)
         {
-            transit_time = sv_measurements[j]/common.c;
-            transmit_time = cur_time - transit_time;
-            sv_pvt = common.sendSvStates(sv_id_vect[j+1],transmit_time,transit_time);
-            sv_states.conservativeResize(j+1,7);
-            sv_states.block<1,7>(j,0) = sv_pvt.transpose();
+            num_measurements = sv_measurements.size();
+            num_svs = (sv_measurements.size())*0.5;
+
+            Eigen::Map<Eigen::MatrixXd> temp(sv_measurements.data(),1,num_measurements);
+
+            // resizing matrices
+            meas_vect.resize(num_measurements,1);
+            sv_states.resize(num_svs,7);
+
+            meas_vect = temp.transpose();
+
+            for(int j = 0;j<num_svs;j++)
+            {
+                transit_time = sv_measurements[j]/common.c;
+                transmit_time = cur_time - transit_time;
+                sv_pvt = common.sendSvStates(valid_sv_id_vect[j],transmit_time,transit_time);
+                sv_states.block<1,7>(j,0) = sv_pvt.transpose();
+            }
+
+            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
+            std::cout<<x_hat<<std::endl<<std::endl;
+
+            sv_measurements.clear();
+            valid_sv_id_vect.clear();
         }
-
-        gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
-        // std::cout<<true_x<<std::endl;
-
-        sv_measurements.clear();
-
+        
         i++;
     }
 

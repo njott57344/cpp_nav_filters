@@ -73,8 +73,6 @@ namespace cpp_nav_filt
             std::cout<<"WARNING: NOT ENOUGH SVS TO COMPUTE SOLUTION SKIPPING EPOCH!!"<<std::endl;
             X = NAN*ones_8_1;
         }
-
-        std::cout<<X<<std::endl;
     }
 
     void GpsLeastSquares::calcStateEstimate()
