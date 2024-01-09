@@ -26,6 +26,8 @@ namespace cpp_nav_filt
             Eigen::MatrixXd G_; // Unit Vectors
             vec_8_1 delta_x_; // update to state estimate (error state)
 
+            vec_8_1 ones_8_1;
+
             int ctr_ = 0; // counter for solver while loop
 
             // internal functions

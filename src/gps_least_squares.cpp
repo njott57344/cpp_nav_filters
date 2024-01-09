@@ -5,7 +5,7 @@ namespace cpp_nav_filt
 
     GpsLeastSquares::GpsLeastSquares()
     {
-    
+        ones_8_1.setOnes();
     }
 
     GpsLeastSquares::~GpsLeastSquares()
@@ -41,31 +41,39 @@ namespace cpp_nav_filt
         H_.setZero();
 
         int rows_G_,cols_G_;
-        
-        while(ctr_<10 && delta_x_.norm()>0.0001)
+        if(num_measurements>=8)
         {
-            common.sendUnitVectors(x_,SvPVT_,G_);
-            common.sendMeasEst(x_,SvPVT_,Yhat_);
-
-            deltaY_ = Y_ - Yhat_;
-
-            H_.block(0,0,num_svs,4) = G_;
-            H_.block(num_svs,4,num_svs,4) = G_;
-            
-            // std::cout<<deltaY_<<std::endl<<std::endl;
-
-            // std::cout<<Yhat_<<std::endl;
-
-            delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
-
-            x_ = x_ + delta_x_;
-
-            ctr_++;
-        }
+            while(ctr_<10 && delta_x_.norm()>0.0001)
+            {
+                common.sendUnitVectors(x_,SvPVT_,G_);
+                common.sendMeasEst(x_,SvPVT_,Yhat_);
     
-        ctr_ = 0;
-        delta_x_.setOnes();
-        X = x_; // setting output state to estimated state
+                deltaY_ = Y_ - Yhat_;
+    
+                H_.block(0,0,num_svs,4) = G_;
+                H_.block(num_svs,4,num_svs,4) = G_;
+                
+                // std::cout<<deltaY_<<std::endl<<std::endl;
+    
+                // std::cout<<Yhat_<<std::endl;
+    
+                delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
+    
+                x_ = x_ + delta_x_;
+    
+                ctr_++;
+            }
+        
+            ctr_ = 0;
+            delta_x_.setOnes();
+            X = x_; // setting output state to estimated state
+        }
+        else
+        {
+            std::cout<<"WARNING: NOT ENOUGH SVS TO COMPUTE SOLUTION SKIPPING EPOCH!!"<<std::endl;
+            X = NAN*ones_8_1;
+        }
+
         std::cout<<X<<std::endl;
     }
 

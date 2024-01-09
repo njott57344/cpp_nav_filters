@@ -20,16 +20,12 @@ int main(int argc,char **argv)
     sv_meas.open(meas_file,std::ios::in);
 
     // MRI antenna
-    vec_8_1 true_x;
+    vec_3_1 true_x;
     true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
-    true_x(3) = 37.0937;
-    true_x(4) = 0.0;
-    true_x(5) = 0.0;
-    true_x(6) = 0.0;
-    true_x(7) = 0.0;
-    
+
+
     std::cout<<true_x<<std::endl;
 
     // ============== Reading Ephemeris ============== //
@@ -70,7 +66,7 @@ int main(int argc,char **argv)
 
     std::cout<<"Ephemeris is Read"<<std::endl;
 
-    // ============== Reading GPS Psr and Dopplers ===== //
+    // ============== GPS Least Squares ===== //
 
     std::string sv_meas_line,sv_meas_word;
     std::vector<double> sv_measurements;
@@ -84,7 +80,11 @@ int main(int argc,char **argv)
 
     int j = 0;
 
-    vec_8_1 state_calc_test;
+    vec_8_1 x_hat;
+    vec_7_1 sv_pvt;
+    Eigen::MatrixXd meas_vect;
+    double num_measurements,num_svs;
+    double transit_time,transmit_time;
 
     while(std::getline(sv_meas,sv_meas_line))
     {
@@ -115,29 +115,27 @@ int main(int argc,char **argv)
 
         j = 0;
 
-        double num_measurements = sv_measurements.size();
+        num_measurements = sv_measurements.size();
         Eigen::Map<Eigen::MatrixXd> temp(sv_measurements.data(),1,num_measurements);
-        Eigen::MatrixXd meas_vect = temp.transpose();
-                
-        if(i == 1)
-        {        
-            vec_7_1 sv_pvt;
+        
+        meas_vect.resize(num_measurements,1);
+        meas_vect = temp.transpose();
+                    
+        vec_7_1 sv_pvt;
 
-            double num_svs = (sv_measurements.size() - 1)*0.5;
+        num_svs = (sv_measurements.size())*0.5;
 
-            for(int j = 0;j<num_svs;j++)
-            {
-                double transit_time = sv_measurements[j]/common.c;
-                double transmit_time = cur_time - transit_time;
-                sv_pvt = common.sendSvStates(sv_id_vect[j+1],transmit_time,transit_time);
-                sv_states.conservativeResize(j+1,7);
-                sv_states.block<1,7>(j,0) = sv_pvt.transpose();
-            }
-
-            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,state_calc_test);
-            // std::cout<<true_x<<std::endl;
-
+        for(int j = 0;j<num_svs;j++)
+        {
+            transit_time = sv_measurements[j]/common.c;
+            transmit_time = cur_time - transit_time;
+            sv_pvt = common.sendSvStates(sv_id_vect[j+1],transmit_time,transit_time);
+            sv_states.conservativeResize(j+1,7);
+            sv_states.block<1,7>(j,0) = sv_pvt.transpose();
         }
+
+        gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
+        // std::cout<<true_x<<std::endl;
 
         sv_measurements.clear();
 
