@@ -259,4 +259,33 @@ namespace cpp_nav_filt
         psr_rate_hat = (-u.dot(relative_velocity)) + x_hat_[7];
     }
 
+    //========= Frame Conversions ==========//
+
+    void Common::convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions)
+    {
+        eigen2array(ecef_pos_,ecef_pos);
+        frame_conversions.xyz2lla(lla_pos_,ecef_pos_);
+        array2eigen(lla_pos,lla_pos_);
+    }
+
+    void Common::convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions)
+    {
+        eigen2array(lla_pos_,lla_pos);
+        frame_conversions.lla2xyz(ecef_pos_,lla_pos_);
+        array2eigen(ecef_pos,ecef_pos_);
+    }
+
+    void Common::eigen2array(double array[3],vec_3_1& eigen)
+    {
+        array[0] = eigen[0];
+        array[1] = eigen[1];
+        array[2] = eigen[2];
+    }
+
+    void Common::array2eigen(vec_3_1& eigen,double array[3])
+    {
+        eigen[0] = array[0];
+        eigen[1] = array[1];
+        eigen[2] = array[2];
+    }
 }// end of namespace

@@ -13,6 +13,7 @@ namespace cpp_nav_filt
             ~GpsLeastSquares();
 
             void sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,Common& common,vec_8_1& X);
+            void sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,Common& common,mat_4_4& DOP);
 
         private:
 
@@ -28,10 +29,10 @@ namespace cpp_nav_filt
 
             vec_8_1 ones_8_1;
 
+            double num_svs_;
+            double num_measurements_;
+            
             int ctr_ = 0; // counter for solver while loop
-
-            // internal functions
-            void calcStateEstimate();
 
     }; // end of class
 

@@ -83,19 +83,34 @@ CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp -o CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.s
 
+CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o: CMakeFiles/CppNavFilt.dir/flags.make
+CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o: ../src/frame_conversions.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o -c /home/njo0004/devel/cpp_nav_filters/src/frame_conversions.cpp
+
+CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/njo0004/devel/cpp_nav_filters/src/frame_conversions.cpp > CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.i
+
+CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/njo0004/devel/cpp_nav_filters/src/frame_conversions.cpp -o CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.s
+
 # Object files for target CppNavFilt
 CppNavFilt_OBJECTS = \
 "CMakeFiles/CppNavFilt.dir/src/common.cpp.o" \
-"CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o"
+"CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o" \
+"CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o"
 
 # External object files for target CppNavFilt
 CppNavFilt_EXTERNAL_OBJECTS =
 
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/common.cpp.o
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o
+libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/build.make
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libCppNavFilt.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libCppNavFilt.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/CppNavFilt.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/CppNavFilt.dir/link.txt --verbose=$(VERBOSE)
 

@@ -15,25 +15,25 @@ namespace cpp_nav_filt
 
     void GpsLeastSquares::sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,Common& common,vec_8_1& X)
     {
-        int num_measurements = Y.rows();
-        int num_svs = SvPVT.rows();
+        num_measurements_ = Y.rows();
+        num_svs_ = SvPVT.rows();
 
         // Resizing
-        Y_.resize(num_measurements,1);
-        Yhat_.resize(num_measurements,1);
-        deltaY_.resize(num_measurements,1);
-        SvPVT_.resize(num_svs,7);        
-        G_.resize(num_svs,4);
-        H_.resize(num_measurements,8);
+        Y_.resize(num_measurements_,1);
+        Yhat_.resize(num_measurements_,1);
+        deltaY_.resize(num_measurements_,1);
+        SvPVT_.resize(num_svs_,7);        
+        G_.resize(num_svs_,4);
+        H_.resize(num_measurements_,8);
 
         // Setting Internal Variables to the right things
         Y_ = Y;
         SvPVT_ = SvPVT;
         
         // applying clock corrections to pseudoranges
-        Y_.block(0,0,num_svs,1) = Y_.block(0,0,num_svs,1) + common.c*SvPVT_.col(6);
+        Y_.block(0,0,num_svs_,1) = Y_.block(0,0,num_svs_,1) + common.c*SvPVT_.col(6);
 
-        Y_.block(num_svs,0,num_svs,1) = -Y_.block(num_svs,0,num_svs,1)*(common.c/common.f_l1);
+        Y_.block(num_svs_,0,num_svs_,1) = -Y_.block(num_svs_,0,num_svs_,1)*(common.c/common.f_l1);
         
         x_ = X;
         
@@ -41,7 +41,7 @@ namespace cpp_nav_filt
         H_.setZero();
 
         int rows_G_,cols_G_;
-        if(num_measurements>=8)
+        if(num_measurements_>=8)
         {
             while(ctr_<10 && delta_x_.norm()>0.0001)
             {
@@ -50,8 +50,8 @@ namespace cpp_nav_filt
     
                 deltaY_ = Y_ - Yhat_;
     
-                H_.block(0,0,num_svs,4) = G_;
-                H_.block(num_svs,4,num_svs,4) = G_;
+                H_.block(0,0,num_svs_,4) = G_;
+                H_.block(num_svs_,4,num_svs_,4) = G_;
                 
                 // std::cout<<deltaY_<<std::endl<<std::endl;
     
@@ -75,8 +75,18 @@ namespace cpp_nav_filt
         }
     }
 
-    void GpsLeastSquares::calcStateEstimate()
+    void GpsLeastSquares::sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,Common& common,mat_4_4& DOP)
     {
-        
+        SvPVT_ = SvPVT;
+        x_ = x_hat;
+
+        num_svs_ = SvPVT_.rows();
+
+        H_.resize(num_svs_,4);
+
+        common.sendUnitVectors(x_,SvPVT_,H_);
+
+        DOP = (H_.transpose()*H_).inverse();
     }
+
 }

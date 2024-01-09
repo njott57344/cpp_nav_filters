@@ -136,19 +136,6 @@ CppNavFilt/fast:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/build
 .PHONY : CppNavFilt/fast
 
-#=============================================================================
-# Target rules for targets named GpsLocalization
-
-# Build rule for target.
-GpsLocalization: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 GpsLocalization
-.PHONY : GpsLocalization
-
-# fast build rule for target.
-GpsLocalization/fast:
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/build
-.PHONY : GpsLocalization/fast
-
 src/common.o: src/common.cpp.o
 
 .PHONY : src/common.o
@@ -156,7 +143,6 @@ src/common.o: src/common.cpp.o
 # target to build an object file
 src/common.cpp.o:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.o
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/common.cpp.o
 .PHONY : src/common.cpp.o
 
 src/common.i: src/common.cpp.i
@@ -166,7 +152,6 @@ src/common.i: src/common.cpp.i
 # target to preprocess a source file
 src/common.cpp.i:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.i
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/common.cpp.i
 .PHONY : src/common.cpp.i
 
 src/common.s: src/common.cpp.s
@@ -176,8 +161,34 @@ src/common.s: src/common.cpp.s
 # target to generate assembly for a file
 src/common.cpp.s:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.s
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/common.cpp.s
 .PHONY : src/common.cpp.s
+
+src/frame_conversions.o: src/frame_conversions.cpp.o
+
+.PHONY : src/frame_conversions.o
+
+# target to build an object file
+src/frame_conversions.cpp.o:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o
+.PHONY : src/frame_conversions.cpp.o
+
+src/frame_conversions.i: src/frame_conversions.cpp.i
+
+.PHONY : src/frame_conversions.i
+
+# target to preprocess a source file
+src/frame_conversions.cpp.i:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.i
+.PHONY : src/frame_conversions.cpp.i
+
+src/frame_conversions.s: src/frame_conversions.cpp.s
+
+.PHONY : src/frame_conversions.s
+
+# target to generate assembly for a file
+src/frame_conversions.cpp.s:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.s
+.PHONY : src/frame_conversions.cpp.s
 
 src/gps_least_squares.o: src/gps_least_squares.cpp.o
 
@@ -186,7 +197,6 @@ src/gps_least_squares.o: src/gps_least_squares.cpp.o
 # target to build an object file
 src/gps_least_squares.cpp.o:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/gps_least_squares.cpp.o
 .PHONY : src/gps_least_squares.cpp.o
 
 src/gps_least_squares.i: src/gps_least_squares.cpp.i
@@ -196,7 +206,6 @@ src/gps_least_squares.i: src/gps_least_squares.cpp.i
 # target to preprocess a source file
 src/gps_least_squares.cpp.i:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.i
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/gps_least_squares.cpp.i
 .PHONY : src/gps_least_squares.cpp.i
 
 src/gps_least_squares.s: src/gps_least_squares.cpp.s
@@ -206,7 +215,6 @@ src/gps_least_squares.s: src/gps_least_squares.cpp.s
 # target to generate assembly for a file
 src/gps_least_squares.cpp.s:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.s
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/src/gps_least_squares.cpp.s
 .PHONY : src/gps_least_squares.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -246,10 +254,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... SvPvtTest"
 	@echo "... CppNavFilt"
-	@echo "... GpsLocalization"
 	@echo "... src/common.o"
 	@echo "... src/common.i"
 	@echo "... src/common.s"
+	@echo "... src/frame_conversions.o"
+	@echo "... src/frame_conversions.i"
+	@echo "... src/frame_conversions.s"
 	@echo "... src/gps_least_squares.o"
 	@echo "... src/gps_least_squares.i"
 	@echo "... src/gps_least_squares.s"

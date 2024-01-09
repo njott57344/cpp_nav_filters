@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/CppNavFilt.dir/src/common.cpp.o"
+  "CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o"
   "CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o"
   "libCppNavFilt.a"
   "libCppNavFilt.pdb"

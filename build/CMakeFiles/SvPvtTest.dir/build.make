@@ -79,7 +79,7 @@ SvPvtTest_EXTERNAL_OBJECTS =
 
 SvPvtTest: CMakeFiles/SvPvtTest.dir/src/main.cpp.o
 SvPvtTest: CMakeFiles/SvPvtTest.dir/build.make
-SvPvtTest: libGpsLocalization.a
+SvPvtTest: libCppNavFilt.a
 SvPvtTest: CMakeFiles/SvPvtTest.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable SvPvtTest"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SvPvtTest.dir/link.txt --verbose=$(VERBOSE)

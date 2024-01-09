@@ -7,6 +7,7 @@ int main(int argc,char **argv)
 {
     cpp_nav_filt::Common common;
     cpp_nav_filt::GpsLeastSquares gps_least_squares;
+    WgsConversions fc; // frame conversions
 
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
@@ -24,9 +25,6 @@ int main(int argc,char **argv)
     true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
-
-
-    std::cout<<true_x<<std::endl;
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;
@@ -82,10 +80,14 @@ int main(int argc,char **argv)
     int j = 0;
 
     vec_8_1 x_hat;
+    mat_4_4 DOP;
+
     vec_7_1 sv_pvt;
     Eigen::MatrixXd meas_vect;
     double num_measurements,num_svs;
     double transit_time,transmit_time;
+
+    vec_3_1 lla_pos,ecef_pos;
 
     while(std::getline(sv_meas,sv_meas_line))
     {
@@ -143,7 +145,11 @@ int main(int argc,char **argv)
             }
 
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
-            std::cout<<x_hat<<std::endl<<std::endl;
+            gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
+
+            ecef_pos = x_hat.block<3,1>(0,0);
+
+            common.convertECEF2LLA(ecef_pos,lla_pos,fc);
 
             sv_measurements.clear();
             valid_sv_id_vect.clear();

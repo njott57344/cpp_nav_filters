@@ -55,7 +55,6 @@ CMAKE_BINARY_DIR = /home/njo0004/devel/cpp_nav_filters/build
 # The main recursive "all" target.
 all: CMakeFiles/SvPvtTest.dir/all
 all: CMakeFiles/CppNavFilt.dir/all
-all: CMakeFiles/GpsLocalization.dir/all
 
 .PHONY : all
 
@@ -67,7 +66,6 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/SvPvtTest.dir/clean
 clean: CMakeFiles/CppNavFilt.dir/clean
-clean: CMakeFiles/GpsLocalization.dir/clean
 
 .PHONY : clean
 
@@ -75,15 +73,15 @@ clean: CMakeFiles/GpsLocalization.dir/clean
 # Target rules for target CMakeFiles/SvPvtTest.dir
 
 # All Build rule for target.
-CMakeFiles/SvPvtTest.dir/all: CMakeFiles/GpsLocalization.dir/all
+CMakeFiles/SvPvtTest.dir/all: CMakeFiles/CppNavFilt.dir/all
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/depend
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=7,8 "Built target SvPvtTest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=5,6 "Built target SvPvtTest"
 .PHONY : CMakeFiles/SvPvtTest.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SvPvtTest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SvPvtTest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
 .PHONY : CMakeFiles/SvPvtTest.dir/rule
@@ -105,12 +103,12 @@ CMakeFiles/SvPvtTest.dir/clean:
 CMakeFiles/CppNavFilt.dir/all:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/depend
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=1,2,3 "Built target CppNavFilt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=1,2,3,4 "Built target CppNavFilt"
 .PHONY : CMakeFiles/CppNavFilt.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/CppNavFilt.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/CppNavFilt.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
 .PHONY : CMakeFiles/CppNavFilt.dir/rule
@@ -124,33 +122,6 @@ CppNavFilt: CMakeFiles/CppNavFilt.dir/rule
 CMakeFiles/CppNavFilt.dir/clean:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/clean
 .PHONY : CMakeFiles/CppNavFilt.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/GpsLocalization.dir
-
-# All Build rule for target.
-CMakeFiles/GpsLocalization.dir/all:
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/depend
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=4,5,6 "Built target GpsLocalization"
-.PHONY : CMakeFiles/GpsLocalization.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/GpsLocalization.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/GpsLocalization.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
-.PHONY : CMakeFiles/GpsLocalization.dir/rule
-
-# Convenience name for target.
-GpsLocalization: CMakeFiles/GpsLocalization.dir/rule
-
-.PHONY : GpsLocalization
-
-# clean rule for target.
-CMakeFiles/GpsLocalization.dir/clean:
-	$(MAKE) -f CMakeFiles/GpsLocalization.dir/build.make CMakeFiles/GpsLocalization.dir/clean
-.PHONY : CMakeFiles/GpsLocalization.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

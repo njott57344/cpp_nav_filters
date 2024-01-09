@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include "frame_conversions/frame_conversions.h"
 
 typedef Eigen::Matrix<double,3,1> vec_3_1;
 typedef Eigen::Matrix<double,32,3> mat_32_3;
@@ -19,6 +20,7 @@ typedef Eigen::Matrix<double,7,1> vec_7_1;
 typedef Eigen::Matrix<double,4,1> vec_4_1;
 typedef Eigen::Matrix<double,8,1> vec_8_1;
 typedef Eigen::Matrix<double,32,1> vec_32_1;
+typedef Eigen::Matrix<double,4,4> mat_4_4;
 
 /*
     Order of Ephemeris
@@ -83,6 +85,10 @@ namespace cpp_nav_filt
             const double f_l2 = 1.2276*pow(10,9);
             const double f_l5 = 1.176*pow(10,9);
 
+            // Frame Conversion Functions
+            void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions);
+            void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions);
+
         private:
 
 
@@ -108,6 +114,10 @@ namespace cpp_nav_filt
             vec_8_1 x_hat_;
             vec_32_1 ones_32_1;
 
+            // Temporary Variables for doing the frame conversions
+            double ecef_pos_[3];
+            double lla_pos_[3];
+
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
             void setCurrentEphem(vec_1_27& ephem,const int& sv);
@@ -117,6 +127,9 @@ namespace cpp_nav_filt
             void calcPsr(double sv_id);
             void calcPsrRate(double sv_id);
             void calcMeasEst();
+
+            void eigen2array(double array[3],vec_3_1& eigen);
+            void array2eigen(vec_3_1& eigen,double array[3]);
 
         protected:
 
