@@ -18,6 +18,7 @@ typedef Eigen::Matrix<double,6,1> vec_6_1;
 typedef Eigen::Matrix<double,7,1> vec_7_1;
 typedef Eigen::Matrix<double,4,1> vec_4_1;
 typedef Eigen::Matrix<double,8,1> vec_8_1;
+typedef Eigen::Matrix<double,32,1> vec_32_1;
 
 /*
     Order of Ephemeris
@@ -102,9 +103,10 @@ namespace cpp_nav_filt
 
             Eigen::MatrixXd Y_;
             Eigen::MatrixXd Yhat_;
-            Eigen::MatrixXd sv_pos_;
+            Eigen::MatrixXd sv_pvt_;
             Eigen::MatrixXd H_;
             vec_8_1 x_hat_;
+            vec_32_1 ones_32_1;
 
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
