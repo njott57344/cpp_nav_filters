@@ -1,7 +1,10 @@
 #include "common/common.h"
 #include "gps_least_squares/gps_least_squares.h"
+#include "sciplot/sciplot.hpp"
 
 #include <fstream>
+
+namespace plt = sciplot;
 
 int main(int argc,char **argv)
 {
@@ -13,12 +16,16 @@ int main(int argc,char **argv)
     std::fstream sv_ephem;
     std::fstream sv_meas;
 
+    std::ofstream solution_out;
+
     // strings of files
     std::string ephem_file = "/home/njo0004/devel/cpp_nav_filters_data/class_ephem.csv";
     std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/class_meas_data.csv";
+    std::string output_file = "/home/njo0004/devel/cpp_nav_filters_data/output.csv";
 
     sv_ephem.open(ephem_file,std::ios::in);
     sv_meas.open(meas_file,std::ios::in);
+    solution_out.open(output_file);
 
     // MRI antenna
     vec_3_1 true_x;
@@ -76,6 +83,7 @@ int main(int argc,char **argv)
 
     Eigen::MatrixXd sv_states;
     Eigen::MatrixXd H;
+    Eigen::MatrixXd state_soln;
 
     int j = 0;
 
@@ -153,10 +161,28 @@ int main(int argc,char **argv)
 
             sv_measurements.clear();
             valid_sv_id_vect.clear();
+            
+            state_soln.conservativeResize(i+1,8); // is i not i+1 bc idx i = 0 is skipped
+            state_soln.block(i-1,0,1,8) = x_hat.transpose();
         }
-        
+                
         i++;
     }
+        
+    solution_out.close();
+    std::cout<<state_soln<<std::endl;
+
+    /*
+    plt::Plot2D pos_plt;
+    pos_plt.palette("paired");
+    pos_plt.drawDots(state_soln.col(0),state_soln.col(1)).label("RCVR1 ECEF");
+    pos_plt.xlabel("X [m]");
+    pos_plt.ylabel("Y [m]");
+    plt::Figure pos_fig = {{pos_plt}};
+    pos_fig.title("ECEF Position");
+    plt::Canvas pos_cnvs = {{pos_fig}};
+    pos_cnvs.show();
+    */
 
     return 0;
 }

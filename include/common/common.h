@@ -67,8 +67,8 @@ namespace cpp_nav_filt
             void receiveSvEphem(vec_1_27& ephem_in,const int& sv_in);
             void sendSvEphem(vec_1_27& ephem_out,const int& desired_sv);
 
-            void sendUnitVectors(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
-            void sendMeasEst(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
+            void sendUnitVectors(vec_3_1& pos,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
+            void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
@@ -88,7 +88,7 @@ namespace cpp_nav_filt
             // Frame Conversion Functions
             void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions);
             void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions);
-
+            // void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& )
         private:
 
 
@@ -111,7 +111,11 @@ namespace cpp_nav_filt
             Eigen::MatrixXd Yhat_;
             Eigen::MatrixXd sv_pvt_;
             Eigen::MatrixXd H_;
-            vec_8_1 x_hat_;
+            vec_3_1 pos_; // [Position;clk;Velocity;clk drift]
+            vec_3_1 vel_;
+            double clk_;
+            double clk_drift_;
+
             vec_32_1 ones_32_1;
 
             // Temporary Variables for doing the frame conversions

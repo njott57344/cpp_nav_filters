@@ -215,6 +215,26 @@ CppNavFilt_BINARY_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters/build
 //Value Computed by CMake
 CppNavFilt_SOURCE_DIR:STATIC=/home/njo0004/devel/cpp_nav_filters
 
+//Directory under which to collect all populated content
+FETCHCONTENT_BASE_DIR:PATH=/home/njo0004/devel/cpp_nav_filters/build/_deps
+
+//Disables all attempts to download or update content and assumes
+// source dirs already exist
+FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+
+//Enables QUIET option for all content population
+FETCHCONTENT_QUIET:BOOL=ON
+
+//When not empty, overrides where to find pre-populated content
+// for sciplot_content
+FETCHCONTENT_SOURCE_DIR_SCIPLOT_CONTENT:PATH=
+
+//Enables UPDATE_DISCONNECTED behavior for all content population
+FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of sciplot_content
+FETCHCONTENT_UPDATES_DISCONNECTED_SCIPLOT_CONTENT:BOOL=OFF
+
 
 ########################
 # INTERNAL cache entries

@@ -172,11 +172,12 @@ namespace cpp_nav_filt
         return dt;
     }
 
-    void Common::sendUnitVectors(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H)
+    void Common::sendUnitVectors(vec_3_1& X_hat,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H)
     {
         // sending position states to state estimate
-        x_hat_ = X_hat;
-
+        pos_ = X_hat;
+        clk_ = clk;
+        
         num_sv_ = SvPVT.rows();
         
         sv_pvt_.resize(num_sv_,7);
@@ -189,9 +190,12 @@ namespace cpp_nav_filt
         H = H_;
     }
 
-    void Common::sendMeasEst(vec_8_1& X_hat,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat)
+    void Common::sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat)
     {
-        x_hat_ = X_hat;
+        pos_ = pos;
+        vel_ = vel;
+        clk_ = clk;
+        clk_drift_ = clk_drift;
 
         num_sv_ = SvPVT.rows();
 
@@ -200,7 +204,7 @@ namespace cpp_nav_filt
         Yhat_.resize(num_sv_*2,1);
 
         sv_pvt_ = SvPVT;
-        
+
         calcUnitVectors();
         
         calcMeasEst();
@@ -236,11 +240,11 @@ namespace cpp_nav_filt
 
     void Common::calcPsr(double sv_id)
     {        
-        x_comp = sv_pvt_(sv_id,0) - x_hat_[0];
-        y_comp = sv_pvt_(sv_id,1) - x_hat_[1];
-        z_comp = sv_pvt_(sv_id,2) - x_hat_[2];
+        x_comp = sv_pvt_(sv_id,0) - pos_[0];
+        y_comp = sv_pvt_(sv_id,1) - pos_[1];
+        z_comp = sv_pvt_(sv_id,2) - pos_[2];
 
-        psr_hat = sqrt(pow(x_comp,2) + pow(y_comp,2) + pow(z_comp,2)) + x_hat_[3];
+        psr_hat = sqrt(pow(x_comp,2) + pow(y_comp,2) + pow(z_comp,2)) + clk_;
     }
 
     void Common::calcPsrRate(double sv_id)
@@ -248,15 +252,15 @@ namespace cpp_nav_filt
         vec_3_1 u; // unit vector to the sv_id satellite
         vec_3_1 relative_velocity;
 
-        x_comp_vel = sv_pvt_(sv_id,3) - x_hat_[4];
-        y_comp_vel = sv_pvt_(sv_id,4) - x_hat_[5];
-        z_comp_vel = sv_pvt_(sv_id,5) - x_hat_[6];
+        x_comp_vel = sv_pvt_(sv_id,3) - vel_[0];
+        y_comp_vel = sv_pvt_(sv_id,4) - vel_[1];
+        z_comp_vel = sv_pvt_(sv_id,5) - vel_[2];
         
         relative_velocity << x_comp_vel,y_comp_vel,z_comp_vel;
 
         u = H_.block<1,3>(sv_id,0);
         
-        psr_rate_hat = (-u.dot(relative_velocity)) + x_hat_[7];
+        psr_rate_hat = (-u.dot(relative_velocity)) + clk_drift_;
     }
 
     //========= Frame Conversions ==========//

@@ -18,7 +18,12 @@ namespace cpp_nav_filt
         private:
 
             // internal variables
-            vec_8_1 x_; // state estimate
+            vec_3_1 pos_;
+            vec_3_1 vel_;
+            double clk_;
+            double clk_drift_;
+            vec_8_1 x_;
+
             Eigen::MatrixXd H_; // Measurement Model
             Eigen::MatrixXd SvPVT_;
             Eigen::MatrixXd Y_;

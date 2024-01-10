@@ -36,7 +36,12 @@ namespace cpp_nav_filt
         Y_.block(num_svs_,0,num_svs_,1) = -Y_.block(num_svs_,0,num_svs_,1)*(common.c/common.f_l1);
         
         x_ = X;
-        
+
+        pos_ = x_.block(0,0,3,1);
+        clk_ = x_[3];
+        vel_ = x_.block(4,0,3,1);
+        clk_drift_ = x_[7];
+                
         delta_x_.setOnes();
         H_.setZero();
 
@@ -45,9 +50,9 @@ namespace cpp_nav_filt
         {
             while(ctr_<10 && delta_x_.norm()>0.0001)
             {
-                common.sendUnitVectors(x_,SvPVT_,G_);
-                common.sendMeasEst(x_,SvPVT_,Yhat_);
-    
+                common.sendUnitVectors(pos_,clk_,SvPVT_,G_);
+                common.sendMeasEst(pos_,vel_,clk_,clk_drift_,SvPVT_,Yhat_);
+
                 deltaY_ = Y_ - Yhat_;
     
                 H_.block(0,0,num_svs_,4) = G_;
@@ -60,7 +65,12 @@ namespace cpp_nav_filt
                 delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
     
                 x_ = x_ + delta_x_;
-    
+                
+                pos_ = x_.block(0,0,3,1);
+                clk_ = x_[3];
+                vel_ = x_.block(4,0,3,1);
+                clk_drift_ = x_[7];
+                
                 ctr_++;
             }
         
@@ -79,12 +89,17 @@ namespace cpp_nav_filt
     {
         SvPVT_ = SvPVT;
         x_ = x_hat;
-
+        
+        pos_ = x_.block(0,0,3,1);
+        clk_ = x_[3];
+        vel_ = x_.block(4,0,3,1);
+        clk_drift_ = x_[7];
+        
         num_svs_ = SvPVT_.rows();
 
         H_.resize(num_svs_,4);
 
-        common.sendUnitVectors(x_,SvPVT_,H_);
+        common.sendUnitVectors(pos_,clk_,SvPVT_,H_);
 
         DOP = (H_.transpose()*H_).inverse();
     }
