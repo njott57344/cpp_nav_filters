@@ -6,19 +6,23 @@ A collection of C-Plus-Plus INS filters to perform fusion of GNSS and INS nav so
 - [ ] Tightly Coupled INS EKF
 - [ ] GPS Least Squares
     - [ ] Test on multipe files/multiple epochs
-    - [ ] Return DOP
-    - [ ] Resilience Checks
-        - [ ] Test for sufficient satellites before attempting to calculate a solution
+        - [ ] Works on entire static data set.
+        - [ ] Test GpsLeastSquares on new and exciting datasets
+    - [X] Return DOP
+    - [X] Resilience Checks
+        - [X] Test for sufficient satellites before attempting to calculate a solution
     - [ ] Weighting matrix
         - [ ] Use CN0 estimate
+        - [ ] Use elevation angle
+    - [ ] Set mask angle on satellites?
 - [ ] Common 
     - [X] Struct of ephemeris for each satellite
         - [X] Struct contains vectors of variable dimension for each ephemeride
         - [X] A vector of same variable dimension that contains ID for each SV
-    - [ ] Resilience Checks
-        - [ ] Ensure common has ephemerides to calcualte SV PVT states for the sv_id satellite
-- [ ] Plotting MATPLOT in cpp
-    - [ ] Learn how to do this
+    - [X] Resilience Checks
+        - [X] Ensure common has ephemerides to calcualte SV PVT states for the sv_id satellite
+- [ ] Plotting in CPP
+    - [ ] Currently Using matplotplusplus as plotting tool in c++
 
 ## Working Inputs and Outputs of Various bits of Cpp Nav Filt
 - Common
