@@ -11,28 +11,7 @@ namespace cpp_nav_filt
 
         sv_state_.setZero();
 
-        // Initializing Ephem Map to NAN
-        current_ephem_["T_GD"]      = NAN;
-        current_ephem_["t_oc"]      = NAN;
-        current_ephem_["a_f2"]      = NAN;
-        current_ephem_["a_f1"]      = NAN;
-        current_ephem_["a_f0"]      = NAN;
-        current_ephem_["C_rc"]      = NAN;
-        current_ephem_["C_rs"]      = NAN;
-        current_ephem_["C_uc"]      = NAN;
-        current_ephem_["C_us"]      = NAN;
-        current_ephem_["C_ic"]      = NAN;
-        current_ephem_["C_is"]      = NAN;
-        current_ephem_["Delta_n"]   = NAN;
-        current_ephem_["M_0"]       = NAN;
-        current_ephem_["e"]         = NAN;
-        current_ephem_["A"]         = NAN;
-        current_ephem_["t_oe"]      = NAN;
-        current_ephem_["Omega_0"]   = NAN;
-        current_ephem_["i_0"]       = NAN;
-        current_ephem_["omega"]     = NAN;
-        current_ephem_["dot_Omega"] = NAN;
-        current_ephem_["I_dot"]     = NAN;
+        nanEphemerisMap();
     }
 
     Common::~Common()
@@ -191,6 +170,7 @@ namespace cpp_nav_filt
             sv_state.setZero();
         }
        
+       nanEphemerisMap();
     }
 
     double Common::checkT(double time)
@@ -214,6 +194,31 @@ namespace cpp_nav_filt
         }
 
         return dt;
+    }
+
+    void Common::nanEphemerisMap()
+    {
+        current_ephem_["T_GD"]      = NAN;
+        current_ephem_["t_oc"]      = NAN;
+        current_ephem_["a_f2"]      = NAN;
+        current_ephem_["a_f1"]      = NAN;
+        current_ephem_["a_f0"]      = NAN;
+        current_ephem_["C_rc"]      = NAN;
+        current_ephem_["C_rs"]      = NAN;
+        current_ephem_["C_uc"]      = NAN;
+        current_ephem_["C_us"]      = NAN;
+        current_ephem_["C_ic"]      = NAN;
+        current_ephem_["C_is"]      = NAN;
+        current_ephem_["Delta_n"]   = NAN;
+        current_ephem_["M_0"]       = NAN;
+        current_ephem_["e"]         = NAN;
+        current_ephem_["A"]         = NAN;
+        current_ephem_["t_oe"]      = NAN;
+        current_ephem_["Omega_0"]   = NAN;
+        current_ephem_["i_0"]       = NAN;
+        current_ephem_["omega"]     = NAN;
+        current_ephem_["dot_Omega"] = NAN;
+        current_ephem_["I_dot"]     = NAN;
     }
 
     void Common::sendUnitVectors(vec_3_1& X_hat,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H)

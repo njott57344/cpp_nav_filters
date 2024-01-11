@@ -137,7 +137,8 @@ namespace cpp_nav_filt
             void calcPsr(double sv_id);
             void calcPsrRate(double sv_id);
             void calcMeasEst();
-
+            void nanEphemerisMap();
+            
             void eigen2array(double array[3],vec_3_1& eigen);
             void array2eigen(vec_3_1& eigen,double array[3]);
 
