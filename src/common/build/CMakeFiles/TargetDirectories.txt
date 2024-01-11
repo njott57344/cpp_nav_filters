@@ -1,5 +1,0 @@
-/home/njo0004/devel/cpp_nav_filters/src/common/build/CMakeFiles/rebuild_cache.dir
-/home/njo0004/devel/cpp_nav_filters/src/common/build/CMakeFiles/edit_cache.dir
-/home/njo0004/devel/cpp_nav_filters/src/common/build/CMakeFiles/SvPvtTest.dir
-/home/njo0004/devel/cpp_nav_filters/src/common/build/CMakeFiles/Common.dir
-/home/njo0004/devel/cpp_nav_filters/src/common/build/CMakeFiles/CommonLib.dir
