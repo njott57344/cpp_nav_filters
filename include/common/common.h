@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <map>
 
 #include "frame_conversions/frame_conversions.h"
 
@@ -91,8 +92,8 @@ namespace cpp_nav_filt
             void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions);
             void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions);
             // void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& )
-        private:
 
+        private:
 
             mat_32_27 sv_ephem; // matrix of satellite ephemeris
             vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv idx
@@ -120,13 +121,16 @@ namespace cpp_nav_filt
 
             vec_32_1 ones_32_1;
 
+            // Ephemeris std::map
+            std::map<std::string,double> current_ephem_;
+
             // Temporary Variables for doing the frame conversions
             double ecef_pos_[3];
             double lla_pos_[3];
 
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
-            void setCurrentEphem(vec_1_27& ephem,const int& sv);
+            void setCurrentEphem(const int& sv);
             double checkT(double time);
 
             void calcUnitVectors();
