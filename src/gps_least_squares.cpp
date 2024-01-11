@@ -31,9 +31,9 @@ namespace cpp_nav_filt
         SvPVT_ = SvPVT;
         
         // applying clock corrections to pseudoranges
-        Y_.block(0,0,num_svs_,1) = Y_.block(0,0,num_svs_,1) + common.c*SvPVT_.col(6);
+        Y_.block(0,0,num_svs_,1) = Y_.block(0,0,num_svs_,1)  + c*SvPVT_.col(6);
 
-        Y_.block(num_svs_,0,num_svs_,1) = -Y_.block(num_svs_,0,num_svs_,1)*(common.c/common.f_l1);
+        Y_.block(num_svs_,0,num_svs_,1) = -Y_.block(num_svs_,0,num_svs_,1)*(c/f_l1);
         
         x_ = X;
 

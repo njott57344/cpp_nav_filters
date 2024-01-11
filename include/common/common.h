@@ -57,6 +57,20 @@ typedef Eigen::Matrix<double,4,4> mat_4_4;
 
 namespace cpp_nav_filt
 {
+
+    // GPS Constants
+    const double gps_pi = M_PI; // PI
+    const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
+    const double GM = 3.986005*pow(10,14);  
+    const double F = -4.442807633*pow(10,-10);
+    const int half_week = 302400; // [s]
+    const double c = 299792458.0; // [m/s] speed of light
+    
+    // Frequency Constant
+    const double f_l1 = 1.57542*pow(10,9);
+    const double f_l2 = 1.2276*pow(10,9);
+    const double f_l5 = 1.176*pow(10,9);
+
     class Common
     {
         public:
@@ -72,19 +86,6 @@ namespace cpp_nav_filt
             void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
 
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
-
-            // GPS Constants
-            const double gps_pi = M_PI; // PI
-            const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
-            const double GM = 3.986005*pow(10,14);  
-            const double F = -4.442807633*pow(10,-10);
-            const int half_week = 302400; // [s]
-            const double c = 299792458.0; // [m/s] speed of light
-            
-            // Frequency Constant
-            const double f_l1 = 1.57542*pow(10,9);
-            const double f_l2 = 1.2276*pow(10,9);
-            const double f_l5 = 1.176*pow(10,9);
 
             // Frame Conversion Functions
             void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions);

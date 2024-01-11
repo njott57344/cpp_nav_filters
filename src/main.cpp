@@ -151,7 +151,7 @@ int main(int argc,char **argv)
 
             for(int j = 0;j<num_svs;j++)
             {
-                transit_time = sv_measurements[j]/common.c;
+                transit_time = sv_measurements[j]/cpp_nav_filt::c;
                 transmit_time = cur_time - transit_time;
                 sv_pvt = common.sendSvStates(valid_sv_id_vect[j],transmit_time,transit_time);
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
