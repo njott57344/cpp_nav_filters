@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16.3)
 project(CppNavFilt)
 set(CMAKE_CXX_STANDARD 17)
 
-# CMake Stuff for Sci Plot
+# CMake Stuff for Plotting
 include(FetchContent)
 
 FetchContent_Declare(matplotplusplus
