@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=gnu++17
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/home/njo0004/devel/cpp_nav_filters/build/_deps/sciplot_content-src 
+CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include 
 

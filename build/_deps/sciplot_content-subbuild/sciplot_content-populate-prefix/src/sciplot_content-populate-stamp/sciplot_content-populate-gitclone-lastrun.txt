@@ -1,3 +1,0 @@
-repository='https://github.com/sciplot/sciplot.git'
-module=''
-tag='origin'

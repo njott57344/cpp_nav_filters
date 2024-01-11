@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/CMakeFiles/matplotplusplus-populate"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/CMakeFiles/matplotplusplus-populate.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/CMakeFiles/matplotplusplus-populate-complete.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-install.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-download.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-update.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-patch.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-configure.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-build.rule"
+		},
+		{
+			"file" : "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/matplotplusplus-populate-prefix/src/matplotplusplus-populate-stamp/matplotplusplus-populate-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"matplotplusplus-populate"
+		],
+		"name" : "matplotplusplus-populate"
+	}
+}

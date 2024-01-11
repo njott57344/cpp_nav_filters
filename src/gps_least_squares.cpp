@@ -48,7 +48,7 @@ namespace cpp_nav_filt
         int rows_G_,cols_G_;
         if(num_measurements_>=8)
         {
-            while(ctr_<10 && delta_x_.norm()>0.0001)
+            while(ctr_<100 && delta_x_.norm()>0.0000001)
             {
                 common.sendUnitVectors(pos_,clk_,SvPVT_,G_);
                 common.sendMeasEst(pos_,vel_,clk_,clk_drift_,SvPVT_,Yhat_);
@@ -76,7 +76,7 @@ namespace cpp_nav_filt
         
             ctr_ = 0;
             delta_x_.setOnes();
-            X = x_; // setting output state to estimated state
+            X = x_; // setting output state to estimated state            
         }
         else
         {

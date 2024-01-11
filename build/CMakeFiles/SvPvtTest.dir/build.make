@@ -79,7 +79,17 @@ SvPvtTest_EXTERNAL_OBJECTS =
 
 SvPvtTest: CMakeFiles/SvPvtTest.dir/src/main.cpp.o
 SvPvtTest: CMakeFiles/SvPvtTest.dir/build.make
+SvPvtTest: _deps/matplotplusplus-build/source/matplot/libmatplot.a
 SvPvtTest: libCppNavFilt.a
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libjpeg.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libtiff.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libz.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libpng.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libz.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libpng.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/liblapack.so
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libblas.so
+SvPvtTest: _deps/matplotplusplus-build/source/3rd_party/libnodesoup.a
 SvPvtTest: CMakeFiles/SvPvtTest.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable SvPvtTest"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SvPvtTest.dir/link.txt --verbose=$(VERBOSE)

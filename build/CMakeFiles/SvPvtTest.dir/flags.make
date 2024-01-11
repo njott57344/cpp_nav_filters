@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS =   -std=gnu++17
 
-CXX_DEFINES = 
+CXX_DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
 
-CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/home/njo0004/devel/cpp_nav_filters/build/_deps/sciplot_content-src 
+CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-build/source/matplot 
 

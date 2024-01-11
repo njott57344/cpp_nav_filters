@@ -66,14 +66,92 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/SvPvtTest.dir/clean
 clean: CMakeFiles/CppNavFilt.dir/clean
+clean: _deps/matplotplusplus-build/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory _deps/matplotplusplus-build
+
+# Recursive "all" directory target.
+_deps/matplotplusplus-build/all: _deps/matplotplusplus-build/source/all
+
+.PHONY : _deps/matplotplusplus-build/all
+
+# Recursive "preinstall" directory target.
+_deps/matplotplusplus-build/preinstall: _deps/matplotplusplus-build/source/preinstall
+
+.PHONY : _deps/matplotplusplus-build/preinstall
+
+# Recursive "clean" directory target.
+_deps/matplotplusplus-build/clean: _deps/matplotplusplus-build/source/clean
+
+.PHONY : _deps/matplotplusplus-build/clean
+
+#=============================================================================
+# Directory level rules for directory _deps/matplotplusplus-build/source
+
+# Recursive "all" directory target.
+_deps/matplotplusplus-build/source/all: _deps/matplotplusplus-build/source/3rd_party/all
+_deps/matplotplusplus-build/source/all: _deps/matplotplusplus-build/source/matplot/all
+
+.PHONY : _deps/matplotplusplus-build/source/all
+
+# Recursive "preinstall" directory target.
+_deps/matplotplusplus-build/source/preinstall: _deps/matplotplusplus-build/source/3rd_party/preinstall
+_deps/matplotplusplus-build/source/preinstall: _deps/matplotplusplus-build/source/matplot/preinstall
+
+.PHONY : _deps/matplotplusplus-build/source/preinstall
+
+# Recursive "clean" directory target.
+_deps/matplotplusplus-build/source/clean: _deps/matplotplusplus-build/source/3rd_party/clean
+_deps/matplotplusplus-build/source/clean: _deps/matplotplusplus-build/source/matplot/clean
+
+.PHONY : _deps/matplotplusplus-build/source/clean
+
+#=============================================================================
+# Directory level rules for directory _deps/matplotplusplus-build/source/3rd_party
+
+# Recursive "all" directory target.
+_deps/matplotplusplus-build/source/3rd_party/all: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
+
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/all
+
+# Recursive "preinstall" directory target.
+_deps/matplotplusplus-build/source/3rd_party/preinstall:
+
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/preinstall
+
+# Recursive "clean" directory target.
+_deps/matplotplusplus-build/source/3rd_party/clean: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/clean
+
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/clean
+
+#=============================================================================
+# Directory level rules for directory _deps/matplotplusplus-build/source/matplot
+
+# Recursive "all" directory target.
+_deps/matplotplusplus-build/source/matplot/all: _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
+
+.PHONY : _deps/matplotplusplus-build/source/matplot/all
+
+# Recursive "preinstall" directory target.
+_deps/matplotplusplus-build/source/matplot/preinstall:
+
+.PHONY : _deps/matplotplusplus-build/source/matplot/preinstall
+
+# Recursive "clean" directory target.
+_deps/matplotplusplus-build/source/matplot/clean: _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/clean
+
+.PHONY : _deps/matplotplusplus-build/source/matplot/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/SvPvtTest.dir
 
 # All Build rule for target.
+CMakeFiles/SvPvtTest.dir/all: _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
 CMakeFiles/SvPvtTest.dir/all: CMakeFiles/CppNavFilt.dir/all
+CMakeFiles/SvPvtTest.dir/all: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/depend
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=5,6 "Built target SvPvtTest"
@@ -81,7 +159,7 @@ CMakeFiles/SvPvtTest.dir/all: CMakeFiles/CppNavFilt.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SvPvtTest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 50
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SvPvtTest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
 .PHONY : CMakeFiles/SvPvtTest.dir/rule
@@ -122,6 +200,60 @@ CppNavFilt: CMakeFiles/CppNavFilt.dir/rule
 CMakeFiles/CppNavFilt.dir/clean:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/clean
 .PHONY : CMakeFiles/CppNavFilt.dir/clean
+
+#=============================================================================
+# Target rules for target _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir
+
+# All Build rule for target.
+_deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all:
+	$(MAKE) -f _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build.make _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/depend
+	$(MAKE) -f _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build.make _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=45,46,47,48,49,50 "Built target nodesoup"
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
+
+# Build rule for subdir invocation for target.
+_deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 6
+	$(MAKE) -f CMakeFiles/Makefile2 _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/rule
+
+# Convenience name for target.
+nodesoup: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/rule
+
+.PHONY : nodesoup
+
+# clean rule for target.
+_deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/clean:
+	$(MAKE) -f _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build.make _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/clean
+.PHONY : _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/clean
+
+#=============================================================================
+# Target rules for target _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir
+
+# All Build rule for target.
+_deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
+	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/depend
+	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44 "Built target matplot"
+.PHONY : _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
+
+# Build rule for subdir invocation for target.
+_deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 44
+	$(MAKE) -f CMakeFiles/Makefile2 _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
+.PHONY : _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/rule
+
+# Convenience name for target.
+matplot: _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/rule
+
+.PHONY : matplot
+
+# clean rule for target.
+_deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/clean:
+	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/clean
+.PHONY : _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

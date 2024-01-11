@@ -1,10 +1,10 @@
 #include "common/common.h"
 #include "gps_least_squares/gps_least_squares.h"
-#include "sciplot/sciplot.hpp"
+#include "matplot/matplot.h"
 
 #include <fstream>
 
-namespace plt = sciplot;
+namespace plt = matplot;
 
 int main(int argc,char **argv)
 {
@@ -28,7 +28,7 @@ int main(int argc,char **argv)
     solution_out.open(output_file);
 
     // MRI antenna
-    vec_3_1 true_x;
+    vec_3_1 true_x,true_lla;
     true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
@@ -76,6 +76,11 @@ int main(int argc,char **argv)
     std::string sv_meas_line,sv_meas_word;
     std::vector<double> sv_measurements;
     std::vector<double> gps_time;
+
+    std::vector<double> lat_soln;
+    std::vector<double> lon_soln;
+    std::vector<double> alt_soln;
+
     std::vector<int> sv_id_vect;
     std::vector<int> valid_sv_id_vect;
     int sv_id;
@@ -158,31 +163,25 @@ int main(int argc,char **argv)
             ecef_pos = x_hat.block<3,1>(0,0);
 
             common.convertECEF2LLA(ecef_pos,lla_pos,fc);
+            
+            lat_soln.push_back(lla_pos[0]);
+            lon_soln.push_back(lla_pos[1]);
+            alt_soln.push_back(lla_pos[2]);
 
             sv_measurements.clear();
             valid_sv_id_vect.clear();
             
-            state_soln.conservativeResize(i+1,8); // is i not i+1 bc idx i = 0 is skipped
-            state_soln.block(i-1,0,1,8) = x_hat.transpose();
+            x_hat.setZero();
         }
                 
         i++;
     }
         
     solution_out.close();
-    std::cout<<state_soln<<std::endl;
-
-    /*
-    plt::Plot2D pos_plt;
-    pos_plt.palette("paired");
-    pos_plt.drawDots(state_soln.col(0),state_soln.col(1)).label("RCVR1 ECEF");
-    pos_plt.xlabel("X [m]");
-    pos_plt.ylabel("Y [m]");
-    plt::Figure pos_fig = {{pos_plt}};
-    pos_fig.title("ECEF Position");
-    plt::Canvas pos_cnvs = {{pos_fig}};
-    pos_cnvs.show();
-    */
+    
+    plt::plot3(lon_soln,lat_soln,alt_soln,"o");
+    plt::hold(plt::on);
+    plt::show();
 
     return 0;
 }
