@@ -34,7 +34,6 @@ namespace cpp_nav_filt
         {
             if(ephem_vect[i].sv == sv)
             {
-                std::cout<<ephem_vect[i].sv<<" "<<sv<<std::endl;
                 current_ephem_ = ephem_vect[i].ephem_map;
             }
         }

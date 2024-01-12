@@ -143,7 +143,7 @@ int main(int argc,char **argv)
 
         j = 0;
 
-        if(i==1)
+        if(i>0)
         {
             num_measurements = sv_measurements.size();
             num_svs = (sv_measurements.size())*0.5;
@@ -166,7 +166,7 @@ int main(int argc,char **argv)
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
             gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
             ecef_pos = x_hat.block<3,1>(0,0);
-            std::cout<<x_hat<<std::endl;
+
             common.convertECEF2LLA(ecef_pos,lla_pos,fc);
             
             lat_soln.push_back(lla_pos[0]);
@@ -184,11 +184,9 @@ int main(int argc,char **argv)
         
     solution_out.close();
     
-    /*
     plt::plot3(lon_soln,lat_soln,alt_soln,"o");
     plt::hold(plt::on);
     plt::show();
-    */
 
     return 0;
 }
