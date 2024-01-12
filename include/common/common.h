@@ -24,37 +24,11 @@ typedef Eigen::Matrix<double,8,1> vec_8_1;
 typedef Eigen::Matrix<double,32,1> vec_32_1;
 typedef Eigen::Matrix<double,4,4> mat_4_4;
 
-/*
-    Order of Ephemeris
-    IODE_sf1
-    IODE_sf2
-    gpsWeek
-    t_oe
-    A
-    deltaN
-    M_0
-    e
-    omega
-    C_uc
-    C_us
-    C_rc
-    C_rs
-    C_ic
-    C_is
-    i_0
-    iDot
-    omega_O
-    omegaDot
-    IODC
-    t_oc
-    T_GD
-    a_f0
-    a_f1
-    a_f2
-
-*/
-
-
+typedef struct
+{
+    std::map<std::string,double> ephem_map;
+    int sv;
+} SatEphemeris;
 
 namespace cpp_nav_filt
 {
@@ -79,10 +53,6 @@ namespace cpp_nav_filt
             Common();
             ~Common();
 
-            // Getter and Passer for Common
-            void receiveSvEphem(vec_1_27& ephem_in,const int& sv_in);
-            void sendSvEphem(vec_1_27& ephem_out,const int& desired_sv);
-
             void sendUnitVectors(vec_3_1& pos,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
             void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
 
@@ -93,9 +63,10 @@ namespace cpp_nav_filt
             void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions);
             // void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& )
 
+            std::vector<SatEphemeris> ephem_vect;
+
         private:
 
-            mat_32_27 sv_ephem; // matrix of satellite ephemeris
             vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv idx
 
             // Internal Variables

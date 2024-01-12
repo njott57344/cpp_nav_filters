@@ -6,29 +6,16 @@ namespace cpp_nav_filt
     {
         ones_32_1.setOnes();
 
-        sv_ephem.setZero();
-        sv_ephem.col(0) = NAN*ones_32_1;
-
         sv_state_.setZero();
 
         nanEphemerisMap();
+        ephem_vect.resize(32);
     }
 
     Common::~Common()
     {
 
     }    
-
-    void Common::receiveSvEphem(vec_1_27& ephem_in,const int& sv_in)
-    {
-        // std::cout<<ephem_in<<std::endl;
-        sv_ephem.block<1,27>(sv_in-1,0) = ephem_in;
-    }
-
-    void Common::sendSvEphem(vec_1_27& ephem_out,const int& desired_sv)
-    {
-        ephem_out = sv_ephem.block<1,27>(desired_sv-1,0);
-    }
 
     vec_7_1 Common::sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time)
     {
@@ -43,28 +30,14 @@ namespace cpp_nav_filt
 
     void Common::setCurrentEphem(const int& sv)
     {
-        vec_1_27 ephem_vec = sv_ephem.block<1,27>(sv-1,0);
-        current_ephem_["T_GD"]      = ephem_vec(23);
-        current_ephem_["t_oc"]      = ephem_vec(22);
-        current_ephem_["a_f2"]      = ephem_vec(26);
-        current_ephem_["a_f1"]      = ephem_vec(25);
-        current_ephem_["a_f0"]      = ephem_vec(24);
-        current_ephem_["C_rc"]      = ephem_vec(13);
-        current_ephem_["C_rs"]      = ephem_vec(14);
-        current_ephem_["C_uc"]      = ephem_vec(11);
-        current_ephem_["C_us"]      = ephem_vec(12);
-        current_ephem_["C_ic"]      = ephem_vec(15);
-        current_ephem_["C_is"]      = ephem_vec(16);
-        current_ephem_["Delta_n"]   = ephem_vec(7);
-        current_ephem_["M_0"]       = ephem_vec(8);
-        current_ephem_["e"]         = ephem_vec(9);
-        current_ephem_["A"]         = ephem_vec(6);
-        current_ephem_["t_oe"]      = ephem_vec(5);
-        current_ephem_["Omega_0"]   = ephem_vec(19);
-        current_ephem_["i_0"]       = ephem_vec(17);
-        current_ephem_["omega"]     = ephem_vec(10);
-        current_ephem_["dot_Omega"] = ephem_vec(20);
-        current_ephem_["I_dot"]     = ephem_vec(18);
+        for(int i = 0;i<ephem_vect.size();i++)
+        {
+            if(ephem_vect[i].sv == sv)
+            {
+                std::cout<<ephem_vect[i].sv<<" "<<sv<<std::endl;
+                current_ephem_ = ephem_vect[i].ephem_map;
+            }
+        }
     }
 
     void Common::calcSvPVStates(vec_7_1& sv_state)
@@ -73,7 +46,6 @@ namespace cpp_nav_filt
 
         // Making current ephemerides their own variables
         double T_GD      = current_ephem_.at("T_GD");
-        double t_oc      = current_ephem_.at("t_oc");
         double a_f2      = current_ephem_.at("a_f2");
         double a_f1      = current_ephem_.at("a_f1");
         double a_f0      = current_ephem_.at("a_f0");
@@ -83,17 +55,18 @@ namespace cpp_nav_filt
         double C_us      = current_ephem_.at("C_us");
         double C_ic      = current_ephem_.at("C_ic");
         double C_is      = current_ephem_.at("C_is");
-        double Delta_n   = current_ephem_.at("Delta_n");
+        double Delta_n   = current_ephem_.at("deltan");
         double M_0       = current_ephem_.at("M_0");
         double e         = current_ephem_.at("e");
-        double A         = current_ephem_.at("A");
+        double A         = pow(current_ephem_.at("A"),2);
         double t_oe      = current_ephem_.at("t_oe");
-        double Omega_0   = current_ephem_.at("Omega_0");
+        double Omega_0   = current_ephem_.at("omega_0");
         double i_0       = current_ephem_.at("i_0");
         double omega     = current_ephem_.at("omega");
-        double dot_Omega = current_ephem_.at("dot_Omega");
-        double I_dot     = current_ephem_.at("I_dot");
-                            
+        double dot_Omega = current_ephem_.at("omegaDot");
+        double t_oc      = current_ephem_.at("t_oc");
+        double I_dot     = current_ephem_.at("iDot");
+
         if(T_GD != NAN)
         {
 

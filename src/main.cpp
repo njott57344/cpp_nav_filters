@@ -19,8 +19,8 @@ int main(int argc,char **argv)
     std::ofstream solution_out;
 
     // strings of files
-    std::string ephem_file = "/home/njo0004/devel/cpp_nav_filters_data/class_ephem.csv";
-    std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/class_meas_data.csv";
+    std::string ephem_file = "/home/njo0004/devel/cpp_nav_filters_data/dynamic_ephem.csv";
+    std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/dynamic_measurements.csv";
     std::string output_file = "/home/njo0004/devel/cpp_nav_filters_data/output.csv";
 
     sv_ephem.open(ephem_file,std::ios::in);
@@ -35,36 +35,43 @@ int main(int argc,char **argv)
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;
+    std::vector<std::string> ephem_label_vect;
     std::vector<double> ephem_vect;
     double ephemeride;
 
     std::cout<<"Reading SV Ephemeris and Passing to Common"<<std::endl;
 
     int i = 0; // ctr
-    
+    int j = 0; // ctr 2
+
     vec_1_27 ephem_eigen_vect;
 
     while(std::getline(sv_ephem,ephem_line))
     {
         std::stringstream s(ephem_line);
-        // skip first line
 
-        if(i>0)
+        while(std::getline(s,ephem_word,','))
         {
-            // cast read string to a double vector
-            while(std::getline(s,ephem_word,','))
-            {                                
-                ephemeride = std::stod(ephem_word);
-                ephem_vect.push_back(ephemeride);
+            if(i == 0)
+            {
+                ephem_label_vect.push_back(ephem_word);
+                //std::cout<<ephem_word;
             }
-            
-            Eigen::Map<vec_1_27> temp(ephem_vect.data(),1,27);
-            ephem_eigen_vect = temp;
-            common.receiveSvEphem(ephem_eigen_vect,i);
-            ephem_vect.clear();
+            else
+            {
+                if(j == 0)
+                {   
+                    common.ephem_vect[i-1].sv = std::stoi(ephem_word);
+                }
+                else
+                {
+                    common.ephem_vect[i-1].ephem_map[ephem_label_vect[j]] = std::stod(ephem_word);
+                }
+                j++;
+            }
         }
-
         i++;
+        j = 0;
     }
     
     i = 0;
@@ -90,7 +97,7 @@ int main(int argc,char **argv)
     Eigen::MatrixXd H;
     Eigen::MatrixXd state_soln;
 
-    int j = 0;
+    j = 0;
 
     vec_8_1 x_hat;
     mat_4_4 DOP;
@@ -136,7 +143,7 @@ int main(int argc,char **argv)
 
         j = 0;
 
-        if(i>0)
+        if(i==1)
         {
             num_measurements = sv_measurements.size();
             num_svs = (sv_measurements.size())*0.5;
@@ -146,7 +153,6 @@ int main(int argc,char **argv)
             // resizing matrices
             meas_vect.resize(num_measurements,1);
             sv_states.resize(num_svs,7);
-
             meas_vect = temp.transpose();
 
             for(int j = 0;j<num_svs;j++)
@@ -159,9 +165,8 @@ int main(int argc,char **argv)
 
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
             gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
-
             ecef_pos = x_hat.block<3,1>(0,0);
-
+            std::cout<<x_hat<<std::endl;
             common.convertECEF2LLA(ecef_pos,lla_pos,fc);
             
             lat_soln.push_back(lla_pos[0]);
@@ -179,9 +184,11 @@ int main(int argc,char **argv)
         
     solution_out.close();
     
+    /*
     plt::plot3(lon_soln,lat_soln,alt_soln,"o");
     plt::hold(plt::on);
     plt::show();
+    */
 
     return 0;
 }
