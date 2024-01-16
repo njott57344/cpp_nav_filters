@@ -1,7 +1,7 @@
 # Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
 # file Copyright.txt or https://cmake.org/licensing for details.
 
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 3.16.3)
 
 # We name the project and the target for the ExternalProject_Add() call
 # to something that will highlight to the user what we are working on if
@@ -9,21 +9,11 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(matplotplusplus-populate NONE)
 
-
-# Pass through things we've already detected in the main project to avoid
-# paying the cost of redetecting them again in ExternalProject_Add()
-set(GIT_EXECUTABLE [==[/usr/bin/git]==])
-set(GIT_VERSION_STRING [==[2.34.1]==])
-set_property(GLOBAL PROPERTY _CMAKE_FindGit_GIT_EXECUTABLE_VERSION
-  [==[/usr/bin/git;2.34.1]==]
-)
-
-
 include(ExternalProject)
 ExternalProject_Add(matplotplusplus-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/alandefreitas/matplotplusplus" "GIT_TAG" "origin/master"
-                    SOURCE_DIR          "/home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-src"
-                    BINARY_DIR          "/home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-build"
+                    SOURCE_DIR          "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src"
+                    BINARY_DIR          "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""
@@ -31,5 +21,3 @@ ExternalProject_Add(matplotplusplus-populate
                     USES_TERMINAL_DOWNLOAD  YES
                     USES_TERMINAL_UPDATE    YES
 )
-
-

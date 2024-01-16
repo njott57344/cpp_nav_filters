@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/common/common.h
+eigen3/Eigen/Core
+../include/common/eigen3/Eigen/Core
+eigen3/Eigen/Dense
+../include/common/eigen3/Eigen/Dense
+iostream
+-
+cmath
+-
+vector
+-
+map
+-
+frame_conversions/frame_conversions.h
+../include/common/frame_conversions/frame_conversions.h
+
+../include/frame_conversions/frame_conversions.h
+iostream
+-
+math.h
+-
+
+../include/gps_least_squares/gps_least_squares.h
+common/common.h
+../include/gps_least_squares/common/common.h
+
+/home/njo0004/devel/cpp_nav_filters/src/common.cpp
+common/common.h
+/home/njo0004/devel/cpp_nav_filters/src/common/common.h
+
+/home/njo0004/devel/cpp_nav_filters/src/frame_conversions.cpp
+frame_conversions/frame_conversions.h
+/home/njo0004/devel/cpp_nav_filters/src/frame_conversions/frame_conversions.h
+
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp
+gps_least_squares/gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
+

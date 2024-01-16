@@ -1,4 +1,4 @@
-# Install script for directory: /home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source/matplot
+# Install script for directory: /home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source/matplot
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -37,12 +37,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set default install directory permissions.
-if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
-endif()
-
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/matplot/detail" TYPE FILE FILES "/home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-build/source/matplot/matplot/detail/exports.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/matplot/detail" TYPE FILE FILES "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-build/source/matplot/matplot/detail/exports.h")
 endif()
 

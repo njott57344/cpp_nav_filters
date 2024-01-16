@@ -1,4 +1,4 @@
-# Install script for directory: /home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild
+# Install script for directory: /home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-subbuild/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
