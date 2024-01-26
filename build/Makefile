@@ -289,6 +289,33 @@ src/gps_least_squares.cpp.s:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.s
 .PHONY : src/gps_least_squares.cpp.s
 
+src/lc_ins.o: src/lc_ins.cpp.o
+
+.PHONY : src/lc_ins.o
+
+# target to build an object file
+src/lc_ins.cpp.o:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o
+.PHONY : src/lc_ins.cpp.o
+
+src/lc_ins.i: src/lc_ins.cpp.i
+
+.PHONY : src/lc_ins.i
+
+# target to preprocess a source file
+src/lc_ins.cpp.i:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.i
+.PHONY : src/lc_ins.cpp.i
+
+src/lc_ins.s: src/lc_ins.cpp.s
+
+.PHONY : src/lc_ins.s
+
+# target to generate assembly for a file
+src/lc_ins.cpp.s:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.s
+.PHONY : src/lc_ins.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -341,6 +368,9 @@ help:
 	@echo "... src/gps_least_squares.o"
 	@echo "... src/gps_least_squares.i"
 	@echo "... src/gps_least_squares.s"
+	@echo "... src/lc_ins.o"
+	@echo "... src/lc_ins.i"
+	@echo "... src/lc_ins.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

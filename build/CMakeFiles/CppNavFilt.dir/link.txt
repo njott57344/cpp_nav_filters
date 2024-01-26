@@ -1,2 +1,2 @@
-/usr/bin/ar qc libCppNavFilt.a  CMakeFiles/CppNavFilt.dir/src/common.cpp.o CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o
+/usr/bin/ar qc libCppNavFilt.a  CMakeFiles/CppNavFilt.dir/src/common.cpp.o CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o
 /usr/bin/ranlib libCppNavFilt.a

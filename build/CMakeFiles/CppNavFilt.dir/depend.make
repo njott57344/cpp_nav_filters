@@ -13,3 +13,8 @@ CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o: ../include/frame_conversi
 CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o: ../include/gps_least_squares/gps_least_squares.h
 CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o: ../src/gps_least_squares.cpp
 
+CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o: ../include/common/common.h
+CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o: ../include/frame_conversions/frame_conversions.h
+CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o: ../include/lc_ins/lc_ins.h
+CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o: ../src/lc_ins.cpp
+

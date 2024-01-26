@@ -13,3 +13,8 @@ CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o
  ../include/frame_conversions/frame_conversions.h
  ../include/gps_least_squares/gps_least_squares.h
  /home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp
+CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o
+ ../include/common/common.h
+ ../include/frame_conversions/frame_conversions.h
+ ../include/lc_ins/lc_ins.h
+ /home/njo0004/devel/cpp_nav_filters/src/lc_ins.cpp

@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME}
     src/common.cpp
     src/gps_least_squares.cpp
     src/frame_conversions.cpp
+    src/lc_ins.cpp
 )
 
 add_executable(SvPvtTest

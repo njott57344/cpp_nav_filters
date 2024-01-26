@@ -24,6 +24,8 @@ typedef Eigen::Matrix<double,8,1> vec_8_1;
 typedef Eigen::Matrix<double,32,1> vec_32_1;
 typedef Eigen::Matrix<double,4,4> mat_4_4;
 typedef Eigen::Matrix<double,3,3> mat_3_3;
+typedef Eigen::Matrix<double,15,1> vec_15_1;
+typedef Eigen::Matrix<double,15,15> mat_15_15;
 
 typedef struct
 {
