@@ -10,6 +10,14 @@ namespace cpp_nav_filt
 
         nanEphemerisMap();
         ephem_vect.resize(32);
+
+        C_ned_enu.setZero();
+        C_ned_enu(0,1) = 1;
+        C_ned_enu(1,0) = 1;
+        C_ned_enu(2,2) = -1;
+        
+        C_enu_ned = C_ned_enu.transpose();
+
     }
 
     Common::~Common()
@@ -286,17 +294,81 @@ namespace cpp_nav_filt
 
     //========= Frame Conversions ==========//
 
-    void Common::convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions)
+    void Common::setRefLla(vec_3_1& lla_in)
+    {
+        eigen2array(lla_pos_,lla_in);
+        fc.updateReferenceLLA(lla_pos_);
+    }
+
+    void Common::convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos)
     {
         eigen2array(ecef_pos_,ecef_pos);
-        frame_conversions.xyz2lla(lla_pos_,ecef_pos_);
+        fc.xyz2lla(lla_pos_,ecef_pos_);
         array2eigen(lla_pos,lla_pos_);
     }
 
-    void Common::convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions)
+    void Common::convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos)
     {
         eigen2array(lla_pos_,lla_pos);
-        frame_conversions.lla2xyz(ecef_pos_,lla_pos_);
+        fc.lla2xyz(ecef_pos_,lla_pos_);
+        array2eigen(ecef_pos,ecef_pos_);
+    }
+
+    void Common::convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& ned_pos,vec_3_1& ref_lla)
+    {
+        eigen2array(ecef_pos_,ecef_pos);
+        eigen2array(ned_pos_,ned_pos);
+        eigen2array(lla_pos_,ref_lla);
+
+        fc.updateReferenceLLA(lla_pos_);
+        fc.xyz2ned(ned_pos_,ecef_pos_);
+
+        array2eigen(ned_pos,ned_pos_);
+    }
+
+    void Common::convertNED2ECEF(vec_3_1& ned_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla)
+    {
+        eigen2array(ned_pos_,ned_pos);
+        eigen2array(lla_pos_,ref_lla);
+        eigen2array(ecef_pos_,ecef_pos);
+
+        fc.updateReferenceLLA(lla_pos_);
+        fc.ned2xyz(ecef_pos_,ned_pos_);
+
+        array2eigen(ecef_pos,ecef_pos_);
+    }
+
+    void Common::convertNED2ENU(vec_3_1& ned_pos,vec_3_1& enu_pos)
+    {
+        enu_pos = C_ned_enu*ned_pos;
+    }
+
+    void Common::convertENU2NED(vec_3_1& enu_pos,vec_3_1& ned_pos)
+    {
+        ned_pos = C_enu_ned*enu_pos;
+    }
+
+    void Common::convertECEF2ENU(vec_3_1& ecef_pos,vec_3_1& enu_pos,vec_3_1& ref_lla)
+    {
+        eigen2array(ecef_pos_,ecef_pos);
+        eigen2array(enu_pos_,enu_pos);
+        eigen2array(lla_pos_,ref_lla);
+
+        fc.updateReferenceLLA(lla_pos_);
+        fc.xyz2enu(enu_pos_,ecef_pos_);
+
+        array2eigen(enu_pos,enu_pos_);
+    }
+
+    void Common::convertENU2ECEF(vec_3_1& enu_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla)
+    {
+        eigen2array(ecef_pos_,ecef_pos);
+        eigen2array(enu_pos_,enu_pos);
+        eigen2array(lla_pos_,ref_lla);
+
+        fc.updateReferenceLLA(lla_pos_);
+        fc.enu2xyz(ecef_pos_,enu_pos_);
+
         array2eigen(ecef_pos,ecef_pos_);
     }
 

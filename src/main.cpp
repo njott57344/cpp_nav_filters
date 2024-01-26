@@ -9,9 +9,10 @@ namespace plt = matplot;
 int main(int argc,char **argv)
 {
     cpp_nav_filt::Common common;
-    cpp_nav_filt::GpsLeastSquares gps_least_squares;
-    WgsConversions fc; // frame conversions
-
+    cpp_nav_filt::GpsLeastSquaresSettings LeastSquaresSettings;
+    LeastSquaresSettings.weight_w_el_angle = false;
+    cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
+    
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
     std::fstream sv_meas;
@@ -167,7 +168,7 @@ int main(int argc,char **argv)
             gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
             ecef_pos = x_hat.block<3,1>(0,0);
 
-            common.convertECEF2LLA(ecef_pos,lla_pos,fc);
+            common.convertECEF2LLA(ecef_pos,lla_pos);
             
             lat_soln.push_back(lla_pos[0]);
             lon_soln.push_back(lla_pos[1]);

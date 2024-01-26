@@ -3,8 +3,9 @@
 namespace cpp_nav_filt
 {
 
-    GpsLeastSquares::GpsLeastSquares()
+    GpsLeastSquares::GpsLeastSquares(GpsLeastSquaresSettings& settings_in)
     {
+        ls_settings_ = settings_in;
         ones_8_1.setOnes();
     }
 
@@ -61,9 +62,17 @@ namespace cpp_nav_filt
                 // std::cout<<deltaY_<<std::endl<<std::endl;
     
                 // std::cout<<Yhat_<<std::endl;
-    
-                delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
-    
+
+                if(!ls_settings_.weight_w_el_angle)
+                {
+                    delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
+                }
+                else
+                {
+                    R_.resize(num_measurements_,num_measurements_);
+                    
+                }
+
                 x_ = x_ + delta_x_;
                 
                 pos_ = x_.block(0,0,3,1);

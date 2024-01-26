@@ -5,17 +5,26 @@
 
 namespace cpp_nav_filt
 {
+    typedef struct
+    {
+        bool weight_w_el_angle;
+    }GpsLeastSquaresSettings;
+
     class GpsLeastSquares
     {
         public:
             
-            GpsLeastSquares();
+
+
+            GpsLeastSquares(GpsLeastSquaresSettings& settings_in);
             ~GpsLeastSquares();
 
             void sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,Common& common,vec_8_1& X);
             void sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,Common& common,mat_4_4& DOP);
 
         private:
+
+            GpsLeastSquaresSettings ls_settings_;
 
             // internal variables
             vec_3_1 pos_;
@@ -30,6 +39,8 @@ namespace cpp_nav_filt
             Eigen::MatrixXd Yhat_;
             Eigen::MatrixXd deltaY_;
             Eigen::MatrixXd G_; // Unit Vectors
+            Eigen::MatrixXd R_; // weighting matrix
+            
             vec_8_1 delta_x_; // update to state estimate (error state)
 
             vec_8_1 ones_8_1;

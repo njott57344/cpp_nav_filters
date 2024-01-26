@@ -23,6 +23,7 @@ typedef Eigen::Matrix<double,4,1> vec_4_1;
 typedef Eigen::Matrix<double,8,1> vec_8_1;
 typedef Eigen::Matrix<double,32,1> vec_32_1;
 typedef Eigen::Matrix<double,4,4> mat_4_4;
+typedef Eigen::Matrix<double,3,3> mat_3_3;
 
 typedef struct
 {
@@ -32,7 +33,6 @@ typedef struct
 
 namespace cpp_nav_filt
 {
-
     // GPS Constants
     const double gps_pi = M_PI; // PI
     const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
@@ -55,17 +55,33 @@ namespace cpp_nav_filt
 
             void sendUnitVectors(vec_3_1& pos,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
             void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
-
+            void sendElWeightingMatrix(Eigen::MatrixXd& SvPVT,vec_8_1& x_hat,Eigen::MatrixXd& R);
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
             // Frame Conversion Functions
-            void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos,WgsConversions& frame_conversions);
-            void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos,WgsConversions& frame_conversions);
-            // void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& )
+
+            // ecef to/from lla
+            void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos);
+            void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos);
+            
+            // ecef to/from ned
+            void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& ned_pos,vec_3_1& ref_lla);
+            void convertNED2ECEF(vec_3_1& ned_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla);
+            
+            // enu to/from ned
+            void convertNED2ENU(vec_3_1& ned_pos,vec_3_1& enu_pos);
+            void convertENU2NED(vec_3_1& enu_pos,vec_3_1& ned_pos);
+
+            // ecef to/from enu
+            void convertECEF2ENU(vec_3_1& ecef_pos,vec_3_1& enu_pos,vec_3_1& ref_lla);
+            void convertENU2ECEF(vec_3_1& enu_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla);
 
             std::vector<SatEphemeris> ephem_vect;
 
+            void setRefLla(vec_3_1& lla_in);
         private:
+
+            WgsConversions fc;
 
             vec_7_1 sv_state_; // is the pos and vel of a satellite we care about given by sv idx
 
@@ -85,10 +101,15 @@ namespace cpp_nav_filt
             Eigen::MatrixXd Yhat_;
             Eigen::MatrixXd sv_pvt_;
             Eigen::MatrixXd H_;
+            Eigen::MatrixXd R_;
+
             vec_3_1 pos_; // [Position;clk;Velocity;clk drift]
             vec_3_1 vel_;
             double clk_;
             double clk_drift_;
+            
+            mat_3_3 C_ned_enu; // rotation NED to ENU
+            mat_3_3 C_enu_ned; // rotation ENU to NED
 
             vec_32_1 ones_32_1;
 
@@ -98,6 +119,8 @@ namespace cpp_nav_filt
             // Temporary Variables for doing the frame conversions
             double ecef_pos_[3];
             double lla_pos_[3];
+            double ned_pos_[3];
+            double enu_pos_[3];
 
             // Internal Functions
             void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
@@ -109,7 +132,7 @@ namespace cpp_nav_filt
             void calcPsrRate(double sv_id);
             void calcMeasEst();
             void nanEphemerisMap();
-            
+            void calcElAngle();
             void eigen2array(double array[3],vec_3_1& eigen);
             void array2eigen(vec_3_1& eigen,double array[3]);
 
