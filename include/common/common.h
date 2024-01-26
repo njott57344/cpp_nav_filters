@@ -42,7 +42,10 @@ namespace cpp_nav_filt
     const double F = -4.442807633*pow(10,-10);
     const int half_week = 302400; // [s]
     const double c = 299792458.0; // [m/s] speed of light
-    
+    const double J2 = 1.082627*pow(1,-3); // J2 gravity constant (from Groves p. 72);
+    const double mu_g = 3.986004418*pow(1,14); // Earth gravity constant (from Goves p. 71)
+    const double Ro = 6378137.0; // WGS84 equatorial radius [m]
+        
     // Frequency Constant
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);

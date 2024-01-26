@@ -38,7 +38,9 @@ namespace cpp_nav_filt
 
             void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double t);
             void setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P);
-            void setInitialVelState(vec_3_1& vel_init);
+            void setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P);
+
+            void getPositionSoln(vec_3_1& pos);
 
         private:
             
@@ -56,6 +58,7 @@ namespace cpp_nav_filt
             
             vec_3_1 fb_b_; // body frame specific force in body frame
             vec_3_1 fb_n_; // body frame specific force in nav frame
+            vec_3_1 gamma_b_n_; // gravity acting on body in nav frame
 
             vec_3_1 wb_b_; // body frame angular rate in body frame
             vec_3_1 wb_n_; // body frame angular rate in nav frame
@@ -67,7 +70,8 @@ namespace cpp_nav_filt
             vec_3_1 vel_; // ECEF GPS velocity solution
 
             void mechanizeSolution();
-
+            void somiglianaGravityModel(vec_3_1& gamma_b_n); // see groves p. 72
+            
         protected:
 
 
