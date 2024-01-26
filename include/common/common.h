@@ -55,7 +55,7 @@ namespace cpp_nav_filt
 
             void sendUnitVectors(vec_3_1& pos,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
             void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
-            void sendElWeightingMatrix(Eigen::MatrixXd& SvPVT,vec_8_1& x_hat,Eigen::MatrixXd& R);
+            void sendElAngles(Eigen::MatrixXd& SvPVT,vec_3_1& pos,Eigen::MatrixXd& el_angles);
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
             // Frame Conversion Functions
@@ -79,6 +79,7 @@ namespace cpp_nav_filt
             std::vector<SatEphemeris> ephem_vect;
 
             void setRefLla(vec_3_1& lla_in);
+
         private:
 
             WgsConversions fc;
@@ -101,9 +102,9 @@ namespace cpp_nav_filt
             Eigen::MatrixXd Yhat_;
             Eigen::MatrixXd sv_pvt_;
             Eigen::MatrixXd H_;
-            Eigen::MatrixXd R_;
+            Eigen::MatrixXd el_angles_;
 
-            vec_3_1 pos_; // [Position;clk;Velocity;clk drift]
+            vec_3_1 pos_;
             vec_3_1 vel_;
             double clk_;
             double clk_drift_;
@@ -112,6 +113,7 @@ namespace cpp_nav_filt
             mat_3_3 C_enu_ned; // rotation ENU to NED
 
             vec_32_1 ones_32_1;
+            vec_3_1 ones_3_1;
 
             // Ephemeris std::map
             std::map<std::string,double> current_ephem_;

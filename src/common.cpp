@@ -5,6 +5,7 @@ namespace cpp_nav_filt
     Common::Common()
     {
         ones_32_1.setOnes();
+        ones_3_1.setOnes();
 
         sv_state_.setZero();
 
@@ -36,6 +37,7 @@ namespace cpp_nav_filt
         return sv_state_;
     }
 
+    // ============= SV Ephemeris and SV PVT State Calc ============= //
     void Common::setCurrentEphem(const int& sv)
     {
         for(int i = 0;i<ephem_vect.size();i++)
@@ -201,6 +203,8 @@ namespace cpp_nav_filt
         current_ephem_["I_dot"]     = NAN;
     }
 
+    // ================= Unit Vectors and Measurement Estimates ============ //
+
     void Common::sendUnitVectors(vec_3_1& X_hat,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H)
     {
         // sending position states to state estimate
@@ -290,6 +294,42 @@ namespace cpp_nav_filt
         u = H_.block<1,3>(sv_id,0);
         
         psr_rate_hat = (-u.dot(relative_velocity)) + clk_drift_;
+    }
+    // ======== Weighting Matrices for GPS Least Squares ====== //
+
+    void Common::sendElAngles(Eigen::MatrixXd& SvPVT,vec_3_1& pos,Eigen::MatrixXd& el_angles)
+    {
+        num_sv_ = SvPVT.rows();
+
+        sv_pvt_.resize(num_sv_,7);
+        el_angles_.resize(num_sv_,1);
+        pos_ = pos;
+
+        calcElAngle();
+
+        el_angles = el_angles_;
+    }
+
+    void Common::calcElAngle()
+    {
+        double dx,dy,dz;
+        double numerator,denominator; 
+        double el_angle;
+
+        for(int i = 0;i<num_sv_;i++)
+        {
+            dx = sv_pvt_(i,0) - pos_[0];
+            dy = sv_pvt_(i,1) - pos_[1];
+            dz = sv_pvt_(i,2) - pos_[2];
+
+            numerator = pos_[0]*dx + pos_[1]*dy + pos_[2]*dz;
+            denominator = (pow(pos_[0],2) + pow(pos_[1],2) + pow(pos_[2],2))*(pow(dx,2)+pow(dy,2)+pow(dz,2));
+            denominator = sqrt(denominator);
+
+            el_angle = cpp_nav_filt::gps_pi*0.5 - std::acos(numerator/denominator);
+
+            el_angles_(i,0) = el_angle;
+        }
     }
 
     //========= Frame Conversions ==========//

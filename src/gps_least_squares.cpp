@@ -63,14 +63,13 @@ namespace cpp_nav_filt
     
                 // std::cout<<Yhat_<<std::endl;
 
-                if(!ls_settings_.weight_w_el_angle)
+                if(!ls_settings_.weighted_least_squares)
                 {
                     delta_x_ = ((H_.transpose()*H_).inverse())*H_.transpose()*deltaY_;
                 }
                 else
                 {
-                    R_.resize(num_measurements_,num_measurements_);
-                    
+
                 }
 
                 x_ = x_ + delta_x_;

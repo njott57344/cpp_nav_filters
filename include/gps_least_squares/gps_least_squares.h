@@ -7,7 +7,7 @@ namespace cpp_nav_filt
 {
     typedef struct
     {
-        bool weight_w_el_angle;
+        bool weighted_least_squares;
     }GpsLeastSquaresSettings;
 
     class GpsLeastSquares
@@ -40,7 +40,7 @@ namespace cpp_nav_filt
             Eigen::MatrixXd deltaY_;
             Eigen::MatrixXd G_; // Unit Vectors
             Eigen::MatrixXd R_; // weighting matrix
-            
+
             vec_8_1 delta_x_; // update to state estimate (error state)
 
             vec_8_1 ones_8_1;

@@ -10,7 +10,7 @@ int main(int argc,char **argv)
 {
     cpp_nav_filt::Common common;
     cpp_nav_filt::GpsLeastSquaresSettings LeastSquaresSettings;
-    LeastSquaresSettings.weight_w_el_angle = false;
+    LeastSquaresSettings.weighted_least_squares = false;
     cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
     
     // pointers for file handlers sv ephem and measurements
@@ -169,7 +169,7 @@ int main(int argc,char **argv)
             ecef_pos = x_hat.block<3,1>(0,0);
 
             common.convertECEF2LLA(ecef_pos,lla_pos);
-            
+
             lat_soln.push_back(lla_pos[0]);
             lon_soln.push_back(lla_pos[1]);
             alt_soln.push_back(lla_pos[2]);
@@ -185,7 +185,8 @@ int main(int argc,char **argv)
         
     solution_out.close();
     
-    plt::plot3(lon_soln,lat_soln,alt_soln,"o");
+    plt::geoplot(lat_soln,lon_soln,"*");
+    plt::geolimits({32.5667,32.6167},{-85.4750,-85.5083}); // geolimits for auburn al
     plt::hold(plt::on);
     plt::show();
 
