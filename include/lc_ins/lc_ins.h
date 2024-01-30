@@ -36,18 +36,27 @@ namespace cpp_nav_filt
             LooselyCoupledIns();
             ~LooselyCoupledIns();
 
-            void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double t);
+            void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t);
+
             void setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P);
             void setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P);
+            void setInitialAttState(vec_3_1& att_init,mat_3_3& att_P);
+            void setInitialTime(double& init_time);
+            void setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P);
+            void setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P);
 
             void getPositionSoln(vec_3_1& pos);
-
+            
         private:
             
             bool filt_init_; // boolean to check if filter has initial full state estimate
             bool pos_init_;
             bool vel_init_;
-            
+            bool att_init_;
+            bool time_init_;
+            bool bg_init_;
+            bool ba_init_;
+
             /*
                 X => [dx,dy,dx,x,y,z,roll,pitch,yaw,bgx,bgy,bgz,bax,bay,baz]^T
             */
@@ -69,8 +78,11 @@ namespace cpp_nav_filt
             vec_3_1 pos_; // ECEF GPS position solution
             vec_3_1 vel_; // ECEF GPS velocity solution
 
+            double time_;
+            double dt_;
+
             void mechanizeSolution();
-            void somiglianaGravityModel(vec_3_1& gamma_b_n); // see groves p. 72
+            void checkInitStatus();
             
         protected:
 

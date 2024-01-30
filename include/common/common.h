@@ -85,6 +85,10 @@ namespace cpp_nav_filt
 
             void setRefLla(vec_3_1& lla_in);
 
+            void eul2Rotm(vec_3_1& euler_angles,mat_3_3& C);
+
+            void somiglianaGravityModel(vec_3_1& pos,vec_3_1& gamma_b_n); // see groves p. 72
+
         private:
 
             WgsConversions fc;
@@ -116,6 +120,7 @@ namespace cpp_nav_filt
             
             mat_3_3 C_ned_enu; // rotation NED to ENU
             mat_3_3 C_enu_ned; // rotation ENU to NED
+            mat_3_3 C_x,C_y,C_z;
 
             vec_32_1 ones_32_1;
             vec_3_1 ones_3_1;

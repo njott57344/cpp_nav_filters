@@ -19,6 +19,14 @@ namespace cpp_nav_filt
         
         C_enu_ned = C_ned_enu.transpose();
 
+        C_x.setZero();
+        C_x(0,0) = 1;
+
+        C_y.setZero();
+        C_y(1,1) = 1;
+
+        C_z.setZero();
+        C_z(2,2) = 1;
     }
 
     Common::~Common()
@@ -295,6 +303,47 @@ namespace cpp_nav_filt
         
         psr_rate_hat = (-u.dot(relative_velocity)) + clk_drift_;
     }
+
+    // ======== Auxillary Functions for General Navigation ==== //
+
+    void Common::eul2Rotm(vec_3_1& euler_angles,mat_3_3& C)
+    {
+        // assumes euler angels are ordered roll pitch yaw
+        C_x(1,1) = cos(euler_angles[0]);
+        C_x(1,2) = sin(euler_angles[0]);
+        C_x(2,1) = -sin(euler_angles[0]);
+        C_x(2,2) = cos(euler_angles[0]);
+        
+        C_y(0,0) = cos(euler_angles[1]);
+        C_y(0,2) = -sin(euler_angles[1]);
+        C_y(2,0) = sin(euler_angles[1]);
+        C_y(2,2) = cos(euler_angles[1]);
+
+        C_z(0,0) = cos(euler_angles[2]);
+        C_z(0,1) = sin(euler_angles[2]);
+        C_z(1,0) = -sin(euler_angles[2]);
+        C_z(1,1) = cos(euler_angles[2]);
+
+        C = C_x*C_y*C_z;
+    }
+
+    void Common::somiglianaGravityModel(vec_3_1& pos,vec_3_1& gamma_b_n)
+    {   
+        vec_3_1 inner;
+        double term_x,term_y,term_z,common_term;
+    
+        common_term = 5*pow((pos[2]/pos.norm()),2);
+        term_x = 1-common_term*pos[0];
+        term_y = 1-common_term*pos[1];
+        term_z = 1-common_term*pos[2];
+
+        inner<<term_x,term_y,term_z;
+
+        inner = (1.5*cpp_nav_filt::J2*pow(cpp_nav_filt::Ro,2)/(pow(pos.norm(),2)))*inner;
+        inner = pos + inner;
+        gamma_b_n = -(cpp_nav_filt::mu_g/pow(pos.norm(),3))*inner;
+    }
+
     // ======== Weighting Matrices for GPS Least Squares ====== //
 
     void Common::sendElAngles(Eigen::MatrixXd& SvPVT,vec_3_1& pos,Eigen::MatrixXd& el_angles)

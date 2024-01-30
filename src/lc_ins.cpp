@@ -20,17 +20,27 @@ namespace cpp_nav_filt
         std::cout<<"Loosely Coupled INS Shuting Down!"<<std::endl;
     }
 
+    // =============== Getters ============ //
     void LooselyCoupledIns::getPositionSoln(vec_3_1& pos)
     {
         pos = x_hat_.block<3,1>(3,0);
     }
 
+    void LooselyCoupledIns::getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t)
+    {
+        wb_b_ = ar;
+        fb_b_ = f;
+
+        dt_ = t - time_;
+        time_ = t;
+    }
+
+    // =============== Init =============== //
     void LooselyCoupledIns::setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P)
     {
         x_hat_.block<3,1>(3,0) = pos_init;
         P_hat_.block<3,3>(3,3) = pos_P;
         pos_init_ = true;
-        filt_init_ = pos_init_&&vel_init_; // true if pos and vel have been initialized
     }
 
     void LooselyCoupledIns::setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P)
@@ -38,30 +48,48 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(0,0) = vel_init;
         P_hat_.block<3,3>(0,0) = vel_P;
         vel_init_ = true;
-        filt_init_ = pos_init_&&vel_init_; // true if pos and vel have been initialized
     }
 
+    void LooselyCoupledIns::setInitialAttState(vec_3_1& att_init,mat_3_3& att_P)
+    {
+        x_hat_.block<3,1>(6,0) = att_init;
+        P_hat_.block<3,3>(6,6) = att_P;
+        att_init_ = true;
+    }
+
+    void LooselyCoupledIns::setInitialTime(double& init_time)
+    {
+        time_ = init_time;
+        time_init_ = true;
+    }
+
+    void LooselyCoupledIns::setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P)
+    {
+        x_hat_.block<3,1>(9,0) = bg_init;
+        P_hat_.block<3,3>(9,9) = bg_P;
+        bg_init_ = true;
+    }
+
+    void LooselyCoupledIns::setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P)
+    {
+        x_hat_.block<3,1>(12,0) = ba_init;
+        P_hat_.block<3,3>(12,12) = ba_P;
+        ba_init_ = true;
+    }
+
+    // =============== Loose INS ============== //
     void LooselyCoupledIns::mechanizeSolution()
     {
+        // propagate full state
+        if(filt_init_)
+        {
 
+        }
     }
 
-    void LooselyCoupledIns::somiglianaGravityModel(vec_3_1& gamma_b_n)
-    {   
-        vec_3_1 pos,inner;
-        double term_x,term_y,term_z,common_term;
-        getPositionSoln(pos);
-
-        common_term = 5*pow((pos[2]/pos.norm()),2);
-        term_x = 1-common_term*pos[0];
-        term_y = 1-common_term*pos[1];
-        term_z = 1-common_term*pos[2];
-
-        inner<<term_x,term_y,term_z;
-
-        inner = (1.5*cpp_nav_filt::J2*pow(cpp_nav_filt::Ro,2)/(pow(pos.norm(),2)))*inner;
-        inner = pos + inner;
-        gamma_b_n = -(cpp_nav_filt::mu_g/pow(pos.norm(),3))*inner;
+    void LooselyCoupledIns::checkInitStatus()
+    {
+        filt_init_ = pos_init_&&vel_init_&&att_init_&&time_init_&&bg_init_&&ba_init_;
     }
 
 } // end of namespace
