@@ -1,5 +1,7 @@
 #include "common/common.h"
 #include "gps_least_squares/gps_least_squares.h"
+#include "lc_ins/lc_ins.h"
+
 #include "matplot/matplot.h"
 
 #include <fstream>
@@ -12,7 +14,8 @@ int main(int argc,char **argv)
     cpp_nav_filt::GpsLeastSquaresSettings LeastSquaresSettings;
     LeastSquaresSettings.weighted_least_squares = false;
     cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
-    
+    cpp_nav_filt::LooselyCoupledIns ins;
+
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
     std::fstream sv_meas;

@@ -45,9 +45,11 @@ namespace cpp_nav_filt
             void setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P);
             void setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P);
 
+            void setCommonClass(Common& common);
+
         private:
             
-            Common common;
+            Common common_;
 
             bool filt_init_; // boolean to check if filter has initial full state estimate
             bool pos_init_;

@@ -27,6 +27,10 @@ namespace cpp_nav_filt
 
         C_z.setZero();
         C_z(2,2) = 1;
+
+        num_fb_b_meas_ = 0;
+        fb_b_.setZero();
+        var_.setZero();
     }
 
     Common::~Common()
@@ -302,6 +306,57 @@ namespace cpp_nav_filt
         u = H_.block<1,3>(sv_id,0);
         
         psr_rate_hat = (-u.dot(relative_velocity)) + clk_drift_;
+    }
+
+    // ======== INS Attitude Init ============================= //
+    bool Common::levelInsAccel(vec_3_1& fb_b) 
+    {  
+        // INS Accelerometer Levelling [groves p. 198]
+
+        /*
+            due to noise in specific force measurements, in order to compute an accurate initial roll/pitch,
+            averaging specific force measurements together will be done to filter out noise in accelerometer
+
+            NOTE:
+            1) This assumes vehicle is static during levelling process
+            2) No bias compensation will be done on these specific force measurements, so it is necessary
+            to assume that biases do not change over the initialization period
+        */
+
+       num_fb_b_meas_++;
+       fb_b_.conservativeResize(num_fb_b_meas_,3);
+       fb_b_.block<1,3>(num_fb_b_meas_-1,0) = fb_b.transpose();
+       samp_mean_ = fb_b_.colwise().mean(); // sample mean of accelerometer measurements
+       
+       old_var_ = var_;
+       var_.setZero();
+
+       for(int i = 0;i<num_fb_b_meas_;i++)
+       {
+        var_[0] = var_[0] + pow((fb_b_(i,0) - samp_mean_[0]),2);
+        var_[1] = var_[1] + pow((fb_b_(i,1) - samp_mean_[1]),2);
+        var_[2] = var_[2] + pow((fb_b_(i,2) - samp_mean_[2]),2);
+       }
+
+        var_ = (1/num_fb_b_meas_)*var_;
+        d_var_ = var_ - old_var_;
+
+        if(sqrt(d_var_[0])<0.01 && sqrt(d_var_[1])<0.01 && sqrt(d_var_[2])<0.01)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    void Common::initRPfromAccel(vec_3_1& att)
+    {
+        samp_mean_ = fb_b_.colwise().mean();
+
+        att[0] = std::atan2(-samp_mean_[1],-samp_mean_[0]);
+        att[1] = std::atan(samp_mean_[0]/sqrt(pow(samp_mean_[1],2) + pow(samp_mean_[2],2)));
     }
 
     // ======== Auxillary Functions for General Navigation ==== //

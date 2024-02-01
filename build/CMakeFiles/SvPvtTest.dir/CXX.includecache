@@ -32,11 +32,17 @@ math.h
 common/common.h
 ../include/gps_least_squares/common/common.h
 
+../include/lc_ins/lc_ins.h
+common/common.h
+../include/lc_ins/common/common.h
+
 /home/njo0004/devel/cpp_nav_filters/src/main.cpp
 common/common.h
 /home/njo0004/devel/cpp_nav_filters/src/common/common.h
 gps_least_squares/gps_least_squares.h
 /home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
+lc_ins/lc_ins.h
+/home/njo0004/devel/cpp_nav_filters/src/lc_ins/lc_ins.h
 matplot/matplot.h
 /home/njo0004/devel/cpp_nav_filters/src/matplot/matplot.h
 fstream

@@ -15,7 +15,6 @@ namespace cpp_nav_filt
         vel_init_  = false;
 
         we_i_<<0,0,cpp_nav_filt::w_e;
-        common.makeSkewSymmetic(we_i_,Omega_e_);
 
         I_3_.setZero();
     }
@@ -99,6 +98,12 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(6,0) = att;
     }
 
+    void LooselyCoupledIns::setCommonClass(Common& common)
+    {
+        common_ = common;
+        common_.makeSkewSymmetic(we_i_,Omega_e_);
+    }
+
     // =============== Loose INS ============== //
     void LooselyCoupledIns::mechanizeSolution()
     {
@@ -113,9 +118,9 @@ namespace cpp_nav_filt
             setAttSol(minus_vel_);
             setVelSol(minus_att_);
 
-            common.eul2Rotm(minus_att_,C_n_b_); // rotation matrix based on current solution of attitude
-            common.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
-            common.somiglianaGravityModel(minus_pos_,gamma_b_n_); // gravity from somigliana model
+            common_.eul2Rotm(minus_att_,C_n_b_); // rotation matrix based on current solution of attitude
+            common_.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
+            common_.somiglianaGravityModel(minus_pos_,gamma_b_n_); // gravity from somigliana model
 
             C_b_n_ = C_n_b_.transpose();
 
@@ -129,7 +134,7 @@ namespace cpp_nav_filt
 
             C_n_b_ = C_b_n_.transpose();
 
-            common.rotm2Eul(C_n_b_,plus_att_);
+            common_.rotm2Eul(C_n_b_,plus_att_);
 
             setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }

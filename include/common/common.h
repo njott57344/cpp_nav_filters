@@ -14,6 +14,7 @@
 #include "frame_conversions/frame_conversions.h"
 
 typedef Eigen::Matrix<double,3,1> vec_3_1;
+typedef Eigen::Matrix<double,1,3> vec_1_3;
 typedef Eigen::Matrix<double,32,3> mat_32_3;
 typedef Eigen::Matrix<double,32,27> mat_32_27;
 typedef Eigen::Matrix<double,1,27> vec_1_27;
@@ -89,9 +90,12 @@ namespace cpp_nav_filt
             void eul2Rotm(vec_3_1& euler_angles,mat_3_3& C);
             void rotm2Eul(mat_3_3& C,vec_3_1& euler_angles);
 
+            // Nav Functions
             void somiglianaGravityModel(vec_3_1& pos,vec_3_1& gamma_b_n); // see groves p. 72
             void makeSkewSymmetic(vec_3_1& vec_in,mat_3_3& skew_out);
-
+            bool levelInsAccel(vec_3_1& fb_b);
+            void initRPfromAccel(vec_3_1& att);
+            
         private:
 
             WgsConversions fc;
@@ -100,6 +104,8 @@ namespace cpp_nav_filt
 
             // Internal Variables
             int desired_sv_;
+            int num_fb_b_meas_;
+            
             double T_transmit_;
             double T_transit_;
             double dt;
@@ -109,6 +115,13 @@ namespace cpp_nav_filt
             double x_comp_vel,y_comp_vel,z_comp_vel;
             double num_sv_;
             double psr_rate_hat;
+
+            // accelerometer init
+            vec_3_1 d_var_; // delta variances for accelerometer levelling
+            vec_3_1 var_;
+            vec_3_1 old_var_;
+            vec_1_3 samp_mean_;
+            Eigen::MatrixXd fb_b_; // specific forces for levelling
 
             Eigen::MatrixXd Y_;
             Eigen::MatrixXd Yhat_;
@@ -146,8 +159,10 @@ namespace cpp_nav_filt
             void calcPsr(double sv_id);
             void calcPsrRate(double sv_id);
             void calcMeasEst();
-            void nanEphemerisMap();
             void calcElAngle();
+            void calcSampleMean();
+
+            void nanEphemerisMap();
             void eigen2array(double array[3],vec_3_1& eigen);
             void array2eigen(vec_3_1& eigen,double array[3]);
 

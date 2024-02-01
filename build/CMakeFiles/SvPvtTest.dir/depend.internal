@@ -5,6 +5,7 @@ CMakeFiles/SvPvtTest.dir/src/main.cpp.o
  ../include/common/common.h
  ../include/frame_conversions/frame_conversions.h
  ../include/gps_least_squares/gps_least_squares.h
+ ../include/lc_ins/lc_ins.h
  /home/njo0004/devel/cpp_nav_filters/src/main.cpp
  _deps/matplotplusplus-build/source/matplot/matplot/detail/exports.h
  _deps/matplotplusplus-src/source/matplot/axes_objects/bars.h
