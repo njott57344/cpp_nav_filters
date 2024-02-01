@@ -324,7 +324,31 @@ namespace cpp_nav_filt
         C_z(1,0) = -sin(euler_angles[2]);
         C_z(1,1) = cos(euler_angles[2]);
 
-        C = C_x*C_y*C_z;
+        C = C_z*C_y*C_x; // rotation nav to body
+    }
+
+    void Common::rotm2Eul(mat_3_3& C,vec_3_1& euler_angles)
+    {
+        euler_angles[0] = std::atan2(C(1,2),C(2,2)); // roll
+        euler_angles[1] = -std::asin(C(0,2));        // pitch
+        euler_angles[2] = std::atan2(C(0,1),C(0,0)); // yaw
+    }
+
+    void Common::makeSkewSymmetic(vec_3_1& vec_in,mat_3_3& skew_out)
+    {
+        skew_out.setZero();
+
+        // Z
+        skew_out(0,1) = -vec_in[2];
+        skew_out(1,0) = vec_in[2];
+
+        //Y
+        skew_out(0,2) = vec_in[1];
+        skew_out(2,0) = -vec_in[1];
+
+        //X
+        skew_out(2,1) = vec_in[0];
+        skew_out(1,2) = -vec_in[0];
     }
 
     void Common::somiglianaGravityModel(vec_3_1& pos,vec_3_1& gamma_b_n)

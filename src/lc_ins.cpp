@@ -13,6 +13,11 @@ namespace cpp_nav_filt
         filt_init_ = false;
         pos_init_  = false;
         vel_init_  = false;
+
+        we_i_<<0,0,cpp_nav_filt::w_e;
+        common.makeSkewSymmetic(we_i_,Omega_e_);
+
+        I_3_.setZero();
     }
 
     LooselyCoupledIns::~LooselyCoupledIns()
@@ -21,9 +26,19 @@ namespace cpp_nav_filt
     }
 
     // =============== Getters ============ //
-    void LooselyCoupledIns::getPositionSoln(vec_3_1& pos)
+    void LooselyCoupledIns::setPosSol(vec_3_1& pos)
     {
         pos = x_hat_.block<3,1>(3,0);
+    }
+
+    void LooselyCoupledIns::setAttSol(vec_3_1& att)
+    {
+        att = x_hat_.block<3,1>(6,0);
+    }
+
+    void LooselyCoupledIns::setVelSol(vec_3_1& vel)
+    {
+        vel = x_hat_.block<3,1>(0,0);
     }
 
     void LooselyCoupledIns::getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t)
@@ -35,7 +50,7 @@ namespace cpp_nav_filt
         time_ = t;
     }
 
-    // =============== Init =============== //
+    // =============== Setters =============== //
     void LooselyCoupledIns::setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P)
     {
         x_hat_.block<3,1>(3,0) = pos_init;
@@ -77,13 +92,46 @@ namespace cpp_nav_filt
         ba_init_ = true;
     }
 
+    void LooselyCoupledIns::setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att)
+    {
+        x_hat_.block<3,1>(0,0) = vel;
+        x_hat_.block<3,1>(3,0) = pos;
+        x_hat_.block<3,1>(6,0) = att;
+    }
+
     // =============== Loose INS ============== //
     void LooselyCoupledIns::mechanizeSolution()
     {
         // propagate full state
         if(filt_init_)
         {
+            /*
+                See groves p.173-175 for equations (ECEF full state propagation)
+            */
 
+            setPosSol(minus_pos_);
+            setAttSol(minus_vel_);
+            setVelSol(minus_att_);
+
+            common.eul2Rotm(minus_att_,C_n_b_); // rotation matrix based on current solution of attitude
+            common.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
+            common.somiglianaGravityModel(minus_pos_,gamma_b_n_); // gravity from somigliana model
+
+            C_b_n_ = C_n_b_.transpose();
+
+
+            // state propagation
+            C_b_n_ = C_b_n_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_n_*dt_; // Attitude Update
+            fb_n_ = C_b_n_*fb_b_; // rotating specific force into nav frame
+            plus_vel_ = minus_vel_ + ((fb_n_ + gamma_b_n_) - 2*Omega_e_*minus_vel_)*dt_; // velocity update
+            plus_pos_ = minus_pos_ + (minus_vel_ + plus_vel_)*0.5*dt_; // position update
+                // note: pos update assumes velocity varies linearly over integration period [groves 175]
+
+            C_n_b_ = C_b_n_.transpose();
+
+            common.rotm2Eul(C_n_b_,plus_att_);
+
+            setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }
     }
 

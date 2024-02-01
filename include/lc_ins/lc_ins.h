@@ -45,10 +45,10 @@ namespace cpp_nav_filt
             void setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P);
             void setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P);
 
-            void getPositionSoln(vec_3_1& pos);
-            
         private:
             
+            Common common;
+
             bool filt_init_; // boolean to check if filter has initial full state estimate
             bool pos_init_;
             bool vel_init_;
@@ -69,21 +69,41 @@ namespace cpp_nav_filt
             vec_3_1 fb_n_; // body frame specific force in nav frame
             vec_3_1 gamma_b_n_; // gravity acting on body in nav frame
 
+            vec_3_1 plus_pos_;
+            vec_3_1 plus_vel_;
+            vec_3_1 plus_att_;
+
+            vec_3_1 minus_pos_;
+            vec_3_1 minus_vel_;
+            vec_3_1 minus_att_;
+
             vec_3_1 wb_b_; // body frame angular rate in body frame
-            vec_3_1 wb_n_; // body frame angular rate in nav frame
-            mat_3_3 Omegab_n; // skew symetric of angular rate in nav frame
+            mat_3_3 Omega_b_; // skew symetric of angular rate in body frame
+
+            vec_3_1 we_i_; // rotation rate of earth
+            mat_3_3 Omega_e_; // skew symmetric of rotation rate of earth
 
             mat_3_3 C_b_n_; // rotation matrix from body to nav frame (based on attitude estimate)
+            mat_3_3 C_n_b_; // rotation matrix from nav to body frame (based on attitude estimate)
 
             vec_3_1 pos_; // ECEF GPS position solution
             vec_3_1 vel_; // ECEF GPS velocity solution
 
+            // identity matrices and such
+            mat_3_3 I_3_;
+            
             double time_;
             double dt_;
 
             void mechanizeSolution();
             void checkInitStatus();
-            
+
+            // private setters
+            void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);
+            void setPosSol(vec_3_1& pos);
+            void setAttSol(vec_3_1& att);
+            void setVelSol(vec_3_1& vel);
+
         protected:
 
 

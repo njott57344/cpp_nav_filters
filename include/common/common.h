@@ -45,7 +45,8 @@ namespace cpp_nav_filt
     const double J2 = 1.082627*pow(1,-3); // J2 gravity constant (from Groves p. 72);
     const double mu_g = 3.986004418*pow(1,14); // Earth gravity constant (from Goves p. 71)
     const double Ro = 6378137.0; // WGS84 equatorial radius [m]
-        
+    const double w_e = 7.292115*pow(1,-5); // rotation rate of earth [rad/s]
+    
     // Frequency Constant
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);
@@ -86,8 +87,10 @@ namespace cpp_nav_filt
             void setRefLla(vec_3_1& lla_in);
 
             void eul2Rotm(vec_3_1& euler_angles,mat_3_3& C);
+            void rotm2Eul(mat_3_3& C,vec_3_1& euler_angles);
 
             void somiglianaGravityModel(vec_3_1& pos,vec_3_1& gamma_b_n); // see groves p. 72
+            void makeSkewSymmetic(vec_3_1& vec_in,mat_3_3& skew_out);
 
         private:
 
