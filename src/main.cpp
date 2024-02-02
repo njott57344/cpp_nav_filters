@@ -54,14 +54,9 @@ int main(int argc,char **argv)
 
     while(std::getline(imu_meas,imu_line))
     {
-        std::stringstream imu_stream(imu_line);
-        //std::cout<<imu_line<<std::endl;
-        while(std::getline(imu_stream,imu_word,','));
-        {
-            std::cout<<imu_word<<std::endl;
-            imu_vect.push_back(std::stod(imu_word));
-        }
+        std::cout<<imu_line<<std::endl;
 
+        
         Eigen::Map<Eigen::MatrixXd> temp(imu_vect.data(),1,7);        
         imu_eig_vect = temp;
         fb_b = imu_eig_vect.block<1,3>(0,1).transpose();
