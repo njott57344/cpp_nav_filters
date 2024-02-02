@@ -124,7 +124,6 @@ namespace cpp_nav_filt
 
             C_b_n_ = C_n_b_.transpose();
 
-
             // state propagation
             C_b_n_ = C_b_n_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_n_*dt_; // Attitude Update
             fb_n_ = C_b_n_*fb_b_; // rotating specific force into nav frame

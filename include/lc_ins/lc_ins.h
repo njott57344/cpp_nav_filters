@@ -22,7 +22,11 @@
         x -> forward
         y -> left of vehicle
         z -> completing right hand triad through floor
-    
+    3) IMU assumed to be aligned with body frame 
+        if above is not true, user needs to apply constant rotation before using ins filter
+        x -> forward
+        y -> left of vehicle
+        z -> completing right hand traid through floor   
 */
 
 
