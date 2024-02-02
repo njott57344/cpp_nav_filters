@@ -19,6 +19,7 @@ int main(int argc,char **argv)
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
     std::fstream sv_meas;
+    std::fstream imu_meas;
 
     std::ofstream solution_out;
 
@@ -26,9 +27,12 @@ int main(int argc,char **argv)
     std::string ephem_file = "/home/njo0004/devel/cpp_nav_filters_data/dynamic_ephem.csv";
     std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/dynamic_measurements.csv";
     std::string output_file = "/home/njo0004/devel/cpp_nav_filters_data/output.csv";
+    std::string imu_file = "/home/njo0004/devel/cpp_nav_filters_data/straight_driving.csv";
 
     sv_ephem.open(ephem_file,std::ios::in);
     sv_meas.open(meas_file,std::ios::in);
+    imu_meas.open(imu_file,std::ios::in);
+
     solution_out.open(output_file);
 
     // MRI antenna
@@ -36,6 +40,52 @@ int main(int argc,char **argv)
     true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
+
+    // ============== Testing INS Attitude Init ====== //
+
+    std::string imu_line,imu_word;
+    std::vector<double> imu_vect;
+    Eigen::Matrix<double,3,1> att_init;
+    Eigen::Matrix<double,1,7> imu_eig_vect;
+    bool att_is_init = false;
+    vec_3_1 fb_b;
+
+    int imu_ctr = 0;
+
+    while(std::getline(imu_meas,imu_line))
+    {
+        std::stringstream imu_stream(imu_line);
+        //std::cout<<imu_line<<std::endl;
+        while(std::getline(imu_stream,imu_word,','));
+        {
+            std::cout<<imu_word<<std::endl;
+            imu_vect.push_back(std::stod(imu_word));
+        }
+
+        Eigen::Map<Eigen::MatrixXd> temp(imu_vect.data(),1,7);        
+        imu_eig_vect = temp;
+        fb_b = imu_eig_vect.block<1,3>(0,1).transpose();
+
+        if(imu_ctr == 0)
+        {   
+            //std::cout<<imu_vect.size()<<std::endl;
+
+            for(int i = 0;i<imu_vect.size();i++)
+            {
+           //     std::cout<<imu_vect[i]<<std::endl;
+            }
+            imu_ctr++;
+        }
+
+        imu_vect.clear();
+
+        if(common.levelInsAccel(fb_b) && att_is_init == false)
+        {
+            common.initRPfromAccel(att_init);
+          //  std::cout<<att_init*180/M_PI<<std::endl<<std::endl;
+            att_is_init = true;
+        }
+    }
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;

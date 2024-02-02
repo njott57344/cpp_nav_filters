@@ -114,9 +114,9 @@ namespace cpp_nav_filt
                 See groves p.173-175 for equations (ECEF full state propagation)
             */
 
-            setPosSol(minus_pos_);
-            setAttSol(minus_vel_);
-            setVelSol(minus_att_);
+            setPosSol(minus_pos_); // get position state before propagation
+            setAttSol(minus_vel_); // get attitude state before propagation
+            setVelSol(minus_att_); // get velocity state before propagation
 
             common_.eul2Rotm(minus_att_,C_n_b_); // rotation matrix based on current solution of attitude
             common_.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
