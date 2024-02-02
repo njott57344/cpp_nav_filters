@@ -341,7 +341,7 @@ namespace cpp_nav_filt
         var_ = (1/num_fb_b_meas_)*var_;
         d_var_ = var_ - old_var_;
 
-        if(sqrt(d_var_[0])<0.01 && sqrt(d_var_[1])<0.01 && sqrt(d_var_[2])<0.01)
+        if(sqrt(d_var_[0])<0.01 && sqrt(d_var_[1])<0.01 && sqrt(d_var_[2])<0.01 && num_fb_b_meas_>1)
         {
             return 1;
         }
@@ -355,7 +355,7 @@ namespace cpp_nav_filt
     {
         samp_mean_ = fb_b_.colwise().mean();
 
-        att[0] = std::atan2(-samp_mean_[1],-samp_mean_[0]);
+        att[0] = std::atan2(-samp_mean_[1],-samp_mean_[2]);
         att[1] = std::atan(samp_mean_[0]/sqrt(pow(samp_mean_[1],2) + pow(samp_mean_[2],2)));
     }
 
