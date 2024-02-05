@@ -18,8 +18,12 @@ if(NOT matplotplusplus_POPULATED)
     add_subdirectory(${matplotplusplus_SOURCE_DIR} ${matplotplusplus_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# Cmake Stuff for Matplot (c++ wrapper for pyton matplot)
+find_package(PythonLibs REQUIRED)
+
 include_directories(
     include # cpp nav filt headers
+    ${PYTHON_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}
@@ -39,4 +43,5 @@ target_link_directories(${PROJECT_NAME}
 
 target_link_libraries(SvPvtTest PUBLIC matplot
     ${PROJECT_NAME}
+    ${PYTHON_LIBRARIES}
 )

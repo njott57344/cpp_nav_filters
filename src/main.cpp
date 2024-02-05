@@ -3,10 +3,11 @@
 #include "lc_ins/lc_ins.h"
 
 #include "matplot/matplot.h"
+#include "matplotlibcpp/matplotlibcpp.h"
 
 #include <fstream>
 
-namespace plt = matplot;
+namespace plt = matplotlibcpp;
 
 int main(int argc,char **argv)
 {
@@ -43,6 +44,7 @@ int main(int argc,char **argv)
 
     // ============== Testing INS Attitude Init ====== //
 
+    /*
     std::string imu_line,imu_word;
     std::vector<double> imu_vect;
     Eigen::Matrix<double,3,1> att_init;
@@ -81,6 +83,7 @@ int main(int argc,char **argv)
             att_is_init = true;
         }
     }
+    */
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;
@@ -137,6 +140,10 @@ int main(int argc,char **argv)
     std::vector<double> lon_soln;
     std::vector<double> alt_soln;
 
+    std::vector<double> n_soln;
+    std::vector<double> e_soln;
+    std::vector<double> d_soln;
+
     std::vector<int> sv_id_vect;
     std::vector<int> valid_sv_id_vect;
     int sv_id;
@@ -156,7 +163,7 @@ int main(int argc,char **argv)
     double num_measurements,num_svs;
     double transit_time,transmit_time;
 
-    vec_3_1 lla_pos,ecef_pos;
+    vec_3_1 lla_pos,ecef_pos,ned_pos,lla_0;
 
     while(std::getline(sv_meas,sv_meas_line))
     {
@@ -212,15 +219,28 @@ int main(int argc,char **argv)
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
             }
 
+            
             gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
             gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
             ecef_pos = x_hat.block<3,1>(0,0);
 
             common.convertECEF2LLA(ecef_pos,lla_pos);
-
+            
+            if(i == 1)
+            {
+                lla_0 = lla_pos;
+                common.setRefLla(lla_0);
+            }
+            
+            common.convertECEF2NED(ecef_pos,ned_pos,lla_0);
+            
             lat_soln.push_back(lla_pos[0]);
             lon_soln.push_back(lla_pos[1]);
             alt_soln.push_back(lla_pos[2]);
+            
+            n_soln.push_back(ned_pos[0]);
+            e_soln.push_back(ned_pos[1]);
+            d_soln.push_back(ned_pos[2]);
 
             sv_measurements.clear();
             valid_sv_id_vect.clear();
@@ -233,9 +253,7 @@ int main(int argc,char **argv)
         
     solution_out.close();
     
-    plt::geoplot(lat_soln,lon_soln,"*");
-    plt::geolimits({32.5667,32.6167},{-85.4750,-85.5083}); // geolimits for auburn al
-    plt::hold(plt::on);
+    plt::plot(e_soln,n_soln);
     plt::show();
 
     return 0;

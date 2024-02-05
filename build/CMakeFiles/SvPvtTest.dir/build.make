@@ -81,6 +81,7 @@ SvPvtTest: CMakeFiles/SvPvtTest.dir/src/main.cpp.o
 SvPvtTest: CMakeFiles/SvPvtTest.dir/build.make
 SvPvtTest: _deps/matplotplusplus-build/source/matplot/libmatplot.a
 SvPvtTest: libCppNavFilt.a
+SvPvtTest: /usr/lib/x86_64-linux-gnu/libpython3.8.so
 SvPvtTest: /usr/lib/x86_64-linux-gnu/libjpeg.so
 SvPvtTest: /usr/lib/x86_64-linux-gnu/libtiff.so
 SvPvtTest: /usr/lib/x86_64-linux-gnu/libz.so

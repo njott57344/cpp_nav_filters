@@ -17,6 +17,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
+  "/usr/include/python3.8"
   "_deps/matplotplusplus-src/source"
   "_deps/matplotplusplus-build/source/matplot"
   )

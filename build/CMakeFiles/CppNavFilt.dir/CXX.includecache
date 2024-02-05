@@ -28,11 +28,11 @@ iostream
 math.h
 -
 
-../include/lc_ins/lc_ins.h
+/home/njo0004/devel/cpp_nav_filters/src/common.cpp
 common/common.h
-../include/lc_ins/common/common.h
+/home/njo0004/devel/cpp_nav_filters/src/common/common.h
 
-/home/njo0004/devel/cpp_nav_filters/src/lc_ins.cpp
-lc_ins/lc_ins.h
-/home/njo0004/devel/cpp_nav_filters/src/lc_ins/lc_ins.h
+/home/njo0004/devel/cpp_nav_filters/src/frame_conversions.cpp
+frame_conversions/frame_conversions.h
+/home/njo0004/devel/cpp_nav_filters/src/frame_conversions/frame_conversions.h
 

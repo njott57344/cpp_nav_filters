@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=gnu++17
 
 CXX_DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
 
-CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-build/source/matplot 
+CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/usr/include/python3.8 -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source -I/home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-build/source/matplot 
 

@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=gnu++17
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include 
+CXX_INCLUDES = -I/home/njo0004/devel/cpp_nav_filters/include -I/usr/include/python3.8 
 

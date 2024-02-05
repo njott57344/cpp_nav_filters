@@ -463,7 +463,7 @@ namespace cpp_nav_filt
     //========= Frame Conversions ==========//
 
     void Common::setRefLla(vec_3_1& lla_in)
-    {
+    {        
         eigen2array(lla_pos_,lla_in);
         fc.updateReferenceLLA(lla_pos_);
     }
@@ -489,7 +489,7 @@ namespace cpp_nav_filt
         eigen2array(lla_pos_,ref_lla);
 
         fc.updateReferenceLLA(lla_pos_);
-        fc.xyz2ned(ned_pos_,ecef_pos_);
+        fc.xyz2ned(ned_pos_,ecef_pos_,lla_pos_);
 
         array2eigen(ned_pos,ned_pos_);
     }
@@ -499,9 +499,9 @@ namespace cpp_nav_filt
         eigen2array(ned_pos_,ned_pos);
         eigen2array(lla_pos_,ref_lla);
         eigen2array(ecef_pos_,ecef_pos);
-
+        
         fc.updateReferenceLLA(lla_pos_);
-        fc.ned2xyz(ecef_pos_,ned_pos_);
+        fc.ned2xyz(ecef_pos_,ned_pos_,lla_pos_);
 
         array2eigen(ecef_pos,ecef_pos_);
     }
