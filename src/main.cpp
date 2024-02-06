@@ -44,7 +44,6 @@ int main(int argc,char **argv)
 
     // ============== Testing INS Attitude Init ====== //
 
-    /*
     std::string imu_line,imu_word;
     std::vector<double> imu_vect;
     Eigen::Matrix<double,3,1> att_init;
@@ -55,35 +54,29 @@ int main(int argc,char **argv)
     int imu_ctr = 0;
 
     while(std::getline(imu_meas,imu_line))
-    {
-        std::cout<<imu_line<<std::endl;
+    {        
+        std::stringstream imu_stream(imu_line);
 
-        
-        Eigen::Map<Eigen::MatrixXd> temp(imu_vect.data(),1,7);        
-        imu_eig_vect = temp;
-        fb_b = imu_eig_vect.block<1,3>(0,1).transpose();
-
-        if(imu_ctr == 0)
-        {   
-            //std::cout<<imu_vect.size()<<std::endl;
-
-            for(int i = 0;i<imu_vect.size();i++)
-            {
-           //     std::cout<<imu_vect[i]<<std::endl;
-            }
-            imu_ctr++;
+        while(std::getline(imu_stream,imu_word,','))
+        {
+            imu_vect.push_back(std::stod(imu_word));
         }
 
         imu_vect.clear();
 
+        Eigen::Map<Eigen::MatrixXd> temp_imu(imu_vect.data(),1,7);
+        
+        imu_eig_vect = temp_imu;
+        fb_b = imu_eig_vect.segment<3>(1).transpose();
+
         if(common.levelInsAccel(fb_b) && att_is_init == false)
         {
             common.initRPfromAccel(att_init);
-          //  std::cout<<att_init*180/M_PI<<std::endl<<std::endl;
+            std::cout<<att_init*180/M_PI<<std::endl<<std::endl;
             att_is_init = true;
         }
+
     }
-    */
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;
