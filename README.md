@@ -3,6 +3,7 @@ A collection of C-Plus-Plus INS filters to perform fusion of GNSS and INS nav so
 
 ## To-Do
 - [ ] Loosely Coupled INS EKF
+    - [ ] Full state mechanization needs to be tested
 - [ ] Tightly Coupled INS EKF
 - [ ] GPS Least Squares
     - [ ] Test on multipe files/multiple epochs
@@ -21,6 +22,10 @@ A collection of C-Plus-Plus INS filters to perform fusion of GNSS and INS nav so
         - [X] A vector of same variable dimension that contains ID for each SV
     - [X] Resilience Checks
         - [X] Ensure common has ephemerides to calcualte SV PVT states for the sv_id satellite
+    - [ ] General Navigation Utilities
+        - [ ] Accelerometer Levelling (Tested on single data set and matches MATLAB results)
+        - [ ] Somigliana Gravity Model (groves p. 72)
+        - [ ] Rotation matrices to euler angles and vis. versa. 
 - [ ] Plotting in CPP
     - [ ] Currently Using matplotplusplus as plotting tool in c++
 
