@@ -21,6 +21,7 @@ int main(int argc,char **argv)
     std::fstream sv_ephem;
     std::fstream sv_meas;
     std::fstream imu_meas;
+    std::fstream imu_init_cdn;
 
     std::ofstream solution_out;
 
@@ -29,10 +30,12 @@ int main(int argc,char **argv)
     std::string meas_file = "/home/njo0004/devel/cpp_nav_filters_data/dynamic_measurements.csv";
     std::string output_file = "/home/njo0004/devel/cpp_nav_filters_data/output.csv";
     std::string imu_file = "/home/njo0004/devel/cpp_nav_filters_data/straight_driving.csv";
+    std::string imu_init_cdn_file = "/home/njo0004/devel/cpp_nav_filters_data/straight_line_init_cdn.csv";
 
     sv_ephem.open(ephem_file,std::ios::in);
     sv_meas.open(meas_file,std::ios::in);
     imu_meas.open(imu_file,std::ios::in);
+    imu_init_cdn.open(imu_init_cdn_file,std::ios::in);
 
     solution_out.open(output_file);
 
@@ -42,41 +45,83 @@ int main(int argc,char **argv)
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
 
+    // ============== Initial INS Conditions ========= //
+
+    std::string init_line,init_word;
+    std::vector<double> init_cdn;
+    Eigen::Matrix<double,10,1> eig_init_cdn;
+    Eigen::Matrix<double,3,3> I3;
+    vec_3_1 init_pos,init_vel,init_att,init_ba,init_bg;
+    double init_time;
+    I3.setIdentity();
+
+    while(std::getline(imu_init_cdn,init_line))
+    {
+        std::stringstream init_stream(init_line);
+
+        while(std::getline(init_stream,init_word,','))
+        {
+            init_cdn.push_back(std::stod(init_word));
+        }
+    }
+
+    Eigen::Map<Eigen::MatrixXd> temp_init(init_cdn.data(),1,10);
+    eig_init_cdn = temp_init.transpose();
+    
+    std::cout<<eig_init_cdn<<std::endl;
+    
+    // INS initial Conditions
+    init_pos = eig_init_cdn.segment<3>(1);
+    init_vel = eig_init_cdn.segment<3>(4);
+    init_att = eig_init_cdn.segment<3>(7);
+    init_ba.setZero();
+    init_bg.setZero();
+    init_time = eig_init_cdn[0];
+
+    ins.setInitialPosState(init_pos,I3);
+    ins.setInitialVelState(init_vel,I3);
+    ins.setInitialAttState(init_att,I3);
+    ins.setInitialBaState(init_ba,I3);
+    ins.setInitialBgState(init_bg,I3);
+    ins.setInitialTime(init_time);
+
+    ins.setCommonClass(common);
+    
     // ============== Testing INS Attitude Init ====== //
 
-    std::string imu_line,imu_word;
-    std::vector<double> imu_vect;
-    Eigen::Matrix<double,3,1> att_init;
-    Eigen::Matrix<double,1,7> imu_eig_vect;
-    bool att_is_init = false;
-    vec_3_1 fb_b;
-
-    int imu_ctr = 0;
-
-    while(std::getline(imu_meas,imu_line))
-    {        
-        std::stringstream imu_stream(imu_line);
-
-        while(std::getline(imu_stream,imu_word,','))
-        {
-            imu_vect.push_back(std::stod(imu_word));
-        }
-
-        imu_vect.clear();
-
-        Eigen::Map<Eigen::MatrixXd> temp_imu(imu_vect.data(),1,7);
-        
-        imu_eig_vect = temp_imu;
-        fb_b = imu_eig_vect.segment<3>(1).transpose();
-
-        if(common.levelInsAccel(fb_b) && att_is_init == false)
-        {
-            common.initRPfromAccel(att_init);
-            std::cout<<att_init*180/M_PI<<std::endl<<std::endl;
-            att_is_init = true;
-        }
-
-    }
+//    std::string imu_line,imu_word;
+//    std::vector<double> imu_vect;
+//    Eigen::Matrix<double,3,1> att_init;
+//    Eigen::Matrix<double,1,7> imu_eig_vect;
+//    bool att_is_init = false;
+//    vec_3_1 fb_b;
+//
+//    int imu_ctr = 0;
+//
+//    while(std::getline(imu_meas,imu_line))
+//    {        
+//        std::stringstream imu_stream(imu_line);
+//
+//        while(std::getline(imu_stream,imu_word,','))
+//        {
+//            imu_vect.push_back(std::stod(imu_word));
+//        }
+//
+//        imu_vect.clear();
+//
+//        Eigen::Map<Eigen::MatrixXd> temp_imu(imu_vect.data(),1,7);
+//        
+//        imu_eig_vect = temp_imu;
+//        fb_b = imu_eig_vect.segment<3>(1).transpose();
+//
+//        /*
+//        if(common.levelInsAccel(fb_b) && att_is_init == false)
+//        {
+//            common.initRPfromAccel(att_init);
+//            att_is_init = true;
+//        }
+//        */
+//    }    
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;

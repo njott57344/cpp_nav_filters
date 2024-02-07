@@ -109,7 +109,7 @@ namespace cpp_nav_filt
             void setPosSol(vec_3_1& pos);
             void setAttSol(vec_3_1& att);
             void setVelSol(vec_3_1& vel);
-
+                        
         protected:
 
 

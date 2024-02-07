@@ -13,6 +13,10 @@ namespace cpp_nav_filt
         filt_init_ = false;
         pos_init_  = false;
         vel_init_  = false;
+        att_init_  = false;
+        bg_init_   = false;
+        ba_init_   = false;
+        time_init_ = false;
 
         we_i_<<0,0,cpp_nav_filt::w_e;
 
@@ -55,6 +59,7 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(3,0) = pos_init;
         P_hat_.block<3,3>(3,3) = pos_P;
         pos_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P)
@@ -62,6 +67,7 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(0,0) = vel_init;
         P_hat_.block<3,3>(0,0) = vel_P;
         vel_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setInitialAttState(vec_3_1& att_init,mat_3_3& att_P)
@@ -69,12 +75,14 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(6,0) = att_init;
         P_hat_.block<3,3>(6,6) = att_P;
         att_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setInitialTime(double& init_time)
     {
         time_ = init_time;
         time_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P)
@@ -82,6 +90,7 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(9,0) = bg_init;
         P_hat_.block<3,3>(9,9) = bg_P;
         bg_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P)
@@ -89,6 +98,7 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(12,0) = ba_init;
         P_hat_.block<3,3>(12,12) = ba_P;
         ba_init_ = true;
+        checkInitStatus();
     }
 
     void LooselyCoupledIns::setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att)
@@ -142,6 +152,10 @@ namespace cpp_nav_filt
     void LooselyCoupledIns::checkInitStatus()
     {
         filt_init_ = pos_init_&&vel_init_&&att_init_&&time_init_&&bg_init_&&ba_init_;
+        if(filt_init_)
+        {
+            std::cout<<"Loosely Coupled INS has been initialized!"<<std::endl;
+        }
     }
 
 } // end of namespace
