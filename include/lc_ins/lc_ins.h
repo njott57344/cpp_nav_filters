@@ -50,6 +50,9 @@ namespace cpp_nav_filt
             void setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P);
 
             void setCommonClass(Common& common);
+            void setPosSol(vec_3_1& pos);
+            void setAttSol(vec_3_1& att);
+            void setVelSol(vec_3_1& vel);
 
         private:
             
@@ -89,8 +92,11 @@ namespace cpp_nav_filt
             vec_3_1 we_i_; // rotation rate of earth
             mat_3_3 Omega_e_; // skew symmetric of rotation rate of earth
 
-            mat_3_3 C_b_n_; // rotation matrix from body to nav frame (based on attitude estimate)
-            mat_3_3 C_n_b_; // rotation matrix from nav to body frame (based on attitude estimate)
+            mat_3_3 C_b_n_plus_; // rotation matrix from body to nav frame (based on attitude estimate)
+            mat_3_3 C_n_b_plus_; // rotation matrix from nav to body frame (based on attitude estimate)
+
+            mat_3_3 C_b_n_minus_;
+            mat_3_3 C_n_b_minus_;
 
             vec_3_1 pos_; // ECEF GPS position solution
             vec_3_1 vel_; // ECEF GPS velocity solution
@@ -106,10 +112,7 @@ namespace cpp_nav_filt
 
             // private setters
             void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);
-            void setPosSol(vec_3_1& pos);
-            void setAttSol(vec_3_1& att);
-            void setVelSol(vec_3_1& vel);
-                        
+
         protected:
 
 

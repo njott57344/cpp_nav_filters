@@ -363,23 +363,28 @@ namespace cpp_nav_filt
 
     void Common::eul2Rotm(vec_3_1& euler_angles,mat_3_3& C)
     {
-        // assumes euler angels are ordered roll pitch yaw
-        C_x(1,1) = cos(euler_angles[0]);
-        C_x(1,2) = sin(euler_angles[0]);
-        C_x(2,1) = -sin(euler_angles[0]);
-        C_x(2,2) = cos(euler_angles[0]);
+        // assumes euler angles are ordered roll pitch yaw
+        // see groves p. 38
+
+        vec_3_1 c;
+        vec_3_1 s;
+
+        c << std::cos(euler_angles[0]),std::cos(euler_angles[1]),std::cos(euler_angles[2]);
+        s << std::sin(euler_angles[0]),std::sin(euler_angles[1]),std::sin(euler_angles[2]);
+
+        C_x << 1,  0,    0,
+               0,  c[0], s[0],
+               0, -s[0], c[0];
         
-        C_y(0,0) = cos(euler_angles[1]);
-        C_y(0,2) = -sin(euler_angles[1]);
-        C_y(2,0) = sin(euler_angles[1]);
-        C_y(2,2) = cos(euler_angles[1]);
+        C_y << c[1], 0, -s[1],
+               0,    1,  0,
+               s[1], 0,  c[1];
+        
+        C_z << c[2], s[2], 0,
+              -s[2], c[2], 0,
+               0,    0,    1;
 
-        C_z(0,0) = cos(euler_angles[2]);
-        C_z(0,1) = sin(euler_angles[2]);
-        C_z(1,0) = -sin(euler_angles[2]);
-        C_z(1,1) = cos(euler_angles[2]);
-
-        C = C_z*C_y*C_x; // rotation nav to body
+        C = C_x*C_y*C_z; // rotation nav to body
     }
 
     void Common::rotm2Eul(mat_3_3& C,vec_3_1& euler_angles)
@@ -410,17 +415,18 @@ namespace cpp_nav_filt
     {   
         vec_3_1 inner;
         double term_x,term_y,term_z,common_term;
-    
-        common_term = 5*pow((pos[2]/pos.norm()),2);
-        term_x = 1-common_term*pos[0];
-        term_y = 1-common_term*pos[1];
-        term_z = 1-common_term*pos[2];
+        double abs_pos = pos.norm();
+
+        common_term = 5*pow((pos[2]/abs_pos),2);
+        term_x = (1-common_term)*pos[0];
+        term_y = (1-common_term)*pos[1];
+        term_z = (3-common_term)*pos[2];
 
         inner<<term_x,term_y,term_z;
 
-        inner = (1.5*cpp_nav_filt::J2*pow(cpp_nav_filt::Ro,2)/(pow(pos.norm(),2)))*inner;
+        inner = (1.5*cpp_nav_filt::J2*pow(cpp_nav_filt::Ro,2)/(pow(abs_pos,2)))*inner;
         inner = pos + inner;
-        gamma_b_n = -(cpp_nav_filt::mu_g/pow(pos.norm(),3))*inner;
+        gamma_b_n = -(cpp_nav_filt::mu_g/pow(abs_pos,3))*inner;
     }
 
     // ======== Weighting Matrices for GPS Least Squares ====== //
