@@ -2,13 +2,17 @@
 
 namespace cpp_nav_filt
 {
-    LooselyCoupledIns::LooselyCoupledIns()
+    LooselyCoupledIns::LooselyCoupledIns(LooselyCoupledInsSettings& settings_in)
     {
         std::cout<<"Starting Loosely Coupled INS!"<<std::endl;
+
+        ins_settings = settings_in;
 
         // zeroing state estimates
         x_hat_.setZero();
         P_hat_.setZero();
+        dx_hat_.setZero(); // zeroize error state
+        Phi_.setZero();
 
         filt_init_ = false;
         pos_init_  = false;
@@ -55,8 +59,22 @@ namespace cpp_nav_filt
         
         if(dt_>0)
         {
-            mechanizeSolution();
+            mechanizeSolution(); // mechanize full state PVA solution 
+            generateErrorStateSTM(); // generate error state state transition matrix
+            propagateErrorState();
+
+            setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }
+    }
+
+    void LooselyCoupledIns::setBgSol(vec_3_1& bg_hat)
+    {
+        bg_hat = x_hat_.block<3,1>(9,0);
+    }
+
+    void LooselyCoupledIns::setBaSol(vec_3_1& ba_hat)
+    {
+        ba_hat = x_hat_.block<3,1>(12,0);
     }
 
     // =============== Setters =============== //
@@ -136,6 +154,11 @@ namespace cpp_nav_filt
             setPosSol(minus_pos_); // get position state before propagation
             setAttSol(minus_att_); // get attitude state before propagation
             setVelSol(minus_vel_); // get velocity state before propagation
+            setBgSol(bg_hat_);
+            setBaSol(ba_hat_);
+
+            wb_b_ = wb_b_ - bg_hat_; // subtract bias estimate from gyroscopes
+            fb_b_ = fb_b_ - ba_hat_; // subtract bias estimate from accelerometers
 
             common_.eul2Rotm(minus_att_,C_n_b_minus_); // rotation matrix based on current solution of attitude                      
             common_.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
@@ -156,9 +179,60 @@ namespace cpp_nav_filt
             C_n_b_plus_ = C_b_n_plus_.transpose();
 
             common_.rotm2Eul(C_n_b_plus_,plus_att_);
-
-            setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }
+    }
+
+    void LooselyCoupledIns::generateErrorStateSTM()
+    {
+        /*
+            See Groves p. 582-584 (ECEF error state INS state propogation)
+        */
+
+        vec_3_1 current_pos,lla,current_att;
+        mat_3_3 Cbn;
+        mat_3_3 F21;
+
+        setPosSol(current_pos);
+        setAttSol(current_att);
+        common_.eul2Rotm(current_att,Cbn); // gives rotation from N to B so we need to transpose
+        Cbn = Cbn.transpose();
+        fb_n_ = Cbn*fb_b_; // nav frame specific fornces
+
+        common_.somiglianaGravityModel(current_pos,gamma_b_n_);
+        common_.convertECEF2LLA(current_pos,lla);
+        lla = lla*cpp_nav_filt::D2R;
+        common_.geocentricRadius(lla[0],geocentric_radius_);
+
+        mat_3_3 F23 = (-2*gamma_b_n_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
+        common_.makeSkewSymmetic(fb_n_,F21);
+        F21 = -F21;
+
+        // velocity
+        Phi_.block<3,3>(0,0) = I_3_ - 2*dt_*Omega_e_; // del V w/ del V
+        Phi_.block<3,3>(0,3) = F23*dt_;
+        Phi_.block<3,3>(0,6) = F21*dt_;
+        Phi_.block<3,3>(0,12) = Cbn*dt_;
+        
+        // Position
+        Phi_.block<3,3>(3,0) = I_3_*dt_;
+        Phi_.block<3,3>(3,3) = I_3_;
+        
+        // Attitude
+        Phi_.block<3,3>(6,6) = I_3_ - Omega_e_*dt_;
+        Phi_.block<3,3>(6,9) = Cbn*dt_;
+
+        //Gyro Bias
+        // assume is constant for now (may change to first order GMP in the future)
+        Phi_.block<3,3>(9,9) = I_3_;
+
+        //Accel Bias
+        // assume is constant for now (may change to first order GMP in the future)
+        Phi_.block<3,3>(12,12) = I_3_;
+    }
+
+    void LooselyCoupledIns::propagateErrorState()
+    {
+        dx_hat_ = Phi_*dx_hat_; // state update equation
     }
 
     void LooselyCoupledIns::checkInitStatus()

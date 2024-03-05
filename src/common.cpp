@@ -429,6 +429,23 @@ namespace cpp_nav_filt
         gamma_b_n = -(cpp_nav_filt::mu_g/pow(abs_pos,3))*inner;
     }
 
+    void Common::meridianRadius(double& lat,double& meridian_radius)
+    { 
+        // groves p. 59
+        double denom = 1-pow(cpp_nav_filt::e,2)*pow(sin(lat),2);
+        meridian_radius = cpp_nav_filt::Ro/sqrt(denom);
+    }
+
+    void Common::geocentricRadius(double& lat,double& geocentric_radius)
+    {
+        // groves p. 71
+        double meridian_radius;
+        meridianRadius(lat,meridian_radius);
+
+        double sqrt_arg = pow(cos(lat),2) + pow(1-pow(cpp_nav_filt::e,2),2)*pow(sin(lat),2);
+        geocentric_radius = meridian_radius*sqrt(sqrt_arg);
+    }
+
     // ======== Weighting Matrices for GPS Least Squares ====== //
 
     void Common::sendElAngles(Eigen::MatrixXd& SvPVT,vec_3_1& pos,Eigen::MatrixXd& el_angles)

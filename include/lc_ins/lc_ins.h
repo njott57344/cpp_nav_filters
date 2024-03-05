@@ -32,12 +32,24 @@
 
 namespace cpp_nav_filt
 {
+    typedef struct
+    {
+        double psd_gyro_noise;
+        double psd_gyro_bias;
+        double psd_accel_noise;
+        double psd_accel_bias;
 
+        vec_3_1 lever_arm;
+
+    }LooselyCoupledInsSettings;
+    
     class LooselyCoupledIns
     {
         public:
 
-            LooselyCoupledIns();
+
+
+            LooselyCoupledIns(LooselyCoupledInsSettings& settings_in);
             ~LooselyCoupledIns();
 
             void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t);
@@ -53,9 +65,13 @@ namespace cpp_nav_filt
             void setPosSol(vec_3_1& pos);
             void setAttSol(vec_3_1& att);
             void setVelSol(vec_3_1& vel);
+            void setBgSol(vec_3_1& bg_hat);
+            void setBaSol(vec_3_1& ba_hat);
 
         private:
             
+            LooselyCoupledInsSettings ins_settings;
+
             Common common_;
 
             bool filt_init_; // boolean to check if filter has initial full state estimate
@@ -73,7 +89,10 @@ namespace cpp_nav_filt
             vec_15_1 x_hat_; // full state mean solution
             vec_15_1 dx_hat_; // estimate of error in full state
             mat_15_15 P_hat_; // full state error covariance
-            
+
+            mat_15_15 Phi_; // error state STM
+            mat_15_15 Q_; // discrete process covariance
+
             vec_3_1 fb_b_; // body frame specific force in body frame
             vec_3_1 fb_n_; // body frame specific force in nav frame
             vec_3_1 gamma_b_n_; // gravity acting on body in nav frame
@@ -85,6 +104,9 @@ namespace cpp_nav_filt
             vec_3_1 minus_pos_;
             vec_3_1 minus_vel_;
             vec_3_1 minus_att_;
+
+            vec_3_1 bg_hat_; // estimate of bias in gyro
+            vec_3_1 ba_hat_; // estimate of bias in accel
 
             vec_3_1 wb_b_; // body frame angular rate in body frame
             mat_3_3 Omega_b_; // skew symetric of angular rate in body frame
@@ -106,9 +128,13 @@ namespace cpp_nav_filt
             
             double time_;
             double dt_;
+            double geocentric_radius_;
 
             void mechanizeSolution();
             void checkInitStatus();
+            void generateErrorStateSTM(); // generate error state state state transition matrix
+            void generateProcessCovarMat(); 
+            void propagateErrorState();
 
             // private setters
             void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);

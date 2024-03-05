@@ -36,6 +36,10 @@ typedef struct
 
 namespace cpp_nav_filt
 {
+    // Math Constants
+    const double R2D = 180/M_PI; // FROM [rad] TO [deg]
+    const double D2R = M_PI/180; // FROM [deg] TO [rad]
+
     // GPS Constants
     const double gps_pi = M_PI; // PI
     const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
@@ -47,7 +51,8 @@ namespace cpp_nav_filt
     const double mu_g = 3.986004418*pow(10,14); // Earth gravity constant (from Goves p. 71)
     const double Ro = 6378137.0; // WGS84 equatorial radius [m]
     const double w_e = 7.292115*pow(1,-5); // rotation rate of earth [rad/s]
-    
+    const double e = 0.0818191908425; // ecentricity of earth
+
     // Frequency Constant
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);
@@ -95,6 +100,8 @@ namespace cpp_nav_filt
             void makeSkewSymmetic(vec_3_1& vec_in,mat_3_3& skew_out);
             bool levelInsAccel(vec_3_1& fb_b);
             void initRPfromAccel(vec_3_1& att);
+            void meridianRadius(double& lat,double& meridian_radius);
+            void geocentricRadius(double& lat,double& geocentric_radius);
             
         private:
 

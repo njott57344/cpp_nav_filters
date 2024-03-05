@@ -15,7 +15,8 @@ int main(int argc,char **argv)
     cpp_nav_filt::GpsLeastSquaresSettings LeastSquaresSettings;
     LeastSquaresSettings.weighted_least_squares = false;
     cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
-    cpp_nav_filt::LooselyCoupledIns ins;
+    cpp_nav_filt::LooselyCoupledInsSettings lc_ins_settings;
+    cpp_nav_filt::LooselyCoupledIns ins(lc_ins_settings);
 
     // pointers for file handlers sv ephem and measurements
     std::fstream sv_ephem;
