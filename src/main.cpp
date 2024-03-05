@@ -343,8 +343,8 @@ int main(int argc,char **argv)
         
     solution_out.close();
     
-    //plt::plot(e_soln,n_soln);
-    //plt::show();
+    plt::plot(e_soln,n_soln);
+    plt::show();
 
     return 0;
 }
