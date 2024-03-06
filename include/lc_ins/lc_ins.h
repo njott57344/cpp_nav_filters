@@ -42,17 +42,22 @@ namespace cpp_nav_filt
         vec_3_1 lever_arm;
 
     }LooselyCoupledInsSettings;
-    
+
     class LooselyCoupledIns
     {
         public:
 
-
+            enum GNSS_correction_type
+            {
+                POS_TYPE,
+                VEL_TYPE
+            };
 
             LooselyCoupledIns(LooselyCoupledInsSettings& settings_in);
             ~LooselyCoupledIns();
 
             void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t);
+            void getGnssMeasurements(vec_3_1& gnss_meas,const int& meas_type);
 
             void setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P);
             void setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P);
@@ -82,6 +87,8 @@ namespace cpp_nav_filt
             bool bg_init_;
             bool ba_init_;
 
+            int meas_type_; // integer for measurement type
+
             /*
                 X => [dx,dy,dx,x,y,z,roll,pitch,yaw,bgx,bgy,bgz,bax,bay,baz]^T
             */
@@ -90,12 +97,19 @@ namespace cpp_nav_filt
             vec_15_1 dx_hat_; // estimate of error in full state
             mat_15_15 P_hat_; // full state error covariance
 
+            vec_3_1 y_hat_; // full state measurement estimate
+            vec_3_1 innov_; // full state innovation
+
             mat_15_15 Phi_; // error state STM
             mat_15_15 Q_; // discrete process covariance
 
+            mat_3_3 F21_;
+            mat_3_3 F23_;
+            
             vec_3_1 fb_b_; // body frame specific force in body frame
             vec_3_1 fb_n_; // body frame specific force in nav frame
             vec_3_1 gamma_b_n_; // gravity acting on body in nav frame
+            vec_3_1 gnss_meas_;
 
             vec_3_1 plus_pos_;
             vec_3_1 plus_vel_;
@@ -129,12 +143,21 @@ namespace cpp_nav_filt
             double time_;
             double dt_;
             double geocentric_radius_;
-
-            void mechanizeSolution();
+            
+            // Private Functions
             void checkInitStatus();
+            
+            // Time Update
+            void mechanizeSolution();
             void generateErrorStateSTM(); // generate error state state state transition matrix
             void generateProcessCovarMat(); 
             void propagateErrorState();
+            void correctImuMeasurements();
+
+            // Measurement Update
+            void estimateGnssMeasurement(vec_3_1& y_hat);
+
+            void rigidBodyTransform(vec_3_1& X,vec_3_1& att,vec_3_1& Y);
 
             // private setters
             void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);

@@ -13,6 +13,7 @@ namespace cpp_nav_filt
         P_hat_.setZero();
         dx_hat_.setZero(); // zeroize error state
         Phi_.setZero();
+        Q_.setZero();
 
         filt_init_ = false;
         pos_init_  = false;
@@ -59,12 +60,26 @@ namespace cpp_nav_filt
         
         if(dt_>0)
         {
+            correctImuMeasurements(); // perform bias compensation
             mechanizeSolution(); // mechanize full state PVA solution 
+
             generateErrorStateSTM(); // generate error state state transition matrix
+            generateProcessCovarMat(); // generate current process covariance matrix
+
             propagateErrorState();
 
             setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }
+    }
+
+    void LooselyCoupledIns::getGnssMeasurements(vec_3_1& gnss_measurement,const int& meas_type)
+    {
+        gnss_meas_ = gnss_measurement;
+        meas_type_ = meas_type;
+
+        estimateGnssMeasurement(y_hat_);
+        innov_ = gnss_meas_ - y_hat_; // full state innovation
+
     }
 
     void LooselyCoupledIns::setBgSol(vec_3_1& bg_hat)
@@ -154,11 +169,6 @@ namespace cpp_nav_filt
             setPosSol(minus_pos_); // get position state before propagation
             setAttSol(minus_att_); // get attitude state before propagation
             setVelSol(minus_vel_); // get velocity state before propagation
-            setBgSol(bg_hat_);
-            setBaSol(ba_hat_);
-
-            wb_b_ = wb_b_ - bg_hat_; // subtract bias estimate from gyroscopes
-            fb_b_ = fb_b_ - ba_hat_; // subtract bias estimate from accelerometers
 
             common_.eul2Rotm(minus_att_,C_n_b_minus_); // rotation matrix based on current solution of attitude                      
             common_.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
@@ -190,7 +200,6 @@ namespace cpp_nav_filt
 
         vec_3_1 current_pos,lla,current_att;
         mat_3_3 Cbn;
-        mat_3_3 F21;
 
         setPosSol(current_pos);
         setAttSol(current_att);
@@ -203,14 +212,14 @@ namespace cpp_nav_filt
         lla = lla*cpp_nav_filt::D2R;
         common_.geocentricRadius(lla[0],geocentric_radius_);
 
-        mat_3_3 F23 = (-2*gamma_b_n_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
-        common_.makeSkewSymmetic(fb_n_,F21);
-        F21 = -F21;
+        F23_ = (-2*gamma_b_n_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
+        common_.makeSkewSymmetic(fb_n_,F21_);
+        F21_ = -F21_;
 
         // velocity
         Phi_.block<3,3>(0,0) = I_3_ - 2*dt_*Omega_e_; // del V w/ del V
-        Phi_.block<3,3>(0,3) = F23*dt_;
-        Phi_.block<3,3>(0,6) = F21*dt_;
+        Phi_.block<3,3>(0,3) = F23_*dt_;
+        Phi_.block<3,3>(0,6) = F21_*dt_;
         Phi_.block<3,3>(0,12) = Cbn*dt_;
         
         // Position
@@ -233,6 +242,69 @@ namespace cpp_nav_filt
     void LooselyCoupledIns::propagateErrorState()
     {
         dx_hat_ = Phi_*dx_hat_; // state update equation
+        P_hat_ = Phi_*P_hat_*(Phi_.transpose()) + Q_;
+    }
+
+    void LooselyCoupledIns::generateProcessCovarMat()
+    {
+        // Groves p. 592
+
+        // this is an approximation, assumes dt less than or equal to 0.2 s
+        // I will fix this when Loosely Coupled INS is working
+
+        Q_.block<3,3>(0,0)   = ins_settings.psd_accel_noise*I_3_;
+        Q_.block<3,3>(6,6)   = ins_settings.psd_gyro_noise*I_3_;
+        Q_.block<3,3>(9,9)   = ins_settings.psd_gyro_bias*I_3_;
+        Q_.block<3,3>(12,12) = ins_settings.psd_accel_bias*I_3_;
+
+        Q_ = Q_*dt_;
+    }
+
+    void LooselyCoupledIns::correctImuMeasurements()
+    {
+        setBgSol(bg_hat_);
+        setBaSol(ba_hat_);
+
+        wb_b_ = wb_b_ - bg_hat_; // subtract bias estimate from gyroscopes
+        fb_b_ = fb_b_ - ba_hat_; // subtract bias estimate from accelerometers
+    }
+
+    void LooselyCoupledIns::estimateGnssMeasurement(vec_3_1& y_hat)
+    {
+        vec_3_1 state,att;
+        
+        setAttSol(att);
+
+        if(meas_type_ == POS_TYPE)
+        {
+            setPosSol(state);
+        }
+        else if(meas_type_ == VEL_TYPE)
+        {
+            setVelSol(state);
+        }
+        
+        rigidBodyTransform(state,att,y_hat); // gets current estimate of measured quantity
+    }
+
+    void LooselyCoupledIns::rigidBodyTransform(vec_3_1& X,vec_3_1& att,vec_3_1& Y)
+    {
+        mat_3_3 Cbn; // current estimate of DCM
+        vec_3_1 lb_b; // current estimate of lever arm (body frame)
+
+        common_.eul2Rotm(att,Cbn);
+        Cbn = Cbn.transpose();
+
+        lb_b = ins_settings.lever_arm;
+
+        if(meas_type_ == POS_TYPE)
+        {
+            Y = X + Cbn*lb_b;
+        }
+        else if(meas_type_ == VEL_TYPE)
+        {
+            Y = Cbn*(X + wb_b_.cross(lb_b));
+        }
     }
 
     void LooselyCoupledIns::checkInitStatus()
