@@ -1,4 +1,4 @@
-# Install script for directory: /home/nicholas/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source/3rd_party
+# Install script for directory: /home/njo0004/devel/cpp_nav_filters/build/_deps/matplotplusplus-src/source/3rd_party
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,10 +35,5 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
-endif()
-
-# Set default install directory permissions.
-if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 

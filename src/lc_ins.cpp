@@ -199,12 +199,12 @@ namespace cpp_nav_filt
         */
 
         vec_3_1 current_pos,lla,current_att;
-        mat_3_3 Cbn;
+        mat_3_3 Cbn,Cnb;
 
         setPosSol(current_pos);
         setAttSol(current_att);
-        common_.eul2Rotm(current_att,Cbn); // gives rotation from N to B so we need to transpose
-        Cbn = Cbn.transpose();
+        common_.eul2Rotm(current_att,Cnb); // gives rotation from N to B so we need to transpose
+        Cbn = Cnb.transpose();
         fb_n_ = Cbn*fb_b_; // nav frame specific fornces
 
         common_.somiglianaGravityModel(current_pos,gamma_b_n_);
