@@ -235,6 +235,33 @@ src/common.cpp.s:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.s
 .PHONY : src/common.cpp.s
 
+src/cpp_nav_filt_lib.o: src/cpp_nav_filt_lib.cpp.o
+
+.PHONY : src/cpp_nav_filt_lib.o
+
+# target to build an object file
+src/cpp_nav_filt_lib.cpp.o:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/cpp_nav_filt_lib.cpp.o
+.PHONY : src/cpp_nav_filt_lib.cpp.o
+
+src/cpp_nav_filt_lib.i: src/cpp_nav_filt_lib.cpp.i
+
+.PHONY : src/cpp_nav_filt_lib.i
+
+# target to preprocess a source file
+src/cpp_nav_filt_lib.cpp.i:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/cpp_nav_filt_lib.cpp.i
+.PHONY : src/cpp_nav_filt_lib.cpp.i
+
+src/cpp_nav_filt_lib.s: src/cpp_nav_filt_lib.cpp.s
+
+.PHONY : src/cpp_nav_filt_lib.s
+
+# target to generate assembly for a file
+src/cpp_nav_filt_lib.cpp.s:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/cpp_nav_filt_lib.cpp.s
+.PHONY : src/cpp_nav_filt_lib.cpp.s
+
 src/frame_conversions.o: src/frame_conversions.cpp.o
 
 .PHONY : src/frame_conversions.o
@@ -362,6 +389,9 @@ help:
 	@echo "... src/common.o"
 	@echo "... src/common.i"
 	@echo "... src/common.s"
+	@echo "... src/cpp_nav_filt_lib.o"
+	@echo "... src/cpp_nav_filt_lib.i"
+	@echo "... src/cpp_nav_filt_lib.s"
 	@echo "... src/frame_conversions.o"
 	@echo "... src/frame_conversions.i"
 	@echo "... src/frame_conversions.s"

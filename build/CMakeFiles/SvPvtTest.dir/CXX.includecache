@@ -7,10 +7,14 @@
 #IncludeRegexTransform: 
 
 ../include/common/common.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/common/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
+../include/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 eigen3/Eigen/Core
-../include/common/eigen3/Eigen/Core
+../include/cpp_nav_filt_lib/eigen3/Eigen/Core
 eigen3/Eigen/Dense
-../include/common/eigen3/Eigen/Dense
+../include/cpp_nav_filt_lib/eigen3/Eigen/Dense
 iostream
 -
 cmath
@@ -20,7 +24,7 @@ vector
 map
 -
 frame_conversions/frame_conversions.h
-../include/common/frame_conversions/frame_conversions.h
+../include/cpp_nav_filt_lib/frame_conversions/frame_conversions.h
 
 ../include/frame_conversions/frame_conversions.h
 iostream

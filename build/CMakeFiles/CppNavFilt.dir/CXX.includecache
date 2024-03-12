@@ -7,10 +7,14 @@
 #IncludeRegexTransform: 
 
 ../include/common/common.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/common/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
+../include/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 eigen3/Eigen/Core
-../include/common/eigen3/Eigen/Core
+../include/cpp_nav_filt_lib/eigen3/Eigen/Core
 eigen3/Eigen/Dense
-../include/common/eigen3/Eigen/Dense
+../include/cpp_nav_filt_lib/eigen3/Eigen/Dense
 iostream
 -
 cmath
@@ -20,7 +24,7 @@ vector
 map
 -
 frame_conversions/frame_conversions.h
-../include/common/frame_conversions/frame_conversions.h
+../include/cpp_nav_filt_lib/frame_conversions/frame_conversions.h
 
 ../include/frame_conversions/frame_conversions.h
 iostream
@@ -28,9 +32,25 @@ iostream
 math.h
 -
 
+../include/gps_least_squares/gps_least_squares.h
+common/common.h
+../include/gps_least_squares/common/common.h
+
 ../include/lc_ins/lc_ins.h
 common/common.h
 ../include/lc_ins/common/common.h
+
+/home/njo0004/devel/cpp_nav_filters/src/common.cpp
+common/common.h
+/home/njo0004/devel/cpp_nav_filters/src/common/common.h
+
+/home/njo0004/devel/cpp_nav_filters/src/cpp_nav_filt_lib.cpp
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+/home/njo0004/devel/cpp_nav_filters/src/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp
+gps_least_squares/gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
 
 /home/njo0004/devel/cpp_nav_filters/src/lc_ins.cpp
 lc_ins/lc_ins.h

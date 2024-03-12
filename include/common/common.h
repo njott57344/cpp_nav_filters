@@ -1,32 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-// Eigen
-#include "eigen3/Eigen/Core"
-#include "eigen3/Eigen/Dense"
-
-// CPP Headers
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <map>
-
-#include "frame_conversions/frame_conversions.h"
-
-typedef Eigen::Matrix<double,3,1> vec_3_1;
-typedef Eigen::Matrix<double,1,3> vec_1_3;
-typedef Eigen::Matrix<double,32,3> mat_32_3;
-typedef Eigen::Matrix<double,32,27> mat_32_27;
-typedef Eigen::Matrix<double,1,27> vec_1_27;
-typedef Eigen::Matrix<double,6,1> vec_6_1;
-typedef Eigen::Matrix<double,7,1> vec_7_1;
-typedef Eigen::Matrix<double,4,1> vec_4_1;
-typedef Eigen::Matrix<double,8,1> vec_8_1;
-typedef Eigen::Matrix<double,32,1> vec_32_1;
-typedef Eigen::Matrix<double,4,4> mat_4_4;
-typedef Eigen::Matrix<double,3,3> mat_3_3;
-typedef Eigen::Matrix<double,15,1> vec_15_1;
-typedef Eigen::Matrix<double,15,15> mat_15_15;
+#include "cpp_nav_filt_lib/cpp_nav_filt_lib.h"
 
 typedef struct
 {
@@ -36,27 +11,6 @@ typedef struct
 
 namespace cpp_nav_filt
 {
-    // Math Constants
-    const double R2D = 180/M_PI; // FROM [rad] TO [deg]
-    const double D2R = M_PI/180; // FROM [deg] TO [rad]
-
-    // GPS Constants
-    const double gps_pi = M_PI; // PI
-    const double omega_e_dot = 7.29211561467*pow(10,-5); // rotation rate of earth
-    const double GM = 3.986005*pow(10,14);  
-    const double F = -4.442807633*pow(10,-10);
-    const int half_week = 302400; // [s]
-    const double c = 299792458.0; // [m/s] speed of light
-    const double J2 = 1.082627*pow(10,-3); // J2 gravity constant (from Groves p. 72);
-    const double mu_g = 3.986004418*pow(10,14); // Earth gravity constant (from Goves p. 71)
-    const double Ro = 6378137.0; // WGS84 equatorial radius [m]
-    const double w_e = 7.292115*pow(1,-5); // rotation rate of earth [rad/s]
-    const double e = 0.0818191908425; // ecentricity of earth
-
-    // Frequency Constant
-    const double f_l1 = 1.57542*pow(10,9);
-    const double f_l2 = 1.2276*pow(10,9);
-    const double f_l5 = 1.176*pow(10,9);
 
     class Common
     {
