@@ -27,6 +27,7 @@ typedef Eigen::Matrix<double,4,4> mat_4_4;
 typedef Eigen::Matrix<double,3,3> mat_3_3;
 typedef Eigen::Matrix<double,15,1> vec_15_1;
 typedef Eigen::Matrix<double,15,15> mat_15_15;
+typedef Eigen::Matrix<double,2,1> vec_2_1;
 
 namespace cpp_nav_filt
 {
@@ -62,24 +63,31 @@ namespace cpp_nav_filt
     void calcElAngle();
   
     // ========= Frame Conversion Functions ============= //
-    void setRefLla(vec_3_1& lla_in);
 
     // ecef to/from lla
-    void convertECEF2LLA(vec_3_1& ecef_pos,vec_3_1& lla_pos);
-    void convertLLA2ECEF(vec_3_1& lla_pos,vec_3_1& ecef_pos);
+    vec_3_1 ecef2llaPos(vec_3_1& ecef_pos);
+    vec_3_1 lla2ecefPos(vec_3_1& lla_pos);
     
     // ecef to/from ned
-    void convertECEF2NED(vec_3_1& ecef_pos,vec_3_1& ned_pos,vec_3_1& ref_lla);
-    void convertNED2ECEF(vec_3_1& ned_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla);
+    vec_3_1 ecef2nedPos(vec_3_1& ecef_pos,vec_3_1& ref_lla);
+    vec_3_1 ned2ecefPos(vec_3_1& ned_pos,vec_3_1& ref_lla);
     
-    // enu to/from ned
-    void convertNED2ENU(vec_3_1& ned_pos,vec_3_1& enu_pos);
-    void convertENU2NED(vec_3_1& enu_pos,vec_3_1& ned_pos);
-
     // ecef to/from enu
-    void convertECEF2ENU(vec_3_1& ecef_pos,vec_3_1& enu_pos,vec_3_1& ref_lla);
-    void convertENU2ECEF(vec_3_1& enu_pos,vec_3_1& ecef_pos,vec_3_1& ref_lla);
+    vec_3_1 ecef2enuPos(vec_3_1& ecef_pos,vec_3_1& ref_lla);
+    vec_3_1 enu2ecefPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
 
+    // enu to/from ned
+    vec_3_1 enu2nedPos(vec_3_1& enu_pos);
+    vec_3_1 ned2enuPos(vec_3_1& ned_pos);
+    
+    // lla to/from ned
+    vec_3_1 lla2nedPos(vec_3_1& lla_pos,vec_3_1& ref_lla);
+    vec_3_1 ned2llaPos(vec_3_1& ned_pos,vec_3_1& ref_lla);
+
+    // lla to/from enu
+    vec_3_1 lla2enuPos(vec_3_1& lla_pos,vec_3_1& ref_lla);
+    vec_3_1 enu2llaPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
+    
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
@@ -92,11 +100,8 @@ namespace cpp_nav_filt
     double meridianRadius(double& lat,double);
     double geocentricRadius(double& lat);
 
-
     // Init Roll Pitch
-    void calcSampleMean();
-    bool levelInsAccel(vec_3_1& fb_b);
-    void initRPfromAccel(vec_3_1& att);
+    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b);
 }
 
 #endif

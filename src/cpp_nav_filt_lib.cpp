@@ -187,4 +187,89 @@ namespace cpp_nav_filt
         double sqrt_arg = pow(cos(lat),2) + pow(1-pow(cpp_nav_filt::e,2),2)*pow(sin(lat),2);
         return meridian_radius*sqrt(sqrt_arg);        
     }
+
+    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b)
+    {
+        int num_meas = fb_b.rows();
+        vec_2_1 roll_pitch;
+
+        vec_1_3 samp_mean = fb_b.colwise().mean();
+
+        roll_pitch[0] = std::atan2(-samp_mean[1],-samp_mean[2]);
+        roll_pitch[1] = std::atan(samp_mean[0]/sqrt(pow(samp_mean[1],2) + pow(samp_mean[2],2)));
+        return roll_pitch;
+    }   
+
+    vec_3_1 convertEnu2NED(vec_3_1& enu_pos)
+    {
+        mat_3_3 C;
+        C.setZero();
+
+        C(1,0) = 1;
+        C(0,1) = 1;
+        C(2,2) = -1;
+        
+        return C*enu_pos;
+    }
+
+    vec_3_1 ecef2llaPos(vec_3_1& ecef_pos)
+    {
+
+    }
+
+    vec_3_1 lla2ecefPos(vec_3_1& lla_pos)
+    {
+
+    }
+
+    vec_3_1 ecef2nedPos(vec_3_1& ecef_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 ned2ecefPos(vec_3_1& ned_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 ecef2enuPos(vec_3_1& ecef_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 enu2ecefPos(vec_3_1& enu_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 enu2nedPos(vec_3_1& enu_pos)
+    {
+
+    }
+
+    vec_3_1 ned2enuPos(vec_3_1& ned_pos)
+    {
+
+    }
+
+    vec_3_1 lla2nedPos(vec_3_1& lla_pos,vec_3_1& ref_lla)
+    {
+
+    }
+    
+    vec_3_1 ned2llaPos(vec_3_1& ned_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 lla2enuPos(vec_3_1 lla_pos,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 enu2llaPos(vec_3_1 enu_pos,vec_3_1& ref_lla)
+    {
+
+    }
+    
 } // end of namespace
