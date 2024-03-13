@@ -96,7 +96,12 @@ namespace cpp_nav_filt
     vec_3_1 enu2llaPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
     
     // ---------- Velocities --------------------------- //
-    
+    vec_3_1 ecef2nedVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
+    vec_3_1 ned2ecefVel(vec_3_1& ned_vel,vec_3_1& ref_lla);
+
+    vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
+    vec_3_1 enu2ecefVel(vec_3_1& enu_vel,vec_3_1& ref_lla);
+
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
@@ -106,6 +111,8 @@ namespace cpp_nav_filt
 
     // gravity model
     vec_3_1 somiglianaGravityModel(vec_3_1& ecef_pos); // see groves p. 72
+    
+    // WGS Ellipoidal Earth Stuff
     double transverseRadiusOfCurvature(double& lat); // groves 2.106 (Re(L))
     double meridianRadiusOfCurvature(double& lat); // groves 2.105 (Rn(L))
     double geocentricRadius(double& lat);

@@ -420,4 +420,23 @@ namespace cpp_nav_filt
         return lla_pos;
     }
     
+    vec_3_1 ecef2nedVel(vec_3_1& ecef_vel,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 ned2ecefVel(vec_3_1& ned_vel,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla)
+    {
+
+    }
+
+    vec_3_1 enu2ecefVel(vec_3_1& enu_vel,vec_3_1& ref_lla)
+    {
+        
+    }
 } // end of namespace
