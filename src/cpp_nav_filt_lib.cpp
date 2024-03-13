@@ -172,8 +172,20 @@ namespace cpp_nav_filt
         return -(cpp_nav_filt::mu_g/pow(abs_pos,3))*inner;
     }
 
-    double meridianRadius(double& lat)
+    double meridianRadiusOfCurvature(double& lat)
     {
+        // see groves p. 59
+        double num,den;
+
+        num = cpp_nav_filt::Ro*(1-pow(cpp_nav_filt::e,2));
+        den = pow(1-pow(cpp_nav_filt::e,2)*pow(sin(lat),2),1.5);
+
+        return num/den;
+    }
+
+    double transverseRadiusOfCurvature(double& lat)
+    {
+        // see groves p. 59
         double denom = 1-pow(cpp_nav_filt::e,2)*pow(sin(lat),2);
         return cpp_nav_filt::Ro/sqrt(denom);        
     }
@@ -181,11 +193,11 @@ namespace cpp_nav_filt
     double geocentricRadius(double& lat)
     {
         // groves p. 71
-        double meridian_radius;
-        meridian_radius = meridianRadius(lat);
+        double radius_of_curvature;
+        radius_of_curvature = transverseRadiusOfCurvature(lat);
 
         double sqrt_arg = pow(cos(lat),2) + pow(1-pow(cpp_nav_filt::e,2),2)*pow(sin(lat),2);
-        return meridian_radius*sqrt(sqrt_arg);        
+        return radius_of_curvature*sqrt(sqrt_arg);        
     }
 
     vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b)
@@ -214,62 +226,198 @@ namespace cpp_nav_filt
 
     vec_3_1 ecef2llaPos(vec_3_1& ecef_pos)
     {
+        // groves p 61-62
+        vec_3_1 lla;
+        lla.setOnes();
 
+        double x,y,z;
+        x = ecef_pos[0];
+        y = ecef_pos[1];
+        z = ecef_pos[2];
+
+        double lat,lon,alt;
+        double templat,tempalt;
+
+        double num,den;
+
+        double rho_sqr;
+        double dlat = 1,dalt = 1; // init to 1 so while loop runs
+        int iter = 0;
+
+        double Re; // transverse radius of curavture
+        double e2 = cpp_nav_filt::e*cpp_nav_filt::e;
+
+        // solving for lon (groves 2.113)
+        lon = std::atan2(y,x);
+
+        // have to iterate to solve for lat and alt
+        // init to spherical earth 
+        rho_sqr = x*x + z*z;
+        templat = atan2(y,sqrt(rho_sqr));
+        tempalt = sqrt(rho_sqr + y*y) - cpp_nav_filt::A;
+
+        while (iter<50 && dlat>1e-12 && dalt>1e-12)
+        {
+            Re = transverseRadiusOfCurvature(templat);
+
+            // lat
+            num = (z*(Re + tempalt));
+            den = sqrt(x*x + y*y)*((1-e2)*Re + tempalt);
+            lat = atan(num/den);
+
+            // alt
+            num = sqrt(x*x + y*y);
+            den = std::cos(templat);
+            alt = num/den - Re;
+
+            // while loop stuff
+            dlat = abs(lat - templat);
+            dalt = abs(alt - tempalt);
+            templat = lat;
+            tempalt = alt;
+            iter++;
+        }
+
+        if(iter == 49)
+        {
+            std::cout<<"WARNING: ecef2llaPos could not converge!"<<std::endl;
+            lla = NAN*lla;
+        }
+        else
+        {
+            lla<<lat*cpp_nav_filt::R2D,lon*cpp_nav_filt::R2D,alt;
+        }
+
+        return lla;
     }
 
     vec_3_1 lla2ecefPos(vec_3_1& lla_pos)
     {
+        // see groves 2.112
+        double lat,lon,alt;
+        double x,y,z;
+        vec_3_1 ecef_pos;
+        
+        lat = lla_pos(0)*cpp_nav_filt::D2R;
+        lon = lla_pos(1)*cpp_nav_filt::D2R;
+        alt = lla_pos(2);
 
+        double Re = transverseRadiusOfCurvature(lat);
+        double e2 = pow(cpp_nav_filt::e,2);
+
+        x = (Re + alt)*std::cos(lat)*std::cos(lon);
+        y = (Re + alt)*std::cos(lat)*std::sin(lon);
+        z = ((1 - e2)*Re + alt)*sin(lat);
+
+        ecef_pos<<x,y,z;
+        return ecef_pos;
     }
 
     vec_3_1 ecef2nedPos(vec_3_1& ecef_pos,vec_3_1& ref_lla)
     {
+        double lat_0,lon_0,alt_0; // origin of NED frame
+        lat_0 = ref_lla(0)*cpp_nav_filt::D2R;
+        lon_0 = ref_lla(1)*cpp_nav_filt::D2R;
+        alt_0 = ref_lla(2);
+        
+        mat_3_3 Cen; // rotation matrix ecef to ned
+        vec_3_1 ref_ecef;
+        
+        ref_ecef = cpp_nav_filt::lla2ecefPos(ref_lla);
 
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
+               -std::sin(lon_0),                  std::cos(lat_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+
+        return Cen*(ecef_pos - ref_ecef);
     }
 
     vec_3_1 ned2ecefPos(vec_3_1& ned_pos,vec_3_1& ref_lla)
     {
+        double lat_0,lon_0,alt_0; // origin of NED frame
+        lat_0 = ref_lla(0)*cpp_nav_filt::D2R;
+        lon_0 = ref_lla(1)*cpp_nav_filt::D2R;
+        alt_0 = ref_lla(2);
+        
+        mat_3_3 Cen; // rotation matrix ecef to ned
+        mat_3_3 Cne; // rotation matrix ned to ecef
+        vec_3_1 ref_ecef;
+        
+        ref_ecef = cpp_nav_filt::lla2ecefPos(ref_lla);
 
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
+               -std::sin(lon_0),                  std::cos(lat_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+        
+        Cne = Cen.transpose();
+
+        return ref_ecef + Cne*ned_pos;
     }
 
     vec_3_1 ecef2enuPos(vec_3_1& ecef_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ned_pos,enu_pos;
+        ned_pos = cpp_nav_filt::ecef2nedPos(ecef_pos,ref_lla);
+        enu_pos = cpp_nav_filt::ned2enuPos(ned_pos);
+        return enu_pos;
     }
 
     vec_3_1 enu2ecefPos(vec_3_1& enu_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ned_pos,ecef_pos;
+        ned_pos = cpp_nav_filt::enu2nedPos(enu_pos);
+        ecef_pos = cpp_nav_filt::ned2ecefPos(ned_pos,ref_lla);
+        return ecef_pos;
     }
 
     vec_3_1 enu2nedPos(vec_3_1& enu_pos)
     {
-
+        mat_3_3 Cen; // rotation matrix enu to ned
+        Cen << 0, 1, 0,
+               1, 0, 0,
+               0, 0,-1;
+        return Cen*enu_pos;
     }
 
     vec_3_1 ned2enuPos(vec_3_1& ned_pos)
     {
-
+        mat_3_3 Cne; // rotation matrix ned to enu
+        Cne << 0, 1, 0,
+               1, 0, 0,
+               0, 0,-1;
+        return Cne*ned_pos;
     }
 
     vec_3_1 lla2nedPos(vec_3_1& lla_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ecef_pos,ned_pos;
+        ecef_pos = cpp_nav_filt::lla2ecefPos(lla_pos);
+        ned_pos = cpp_nav_filt::ecef2nedPos(ecef_pos,ref_lla);
+        return ned_pos;
     }
     
     vec_3_1 ned2llaPos(vec_3_1& ned_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ecef_pos,lla_pos;
+        ecef_pos = cpp_nav_filt::ned2ecefPos(ned_pos,ref_lla);
+        lla_pos = cpp_nav_filt::ecef2llaPos(ecef_pos);
+        return lla_pos;
     }
 
     vec_3_1 lla2enuPos(vec_3_1 lla_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ecef_pos,enu_pos;
+        ecef_pos = cpp_nav_filt::lla2ecefPos(lla_pos);
+        enu_pos = cpp_nav_filt::ecef2enuPos(ecef_pos,ref_lla);
+        return enu_pos;
     }
 
     vec_3_1 enu2llaPos(vec_3_1 enu_pos,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ecef_pos,lla_pos;
+        ecef_pos = cpp_nav_filt::enu2ecefPos(enu_pos,ref_lla);
+        lla_pos = cpp_nav_filt::ecef2llaPos(ecef_pos);
+        return lla_pos;
     }
     
 } // end of namespace

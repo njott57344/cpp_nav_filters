@@ -41,11 +41,17 @@ int main(int argc,char **argv)
     solution_out.open(output_file);
 
     // MRI antenna
-    vec_3_1 true_x,true_lla;
+    vec_3_1 true_x,true_lla,test_x;
     true_x(0) = 422596.629;
     true_x(1) = -5362864.287;
     true_x(2) = 3415493.797;
 
+    true_lla = cpp_nav_filt::ecef2llaPos(true_x);
+    test_x = cpp_nav_filt::lla2ecefPos(true_lla);
+
+    std::cout<<true_lla<<std::endl;
+    std::cout<<true_x - test_x<<std::endl;
+    
     // ============== Initial INS Conditions ========= //
 
     std::string init_line,init_word;

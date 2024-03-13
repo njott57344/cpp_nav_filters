@@ -45,10 +45,15 @@ namespace cpp_nav_filt
     const double c = 299792458.0; // [m/s] speed of light
     const double J2 = 1.082627*pow(10,-3); // J2 gravity constant (from Groves p. 72);
     const double mu_g = 3.986004418*pow(10,14); // Earth gravity constant (from Goves p. 71)
-    const double Ro = 6378137.0; // WGS84 equatorial radius [m]
     const double w_e = 7.292115*pow(1,-5); // rotation rate of earth [rad/s]
+    
+    // Parameters of WGS84 Ellipsoid
+    const double Ro = 6378137.0; // WGS84 equatorial radius [m]
     const double e = 0.0818191908425; // ecentricity of earth
-
+    const double flattening = 1/298.257223563;
+    const double Rp = 6356752.31425; // WGS84 polar radius [m]
+    const double A = 6378137.0;
+    
     // Frequency Constant
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);
@@ -63,6 +68,8 @@ namespace cpp_nav_filt
     void calcElAngle();
   
     // ========= Frame Conversion Functions ============= //
+
+    // ------------ Positions ------------------------------ //
 
     // ecef to/from lla
     vec_3_1 ecef2llaPos(vec_3_1& ecef_pos);
@@ -88,6 +95,8 @@ namespace cpp_nav_filt
     vec_3_1 lla2enuPos(vec_3_1& lla_pos,vec_3_1& ref_lla);
     vec_3_1 enu2llaPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
     
+    // ---------- Velocities --------------------------- //
+    
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
@@ -97,7 +106,8 @@ namespace cpp_nav_filt
 
     // gravity model
     vec_3_1 somiglianaGravityModel(vec_3_1& ecef_pos); // see groves p. 72
-    double meridianRadius(double& lat,double);
+    double transverseRadiusOfCurvature(double& lat); // groves 2.106 (Re(L))
+    double meridianRadiusOfCurvature(double& lat); // groves 2.105 (Rn(L))
     double geocentricRadius(double& lat);
 
     // Init Roll Pitch
