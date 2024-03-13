@@ -422,12 +422,41 @@ namespace cpp_nav_filt
     
     vec_3_1 ecef2nedVel(vec_3_1& ecef_vel,vec_3_1& ref_lla)
     {
+        double lat_0,lon_0,alt_0; // origin of NED frame
+        lat_0 = ref_lla(0)*cpp_nav_filt::D2R;
+        lon_0 = ref_lla(1)*cpp_nav_filt::D2R;
+        alt_0 = ref_lla(2);
+        
+        mat_3_3 Cen; // rotation matrix ecef 2 ned
+        vec_3_1 ned_vel;
 
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
+               -std::sin(lon_0),                  std::cos(lat_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+
+        ned_vel = Cen*ecef_vel;
+        return ned_vel;
     }
 
     vec_3_1 ned2ecefVel(vec_3_1& ned_vel,vec_3_1& ref_lla)
     {
+        double lat_0,lon_0,alt_0; // origin of NED frame
+        lat_0 = ref_lla(0)*cpp_nav_filt::D2R;
+        lon_0 = ref_lla(1)*cpp_nav_filt::D2R;
+        alt_0 = ref_lla(2);
+        
+        mat_3_3 Cen,Cne; // rotation matrix ecef 2 ned
+        vec_3_1 ecef_vel;
 
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
+               -std::sin(lon_0),                  std::cos(lat_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+
+        Cne = Cen.transpose();
+
+        ecef_vel = Cne*ned_vel;
+
+        return ecef_vel;
     }
 
     vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla)
