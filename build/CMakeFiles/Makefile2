@@ -154,12 +154,12 @@ CMakeFiles/SvPvtTest.dir/all: _deps/matplotplusplus-build/source/3rd_party/CMake
 CMakeFiles/SvPvtTest.dir/all: _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/depend
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=7,8 "Built target SvPvtTest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=6,7 "Built target SvPvtTest"
 .PHONY : CMakeFiles/SvPvtTest.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SvPvtTest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 52
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 51
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SvPvtTest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
 .PHONY : CMakeFiles/SvPvtTest.dir/rule
@@ -181,12 +181,12 @@ CMakeFiles/SvPvtTest.dir/clean:
 CMakeFiles/CppNavFilt.dir/all:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/depend
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target CppNavFilt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target CppNavFilt"
 .PHONY : CMakeFiles/CppNavFilt.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/CppNavFilt.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/CppNavFilt.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/njo0004/devel/cpp_nav_filters/build/CMakeFiles 0
 .PHONY : CMakeFiles/CppNavFilt.dir/rule
@@ -208,7 +208,7 @@ CMakeFiles/CppNavFilt.dir/clean:
 _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all:
 	$(MAKE) -f _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build.make _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/depend
 	$(MAKE) -f _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build.make _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=47,48,49,50,51,52 "Built target nodesoup"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=46,47,48,49,50,51 "Built target nodesoup"
 .PHONY : _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
 
 # Build rule for subdir invocation for target.
@@ -235,7 +235,7 @@ _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/clean:
 _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all: _deps/matplotplusplus-build/source/3rd_party/CMakeFiles/nodesoup.dir/all
 	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/depend
 	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46 "Built target matplot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45 "Built target matplot"
 .PHONY : _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/all
 
 # Build rule for subdir invocation for target.

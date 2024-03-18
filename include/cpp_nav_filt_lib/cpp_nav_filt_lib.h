@@ -11,8 +11,6 @@
 #include <vector>
 #include <map>
 
-#include "frame_conversions/frame_conversions.h"
-
 typedef Eigen::Matrix<double,3,1> vec_3_1;
 typedef Eigen::Matrix<double,1,3> vec_1_3;
 typedef Eigen::Matrix<double,32,3> mat_32_3;

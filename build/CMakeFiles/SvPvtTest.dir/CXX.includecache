@@ -19,14 +19,6 @@ vector
 -
 map
 -
-frame_conversions/frame_conversions.h
-../include/cpp_nav_filt_lib/frame_conversions/frame_conversions.h
-
-../include/frame_conversions/frame_conversions.h
-iostream
--
-math.h
--
 
 ../include/gps_least_squares/gps_least_squares.h
 cpp_nav_filt_lib/cpp_nav_filt_lib.h

@@ -235,33 +235,6 @@ src/cpp_nav_filt_lib.cpp.s:
 	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/cpp_nav_filt_lib.cpp.s
 .PHONY : src/cpp_nav_filt_lib.cpp.s
 
-src/frame_conversions.o: src/frame_conversions.cpp.o
-
-.PHONY : src/frame_conversions.o
-
-# target to build an object file
-src/frame_conversions.cpp.o:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o
-.PHONY : src/frame_conversions.cpp.o
-
-src/frame_conversions.i: src/frame_conversions.cpp.i
-
-.PHONY : src/frame_conversions.i
-
-# target to preprocess a source file
-src/frame_conversions.cpp.i:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.i
-.PHONY : src/frame_conversions.cpp.i
-
-src/frame_conversions.s: src/frame_conversions.cpp.s
-
-.PHONY : src/frame_conversions.s
-
-# target to generate assembly for a file
-src/frame_conversions.cpp.s:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.s
-.PHONY : src/frame_conversions.cpp.s
-
 src/gps_least_squares.o: src/gps_least_squares.cpp.o
 
 .PHONY : src/gps_least_squares.o
@@ -389,9 +362,6 @@ help:
 	@echo "... src/cpp_nav_filt_lib.o"
 	@echo "... src/cpp_nav_filt_lib.i"
 	@echo "... src/cpp_nav_filt_lib.s"
-	@echo "... src/frame_conversions.o"
-	@echo "... src/frame_conversions.i"
-	@echo "... src/frame_conversions.s"
 	@echo "... src/gps_least_squares.o"
 	@echo "... src/gps_least_squares.i"
 	@echo "... src/gps_least_squares.s"
