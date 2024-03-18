@@ -1,4 +1,4 @@
-#include "common/common.h"
+#include "sv_manager/sv_manager.h"
 #include "gps_least_squares/gps_least_squares.h"
 #include "lc_ins/lc_ins.h"
 
@@ -11,7 +11,7 @@ namespace plt = matplotlibcpp;
 
 int main(int argc,char **argv)
 {
-    cpp_nav_filt::Common common;
+    cpp_nav_filt::SvManager common;
     cpp_nav_filt::GpsLeastSquaresSettings LeastSquaresSettings;
     LeastSquaresSettings.weighted_least_squares = false;
     cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
@@ -85,7 +85,7 @@ int main(int argc,char **argv)
     init_bg.setZero();
     init_time = eig_init_cdn[0];
 
-    common.convertECEF2LLA(init_pos,ins_lla_0);
+    ins_lla_0 = cpp_nav_filt::ecef2llaPos(init_pos);
 
     ins.setInitialPosState(init_pos,I3);
     ins.setInitialVelState(init_vel,I3);
@@ -93,8 +93,6 @@ int main(int argc,char **argv)
     ins.setInitialBaState(init_ba,I3);
     ins.setInitialBgState(init_bg,I3);
     ins.setInitialTime(init_time);
-
-    ins.setCommonClass(common);
 
     // ============== Testing INS Mechanization ====== //
 
@@ -105,7 +103,7 @@ int main(int argc,char **argv)
     bool att_is_init = false;
     vec_3_1 fb_b,wb_b;
     vec_3_1 ins_pos,ins_vel,ins_att; // ecef pos states
-    vec_3_1 ins_ned;
+    vec_3_1 ins_ned,ins_ned_vel;
     double t_current;
 
     std::vector<double> ins_x,ins_y,ins_z,ins_dx,ins_dy,ins_dz,ins_r,ins_p,ins_h;
@@ -134,15 +132,16 @@ int main(int argc,char **argv)
         ins.setVelSol(ins_vel);
         ins.setAttSol(ins_att);
 
-        // common.convertECEF2LLA(ins_pos,ins_ned);
+        ins_ned = cpp_nav_filt::ecef2nedPos(ins_pos,ins_lla_0);
+        ins_ned_vel = cpp_nav_filt::ecef2nedVel(ins_vel,ins_lla_0);
 
-        ins_x.push_back(ins_pos[0]);
-        ins_y.push_back(ins_pos[1]);
-        ins_z.push_back(ins_pos[2]);
+        ins_x.push_back(ins_ned[0]);
+        ins_y.push_back(ins_ned[1]);
+        ins_z.push_back(ins_ned[2]);
         
-        ins_dx.push_back(ins_vel[0]);
-        ins_dy.push_back(ins_vel[1]);
-        ins_dz.push_back(ins_vel[2]);
+        ins_dx.push_back(ins_ned_vel[0]);
+        ins_dy.push_back(ins_ned_vel[1]);
+        ins_dz.push_back(ins_ned_vel[2]);
 
         ins_r.push_back(ins_att[0]);
         ins_p.push_back(ins_att[1]);
@@ -164,8 +163,12 @@ int main(int argc,char **argv)
         imu_vect.clear();
     }    
 
-    plt::plot(ins_x,ins_y);
-    plt::title("INS ECEF X Y Position");
+    plt::plot(ins_y,ins_x);
+    plt::title("INS NED E vs N Position (m)");
+    plt::show();
+
+    plt::plot(ins_dy,ins_dx);
+    plt::title("INS NED E vs N Vel (m/s)");
     plt::show();
 
     plt::plot(ins_r);
@@ -179,8 +182,6 @@ int main(int argc,char **argv)
     plt::plot(ins_h);
     plt::title("INS Heading");
     plt::show();
-
-    
 
     // ============== Reading Ephemeris ============== //
     std::string ephem_line,ephem_word;
@@ -316,21 +317,19 @@ int main(int argc,char **argv)
                 sv_states.block<1,7>(j,0) = sv_pvt.transpose();
             }
 
-            
-            gps_least_squares.sendStateEstimate(meas_vect,sv_states,common,x_hat);
-            gps_least_squares.sendDOPEstimate(x_hat,sv_states,common,DOP);
+            gps_least_squares.sendStateEstimate(meas_vect,sv_states,x_hat);
+            //gps_least_squares.sendDOPEstimate(x_hat,sv_states,DOP);
             ecef_pos = x_hat.block<3,1>(0,0);
 
-            common.convertECEF2LLA(ecef_pos,lla_pos);
-            
+            lla_pos = cpp_nav_filt::ecef2llaPos(ecef_pos);
+    
             if(i == 1)
             {
                 lla_0 = lla_pos;
-                common.setRefLla(lla_0);
             }
-            
-            common.convertECEF2NED(ecef_pos,ned_pos,lla_0);
-            
+ 
+            ned_pos = cpp_nav_filt::ecef2nedPos(ecef_pos,lla_0);
+
             lat_soln.push_back(lla_pos[0]);
             lon_soln.push_back(lla_pos[1]);
             alt_soln.push_back(lla_pos[2]);
@@ -343,6 +342,7 @@ int main(int argc,char **argv)
             valid_sv_id_vect.clear();
             
             x_hat.setZero();
+
         }
                 
         i++;

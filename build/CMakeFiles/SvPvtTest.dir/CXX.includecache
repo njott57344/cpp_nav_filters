@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/common/common.h
-cpp_nav_filt_lib/cpp_nav_filt_lib.h
-../include/common/cpp_nav_filt_lib/cpp_nav_filt_lib.h
-
 ../include/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 eigen3/Eigen/Core
 ../include/cpp_nav_filt_lib/eigen3/Eigen/Core
@@ -33,12 +29,12 @@ math.h
 -
 
 ../include/gps_least_squares/gps_least_squares.h
-common/common.h
-../include/gps_least_squares/common/common.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/gps_least_squares/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 
 ../include/lc_ins/lc_ins.h
-common/common.h
-../include/lc_ins/common/common.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/lc_ins/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 
 ../include/matplotlibcpp/matplotlibcpp.h
 Python.h
@@ -68,9 +64,13 @@ numpy/arrayobject.h
 opencv2/opencv.hpp
 -
 
+../include/sv_manager/sv_manager.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/sv_manager/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
 /home/njo0004/devel/cpp_nav_filters/src/main.cpp
-common/common.h
-/home/njo0004/devel/cpp_nav_filters/src/common/common.h
+sv_manager/sv_manager.h
+/home/njo0004/devel/cpp_nav_filters/src/sv_manager/sv_manager.h
 gps_least_squares/gps_least_squares.h
 /home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
 lc_ins/lc_ins.h

@@ -57,18 +57,18 @@ include CMakeFiles/CppNavFilt.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/CppNavFilt.dir/flags.make
 
-CMakeFiles/CppNavFilt.dir/src/common.cpp.o: CMakeFiles/CppNavFilt.dir/flags.make
-CMakeFiles/CppNavFilt.dir/src/common.cpp.o: ../src/common.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CppNavFilt.dir/src/common.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CppNavFilt.dir/src/common.cpp.o -c /home/njo0004/devel/cpp_nav_filters/src/common.cpp
+CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o: CMakeFiles/CppNavFilt.dir/flags.make
+CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o: ../src/sv_manager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/njo0004/devel/cpp_nav_filters/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o -c /home/njo0004/devel/cpp_nav_filters/src/sv_manager.cpp
 
-CMakeFiles/CppNavFilt.dir/src/common.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CppNavFilt.dir/src/common.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/njo0004/devel/cpp_nav_filters/src/common.cpp > CMakeFiles/CppNavFilt.dir/src/common.cpp.i
+CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/njo0004/devel/cpp_nav_filters/src/sv_manager.cpp > CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.i
 
-CMakeFiles/CppNavFilt.dir/src/common.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CppNavFilt.dir/src/common.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/njo0004/devel/cpp_nav_filters/src/common.cpp -o CMakeFiles/CppNavFilt.dir/src/common.cpp.s
+CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/njo0004/devel/cpp_nav_filters/src/sv_manager.cpp -o CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.s
 
 CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o: CMakeFiles/CppNavFilt.dir/flags.make
 CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o: ../src/gps_least_squares.cpp
@@ -124,7 +124,7 @@ CMakeFiles/CppNavFilt.dir/src/cpp_nav_filt_lib.cpp.s: cmake_force
 
 # Object files for target CppNavFilt
 CppNavFilt_OBJECTS = \
-"CMakeFiles/CppNavFilt.dir/src/common.cpp.o" \
+"CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o" \
 "CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o" \
 "CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o" \
 "CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o" \
@@ -133,7 +133,7 @@ CppNavFilt_OBJECTS = \
 # External object files for target CppNavFilt
 CppNavFilt_EXTERNAL_OBJECTS =
 
-libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/common.cpp.o
+libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/gps_least_squares.cpp.o
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/frame_conversions.cpp.o
 libCppNavFilt.a: CMakeFiles/CppNavFilt.dir/src/lc_ins.cpp.o

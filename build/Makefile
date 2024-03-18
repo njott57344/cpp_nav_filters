@@ -208,33 +208,6 @@ matplot/fast:
 	$(MAKE) -f _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build.make _deps/matplotplusplus-build/source/matplot/CMakeFiles/matplot.dir/build
 .PHONY : matplot/fast
 
-src/common.o: src/common.cpp.o
-
-.PHONY : src/common.o
-
-# target to build an object file
-src/common.cpp.o:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.o
-.PHONY : src/common.cpp.o
-
-src/common.i: src/common.cpp.i
-
-.PHONY : src/common.i
-
-# target to preprocess a source file
-src/common.cpp.i:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.i
-.PHONY : src/common.cpp.i
-
-src/common.s: src/common.cpp.s
-
-.PHONY : src/common.s
-
-# target to generate assembly for a file
-src/common.cpp.s:
-	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/common.cpp.s
-.PHONY : src/common.cpp.s
-
 src/cpp_nav_filt_lib.o: src/cpp_nav_filt_lib.cpp.o
 
 .PHONY : src/cpp_nav_filt_lib.o
@@ -370,6 +343,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/SvPvtTest.dir/build.make CMakeFiles/SvPvtTest.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/sv_manager.o: src/sv_manager.cpp.o
+
+.PHONY : src/sv_manager.o
+
+# target to build an object file
+src/sv_manager.cpp.o:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.o
+.PHONY : src/sv_manager.cpp.o
+
+src/sv_manager.i: src/sv_manager.cpp.i
+
+.PHONY : src/sv_manager.i
+
+# target to preprocess a source file
+src/sv_manager.cpp.i:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.i
+.PHONY : src/sv_manager.cpp.i
+
+src/sv_manager.s: src/sv_manager.cpp.s
+
+.PHONY : src/sv_manager.s
+
+# target to generate assembly for a file
+src/sv_manager.cpp.s:
+	$(MAKE) -f CMakeFiles/CppNavFilt.dir/build.make CMakeFiles/CppNavFilt.dir/src/sv_manager.cpp.s
+.PHONY : src/sv_manager.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -386,9 +386,6 @@ help:
 	@echo "... CppNavFilt"
 	@echo "... nodesoup"
 	@echo "... matplot"
-	@echo "... src/common.o"
-	@echo "... src/common.i"
-	@echo "... src/common.s"
 	@echo "... src/cpp_nav_filt_lib.o"
 	@echo "... src/cpp_nav_filt_lib.i"
 	@echo "... src/cpp_nav_filt_lib.s"
@@ -404,6 +401,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/sv_manager.o"
+	@echo "... src/sv_manager.i"
+	@echo "... src/sv_manager.s"
 .PHONY : help
 
 

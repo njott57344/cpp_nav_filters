@@ -1,7 +1,7 @@
 #ifndef LC_INS_H
 #define LC_INS_H
 
-#include "common/common.h"
+#include "cpp_nav_filt_lib/cpp_nav_filt_lib.h"
 
 /*
     Inputs:
@@ -66,7 +66,6 @@ namespace cpp_nav_filt
             void setInitialBgState(vec_3_1& bg_init,mat_3_3& bg_P);
             void setInitialBaState(vec_3_1& ba_init,mat_3_3& ba_P);
 
-            void setCommonClass(Common& common);
             void setPosSol(vec_3_1& pos);
             void setAttSol(vec_3_1& att);
             void setVelSol(vec_3_1& vel);
@@ -76,8 +75,6 @@ namespace cpp_nav_filt
         private:
             
             LooselyCoupledInsSettings ins_settings;
-
-            Common common_;
 
             bool filt_init_; // boolean to check if filter has initial full state estimate
             bool pos_init_;

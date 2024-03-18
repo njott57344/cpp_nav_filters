@@ -14,7 +14,7 @@ namespace cpp_nav_filt
 
     }
 
-    void GpsLeastSquares::sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,Common& common,vec_8_1& X)
+    void GpsLeastSquares::sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,vec_8_1& X)
     {
         num_measurements_ = Y.rows();
         num_svs_ = SvPVT.rows();
@@ -51,14 +51,14 @@ namespace cpp_nav_filt
         {
             while(ctr_<100 && delta_x_.norm()>0.0000001)
             {
-                common.sendUnitVectors(pos_,clk_,SvPVT_,G_);
-                common.sendMeasEst(pos_,vel_,clk_,clk_drift_,SvPVT_,Yhat_);
+                G_ = cpp_nav_filt::calcUnitVectors(SvPVT_,pos_,clk_);
 
+                Yhat_ = cpp_nav_filt::calcMeasEst(SvPVT_,pos_,vel_,clk_,clk_drift_);
                 deltaY_ = Y_ - Yhat_;
-    
+
                 H_.block(0,0,num_svs_,4) = G_;
                 H_.block(num_svs_,4,num_svs_,4) = G_;
-                
+
                 // std::cout<<deltaY_<<std::endl<<std::endl;
     
                 // std::cout<<Yhat_<<std::endl;
@@ -84,7 +84,7 @@ namespace cpp_nav_filt
         
             ctr_ = 0;
             delta_x_.setOnes();
-            X = x_; // setting output state to estimated state            
+            X = x_; // setting output state to estimated state         
         }
         else
         {
@@ -93,7 +93,7 @@ namespace cpp_nav_filt
         }
     }
 
-    void GpsLeastSquares::sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,Common& common,mat_4_4& DOP)
+    void GpsLeastSquares::sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,mat_4_4& DOP)
     {
         SvPVT_ = SvPVT;
         x_ = x_hat;
@@ -107,7 +107,7 @@ namespace cpp_nav_filt
 
         H_.resize(num_svs_,4);
 
-        common.sendUnitVectors(pos_,clk_,SvPVT_,H_);
+        H_ = cpp_nav_filt::calcUnitVectors(SvPVT_,pos_,clk_);
 
         DOP = (H_.transpose()*H_).inverse();
     }

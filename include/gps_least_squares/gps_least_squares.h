@@ -1,7 +1,7 @@
 #ifndef GPS_LEAST_SQUARES_H
 #define GPS_LEAST_SQUARES_H
 
-#include "common/common.h"
+#include "cpp_nav_filt_lib/cpp_nav_filt_lib.h"
 
 namespace cpp_nav_filt
 {
@@ -14,13 +14,11 @@ namespace cpp_nav_filt
     {
         public:
             
-
-
             GpsLeastSquares(GpsLeastSquaresSettings& settings_in);
             ~GpsLeastSquares();
 
-            void sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,Common& common,vec_8_1& X);
-            void sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,Common& common,mat_4_4& DOP);
+            void sendStateEstimate(Eigen::MatrixXd& Y,Eigen::MatrixXd& SvPVT,vec_8_1& X);
+            void sendDOPEstimate(vec_8_1& x_hat,Eigen::MatrixXd& SvPVT,mat_4_4& DOP);
 
         private:
 

@@ -70,7 +70,6 @@ namespace cpp_nav_filt
     // ========= Frame Conversion Functions ============= //
 
     // ------------ Positions ------------------------------ //
-
     // ecef to/from lla
     vec_3_1 ecef2llaPos(vec_3_1& ecef_pos);
     vec_3_1 lla2ecefPos(vec_3_1& lla_pos);

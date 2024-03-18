@@ -8,7 +8,7 @@ namespace cpp_nav_filt
 
         double x_comp,y_comp,z_comp;
 
-        Eigen::Matrix<double,1,1> psr_hat;
+        Eigen::MatrixXd psr_hat;
         psr_hat.resize(num_sv,1);
 
         for(int i = 0;i<num_sv;i++)
@@ -28,7 +28,7 @@ namespace cpp_nav_filt
         int num_sv = SvPVT.rows();
         double x_comp,y_comp,z_comp;
 
-        Eigen::Matrix<double,1,1> psr_hat,H;
+        Eigen::MatrixXd psr_hat,H;
         psr_hat.resize(num_sv,1); // estimated measurement vector
         H.resize(num_sv,4); // estimated unit vector matrix
 
@@ -54,7 +54,7 @@ namespace cpp_nav_filt
         int num_sv = SvPVT.rows();
         double x_comp,y_comp,z_comp;
 
-        Eigen::Matrix<double,1,1> psr_rate_hat,H;
+        Eigen::MatrixXd psr_rate_hat,H;
         vec_3_1 relative_vel,u;
         
         psr_rate_hat.resize(num_sv,1);
@@ -81,7 +81,7 @@ namespace cpp_nav_filt
     {
         int num_sv = SvPVT.rows();
 
-        Eigen::Matrix<double,1,1> psr,psr_rate,Y_hat;
+        Eigen::MatrixXd psr,psr_rate,Y_hat;
         psr.resize(num_sv,1);
         psr_rate.resize(num_sv,1);
         Y_hat.resize(2*num_sv,1);
@@ -90,7 +90,7 @@ namespace cpp_nav_filt
         psr_rate = calcPsrRate(SvPVT,ecef_pos,ecef_vel,clk_b,clk_d);
 
         Y_hat.block(0,0,num_sv,1) = psr;
-        Y_hat.block(num_sv+1,0,num_sv,1) = psr_rate;
+        Y_hat.block(num_sv,0,num_sv,1) = psr_rate;
 
         return Y_hat;
     }
@@ -322,12 +322,13 @@ namespace cpp_nav_filt
         
         mat_3_3 Cen; // rotation matrix ecef to ned
         vec_3_1 ref_ecef;
-        
+                
         ref_ecef = cpp_nav_filt::lla2ecefPos(ref_lla);
 
-        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
-               -std::sin(lon_0),                  std::cos(lat_0),                  0,
-               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lat_0),
+               -std::sin(lon_0),                  std::cos(lon_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0)*std::sin(lon_0), -std::sin(lat_0);
+
 
         return Cen*(ecef_pos - ref_ecef);
     }
@@ -345,9 +346,9 @@ namespace cpp_nav_filt
         
         ref_ecef = cpp_nav_filt::lla2ecefPos(ref_lla);
 
-        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
-               -std::sin(lon_0),                  std::cos(lat_0),                  0,
-               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lat_0),
+               -std::sin(lon_0),                  std::cos(lon_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0)*std::sin(lon_0), -std::sin(lat_0);
         
         Cne = Cen.transpose();
 
@@ -430,9 +431,9 @@ namespace cpp_nav_filt
         mat_3_3 Cen; // rotation matrix ecef 2 ned
         vec_3_1 ned_vel;
 
-        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
-               -std::sin(lon_0),                  std::cos(lat_0),                  0,
-               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lat_0),
+               -std::sin(lon_0),                  std::cos(lon_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0)*std::sin(lon_0), -std::sin(lat_0);
 
         ned_vel = Cen*ecef_vel;
         return ned_vel;
@@ -448,9 +449,9 @@ namespace cpp_nav_filt
         mat_3_3 Cen,Cne; // rotation matrix ecef 2 ned
         vec_3_1 ecef_vel;
 
-        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lon_0),
-               -std::sin(lon_0),                  std::cos(lat_0),                  0,
-               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0),std::sin(lon_0), -std::sin(lat_0);
+        Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lat_0),
+               -std::sin(lon_0),                  std::cos(lon_0),                  0,
+               -std::cos(lat_0)*std::cos(lon_0), -std::cos(lat_0)*std::sin(lon_0), -std::sin(lat_0);
 
         Cne = Cen.transpose();
 
@@ -461,11 +462,18 @@ namespace cpp_nav_filt
 
     vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla)
     {
-
+        vec_3_1 ned_vel,enu_vel;
+        ned_vel = ecef2nedVel(ecef_vel,ref_lla);
+        enu_vel = ned2enuPos(ned_vel);
+        return enu_vel;
     }
 
     vec_3_1 enu2ecefVel(vec_3_1& enu_vel,vec_3_1& ref_lla)
     {
-        
+        vec_3_1 ned_vel,ecef_vel;
+        ned_vel = enu2nedPos(enu_vel);
+        ecef_vel = ned2ecefVel(ned_vel,ref_lla);    
+        return ecef_vel;
     }
+
 } // end of namespace

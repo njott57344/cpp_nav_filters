@@ -27,7 +27,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-    src/common.cpp
+    src/sv_manager.cpp
     src/gps_least_squares.cpp
     src/frame_conversions.cpp
     src/lc_ins.cpp

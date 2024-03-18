@@ -26,6 +26,7 @@ namespace cpp_nav_filt
         we_i_<<0,0,cpp_nav_filt::w_e;
 
         I_3_.setIdentity();
+        Omega_e_ = cpp_nav_filt::makeSkewSymmetic(we_i_);
     }
 
     LooselyCoupledIns::~LooselyCoupledIns()
@@ -150,12 +151,6 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(6,0) = att;
     }
 
-    void LooselyCoupledIns::setCommonClass(Common& common)
-    {
-        common_ = common;
-        common_.makeSkewSymmetic(we_i_,Omega_e_);
-    }
-
     // =============== Loose INS ============== //
     void LooselyCoupledIns::mechanizeSolution()
     {
@@ -170,9 +165,9 @@ namespace cpp_nav_filt
             setAttSol(minus_att_); // get attitude state before propagation
             setVelSol(minus_vel_); // get velocity state before propagation
 
-            common_.eul2Rotm(minus_att_,C_n_b_minus_); // rotation matrix based on current solution of attitude                      
-            common_.makeSkewSymmetic(wb_b_,Omega_b_); // skew symmetric of body frame angular rates
-            common_.somiglianaGravityModel(minus_pos_,gamma_b_n_); // gravity from somigliana model
+            C_n_b_minus_ = cpp_nav_filt::eul2Rotm(minus_att_);
+            Omega_b_ = cpp_nav_filt::makeSkewSymmetic(wb_b_);
+            gamma_b_n_ = cpp_nav_filt::somiglianaGravityModel(minus_pos_);
 
             C_b_n_minus_ = C_n_b_minus_.transpose();
 
@@ -187,8 +182,7 @@ namespace cpp_nav_filt
                 // note: pos update assumes velocity varies linearly over integration period [groves 175]
 
             C_n_b_plus_ = C_b_n_plus_.transpose();
-
-            common_.rotm2Eul(C_n_b_plus_,plus_att_);
+            plus_att_ = cpp_nav_filt::rotm2Eul(C_n_b_plus_);
         }
     }
 
@@ -203,17 +197,17 @@ namespace cpp_nav_filt
 
         setPosSol(current_pos);
         setAttSol(current_att);
-        common_.eul2Rotm(current_att,Cnb); // gives rotation from N to B so we need to transpose
+        Cnb = cpp_nav_filt::eul2Rotm(current_att);
         Cbn = Cnb.transpose();
         fb_n_ = Cbn*fb_b_; // nav frame specific fornces
 
-        common_.somiglianaGravityModel(current_pos,gamma_b_n_);
-        common_.convertECEF2LLA(current_pos,lla);
-        lla = lla*cpp_nav_filt::D2R;
-        common_.geocentricRadius(lla[0],geocentric_radius_);
+        gamma_b_n_ = cpp_nav_filt::somiglianaGravityModel(current_pos);
+        lla = cpp_nav_filt::ecef2llaPos(current_pos);
+        lla.block<2,1>(0,0) = lla.block<2,1>(0,0)*cpp_nav_filt::D2R;
+        geocentric_radius_ = cpp_nav_filt::geocentricRadius(lla[0]);
 
         F23_ = (-2*gamma_b_n_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
-        common_.makeSkewSymmetic(fb_n_,F21_);
+        F21_ = cpp_nav_filt::makeSkewSymmetic(fb_n_);
         F21_ = -F21_;
 
         // velocity
@@ -292,7 +286,7 @@ namespace cpp_nav_filt
         mat_3_3 Cbn; // current estimate of DCM
         vec_3_1 lb_b; // current estimate of lever arm (body frame)
 
-        common_.eul2Rotm(att,Cbn);
+        Cbn = cpp_nav_filt::eul2Rotm(att);
         Cbn = Cbn.transpose();
 
         lb_b = ins_settings.lever_arm;
