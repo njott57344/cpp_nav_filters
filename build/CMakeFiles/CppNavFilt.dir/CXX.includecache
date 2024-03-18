@@ -28,11 +28,31 @@ iostream
 math.h
 -
 
+../include/gps_least_squares/gps_least_squares.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/gps_least_squares/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
 ../include/lc_ins/lc_ins.h
 cpp_nav_filt_lib/cpp_nav_filt_lib.h
 ../include/lc_ins/cpp_nav_filt_lib/cpp_nav_filt_lib.h
 
+../include/sv_manager/sv_manager.h
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+../include/sv_manager/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
+/home/njo0004/devel/cpp_nav_filters/src/cpp_nav_filt_lib.cpp
+cpp_nav_filt_lib/cpp_nav_filt_lib.h
+/home/njo0004/devel/cpp_nav_filters/src/cpp_nav_filt_lib/cpp_nav_filt_lib.h
+
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares.cpp
+gps_least_squares/gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/src/gps_least_squares/gps_least_squares.h
+
 /home/njo0004/devel/cpp_nav_filters/src/lc_ins.cpp
 lc_ins/lc_ins.h
 /home/njo0004/devel/cpp_nav_filters/src/lc_ins/lc_ins.h
+
+/home/njo0004/devel/cpp_nav_filters/src/sv_manager.cpp
+sv_manager/sv_manager.h
+/home/njo0004/devel/cpp_nav_filters/src/sv_manager/sv_manager.h
 
