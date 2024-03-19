@@ -26,6 +26,8 @@ namespace cpp_nav_filt
         we_i_<<0,0,cpp_nav_filt::w_e;
 
         I_3_.setIdentity();
+        I_15_.setIdentity();
+
         Omega_e_ = cpp_nav_filt::makeSkewSymmetic(we_i_);
     }
 
@@ -88,14 +90,24 @@ namespace cpp_nav_filt
         }
     }
 
-    void LooselyCoupledIns::getGnssMeasurements(vec_3_1& gnss_measurement,const int& meas_type)
+    void LooselyCoupledIns::getGnssMeasurements(vec_3_1& gnss_measurement,const int& meas_type,mat_3_3& R)
     {
+        Eigen::MatrixXd S; // innovation Covariance
+        Eigen::MatrixXd K; // kalman gain
+
         gnss_meas_ = gnss_measurement;
         meas_type_ = meas_type;
 
-        estimateGnssMeasurement(y_hat_,H_);
+        estimateGnssMeasurement(y_hat_,H_); // gives full state measurement estimate and jacobian
         
         innov_ = gnss_meas_ - y_hat_; // full state innovation
+        del_innov_ = innov_ - H_*dx_hat_; // error state innovation
+
+        S = H_*P_hat_*H_.transpose() + R;
+        K = ( (S.transpose()).fullPivLu().solve((P_hat_ * H_.transpose()).transpose()) ).transpose();
+        dx_hat_ = dx_hat_ + K*del_innov_;
+
+        P_hat_ = (I_15_ - K*H_)*P_hat_*(I_15_ - K*H_).transpose() + K*R*K.transpose(); // joseph form
 
     }
 
@@ -350,6 +362,39 @@ namespace cpp_nav_filt
         {
             H = NAN*H;
         }
+    }
+
+    void LooselyCoupledIns::errorStateCorrection()
+    {
+        // see groves p. 564 eq 14.7-14.9
+        vec_3_1 pos,vel,att,att_err;
+        mat_3_3 Cnb,Cbn,Cbn_plus,skew_att_err;
+
+        setPosSol(pos);
+        setVelSol(vel);
+        setAttSol(att);
+
+        pos = pos - dx_hat_.block<3,1>(3,0); // position correction
+        vel = vel - dx_hat_.block<3,1>(0,0); // velocity correction
+
+        // attitude correction
+        Cnb = cpp_nav_filt::eul2Rotm(att);
+        Cbn = Cnb.transpose();
+
+        att_err = dx_hat_.block<3,1>(6,0);
+        skew_att_err = cpp_nav_filt::makeSkewSymmetic(att_err);
+
+        Cbn_plus = (I_3_ - skew_att_err)*Cbn;
+        Cnb = Cbn_plus.transpose();
+
+        att = cpp_nav_filt::rotm2Eul(Cnb);
+
+        dx_hat_.block<9,1>(0,0).setZero();
+
+        x_hat_.block<3,1>(9,0) = dx_hat_.block<3,1>(9,0);
+        x_hat_.block<3,1>(12,0) = dx_hat_.block<3,1>(12,0);
+        
+        setFullStateEstimate(pos,vel,att);
     }
 
     void LooselyCoupledIns::checkInitStatus()

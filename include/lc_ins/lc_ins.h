@@ -57,7 +57,7 @@ namespace cpp_nav_filt
             ~LooselyCoupledIns();
 
             void getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t);
-            void getGnssMeasurements(vec_3_1& gnss_meas,const int& meas_type);
+            void getGnssMeasurements(vec_3_1& gnss_meas,const int& meas_type,mat_3_3& R);
 
             void setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P);
             void setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P);
@@ -98,6 +98,7 @@ namespace cpp_nav_filt
 
             vec_3_1 y_hat_; // full state measurement estimate
             vec_3_1 innov_; // full state innovation
+            vec_3_1 del_innov_; // error state innovation
             mat_3_15 H_; // measurement model
 
             mat_15_15 Phi_; // error state STM
@@ -139,7 +140,8 @@ namespace cpp_nav_filt
 
             // identity matrices and such
             mat_3_3 I_3_;
-            
+            mat_15_15 I_15_;
+
             double time_;
             double dt_;
             double geocentric_radius_;
@@ -157,8 +159,8 @@ namespace cpp_nav_filt
             // Measurement Update
             void estimateGnssMeasurement(vec_3_1& y_hat,mat_3_15& H);
             void measurementModel(vec_3_1& X,vec_3_1& att_sol,mat_3_15& H); 
-
             void rigidBodyTransform(vec_3_1& X,vec_3_1& att,vec_3_1& Y);
+            void errorStateCorrection();
 
             // private setters
             void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);
