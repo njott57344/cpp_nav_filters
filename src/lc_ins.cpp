@@ -50,6 +50,21 @@ namespace cpp_nav_filt
         vel = x_hat_.block<3,1>(0,0);
     }
 
+    void LooselyCoupledIns::setBgSol(vec_3_1& bg_hat)
+    {
+        bg_hat = x_hat_.block<3,1>(9,0);
+    }
+
+    void LooselyCoupledIns::setBaSol(vec_3_1& ba_hat)
+    {
+        ba_hat = x_hat_.block<3,1>(12,0);
+    }
+
+    void LooselyCoupledIns::setErrorCoverEst(mat_15_15& P_hat)
+    {
+        P_hat = P_hat_;
+    }
+
     void LooselyCoupledIns::getImuMeasurements(vec_3_1& f,vec_3_1& ar,double& t)
     {
         wb_b_ = ar;
@@ -78,19 +93,10 @@ namespace cpp_nav_filt
         gnss_meas_ = gnss_measurement;
         meas_type_ = meas_type;
 
-        estimateGnssMeasurement(y_hat_);
+        estimateGnssMeasurement(y_hat_,H_);
+        
         innov_ = gnss_meas_ - y_hat_; // full state innovation
 
-    }
-
-    void LooselyCoupledIns::setBgSol(vec_3_1& bg_hat)
-    {
-        bg_hat = x_hat_.block<3,1>(9,0);
-    }
-
-    void LooselyCoupledIns::setBaSol(vec_3_1& ba_hat)
-    {
-        ba_hat = x_hat_.block<3,1>(12,0);
     }
 
     // =============== Setters =============== //
@@ -175,7 +181,7 @@ namespace cpp_nav_filt
             C_b_n_plus_ = C_b_n_minus_*(I_3_ + Omega_b_*dt_); // - Omega_e_*C_b_n_minus_*dt_; // Attitude Update
             fb_n_ = 0.5*(C_b_n_minus_ + C_b_n_plus_)*fb_b_; // rotating specific force into nav frame
             
-            gamma_b_n_ << 0,0,9.81;
+            gamma_b_n_ << 0,0,9.81; // this is wrong look into a better model
 
             plus_vel_ = minus_vel_ + (fb_n_ + gamma_b_n_)*dt_; // velocity update
             plus_pos_ = minus_pos_ + plus_vel_*dt_; // position update
@@ -263,7 +269,7 @@ namespace cpp_nav_filt
         fb_b_ = fb_b_ - ba_hat_; // subtract bias estimate from accelerometers
     }
 
-    void LooselyCoupledIns::estimateGnssMeasurement(vec_3_1& y_hat)
+    void LooselyCoupledIns::estimateGnssMeasurement(vec_3_1& y_hat,mat_3_15& H)
     {
         vec_3_1 state,att;
         
@@ -278,16 +284,18 @@ namespace cpp_nav_filt
             setVelSol(state);
         }
         
+        measurementModel(state,att,H);
         rigidBodyTransform(state,att,y_hat); // gets current estimate of measured quantity
     }
 
     void LooselyCoupledIns::rigidBodyTransform(vec_3_1& X,vec_3_1& att,vec_3_1& Y)
     {
-        mat_3_3 Cbn; // current estimate of DCM
+        // see groves p. 598 eq 14.102
+        mat_3_3 Cbn,Cnb; // current estimate of DCM
         vec_3_1 lb_b; // current estimate of lever arm (body frame)
 
-        Cbn = cpp_nav_filt::eul2Rotm(att);
-        Cbn = Cbn.transpose();
+        Cnb = cpp_nav_filt::eul2Rotm(att);
+        Cbn = Cnb.transpose();
 
         lb_b = ins_settings.lever_arm;
 
@@ -297,7 +305,50 @@ namespace cpp_nav_filt
         }
         else if(meas_type_ == VEL_TYPE)
         {
-            Y = Cbn*(X + wb_b_.cross(lb_b));
+            mat_3_3 skew_ang_rate;
+            skew_ang_rate = cpp_nav_filt::makeSkewSymmetic(wb_b_);
+            Y = X + Cbn*(skew_ang_rate*lb_b) - Omega_e_*Cbn*lb_b;
+        }
+    }
+
+    void LooselyCoupledIns::measurementModel(vec_3_1& X,vec_3_1& att_sol,mat_3_15& H)
+    {
+        H.setZero();
+
+        // see groves p. 600 eq 14.111-14.112
+        mat_3_3 Cnb,Cbn;
+        vec_3_1 lb_b = ins_settings.lever_arm;
+        vec_3_1 lb_n = Cbn*lb_b;
+        Cnb = cpp_nav_filt::eul2Rotm(att_sol);
+        Cbn = Cnb.transpose();
+
+        if(meas_type_ == POS_TYPE)
+        {
+            mat_3_3 Hr1;
+            Hr1 = cpp_nav_filt::makeSkewSymmetic(lb_n);
+            
+            H.block<3,3>(0,6) = Hr1; // attitude 
+            H.block<3,3>(0,3) = -1*I_3_; // position 
+        }
+        else if(meas_type_ == VEL_TYPE)
+        {
+            mat_3_3 Hv1,Hv2,skew_ang_rate,hv2;
+            vec_3_1 hv1;
+
+            skew_ang_rate = cpp_nav_filt::makeSkewSymmetic(wb_b_);
+            hv1 = Cbn*(skew_ang_rate*lb_b) - Omega_e_*Cbn*lb_b;
+            Hv1 = cpp_nav_filt::makeSkewSymmetic(hv1);
+            
+            hv2 = cpp_nav_filt::makeSkewSymmetic(lb_b);
+            Hv2 = Cbn*hv2;
+
+            H.block<3,3>(0,6) = Hv1; // attitude
+            H.block<3,3>(0,0) = -1*I_3_; // velocity
+            H.block<3,3>(0,9) = Hv2;
+        }
+        else
+        {
+            H = NAN*H;
         }
     }
 

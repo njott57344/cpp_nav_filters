@@ -26,6 +26,7 @@ typedef Eigen::Matrix<double,3,3> mat_3_3;
 typedef Eigen::Matrix<double,15,1> vec_15_1;
 typedef Eigen::Matrix<double,15,15> mat_15_15;
 typedef Eigen::Matrix<double,2,1> vec_2_1;
+typedef Eigen::Matrix<double,3,15> mat_3_15;
 
 namespace cpp_nav_filt
 {

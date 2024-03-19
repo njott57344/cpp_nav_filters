@@ -3,6 +3,7 @@
 #include "lc_ins/lc_ins.h"
 
 #include "matplot/matplot.h"
+
 #include "matplotlibcpp/matplotlibcpp.h"
 
 #include <fstream>
@@ -16,6 +17,13 @@ int main(int argc,char **argv)
     LeastSquaresSettings.weighted_least_squares = false;
     cpp_nav_filt::GpsLeastSquares gps_least_squares(LeastSquaresSettings);
     cpp_nav_filt::LooselyCoupledInsSettings lc_ins_settings;
+
+    lc_ins_settings.psd_accel_bias = 1;
+    lc_ins_settings.psd_accel_noise = 1;
+    lc_ins_settings.psd_gyro_noise = 1;
+    lc_ins_settings.psd_gyro_bias = 1;
+    lc_ins_settings.lever_arm.setZero();
+
     cpp_nav_filt::LooselyCoupledIns ins(lc_ins_settings);
 
     // pointers for file handlers sv ephem and measurements
@@ -167,8 +175,12 @@ int main(int argc,char **argv)
     plt::title("INS NED E vs N Position (m)");
     plt::show();
 
-    plt::plot(ins_dy,ins_dx);
-    plt::title("INS NED E vs N Vel (m/s)");
+    plt::plot(ins_dx);
+    plt::title("INS E Vel (m/s)");
+    plt::show();
+
+    plt::plot(ins_dy);
+    plt::title("INS N Vel (m/s)");
     plt::show();
 
     plt::plot(ins_r);

@@ -72,6 +72,8 @@ namespace cpp_nav_filt
             void setBgSol(vec_3_1& bg_hat);
             void setBaSol(vec_3_1& ba_hat);
 
+            void setErrorCoverEst(mat_15_15& P_hat);
+
         private:
             
             LooselyCoupledInsSettings ins_settings;
@@ -96,6 +98,7 @@ namespace cpp_nav_filt
 
             vec_3_1 y_hat_; // full state measurement estimate
             vec_3_1 innov_; // full state innovation
+            mat_3_15 H_; // measurement model
 
             mat_15_15 Phi_; // error state STM
             mat_15_15 Q_; // discrete process covariance
@@ -152,7 +155,8 @@ namespace cpp_nav_filt
             void correctImuMeasurements();
 
             // Measurement Update
-            void estimateGnssMeasurement(vec_3_1& y_hat);
+            void estimateGnssMeasurement(vec_3_1& y_hat,mat_3_15& H);
+            void measurementModel(vec_3_1& X,vec_3_1& att_sol,mat_3_15& H); 
 
             void rigidBodyTransform(vec_3_1& X,vec_3_1& att,vec_3_1& Y);
 
