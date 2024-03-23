@@ -154,11 +154,13 @@ namespace cpp_nav_filt
         return skew_out;   
     }
 
-    vec_3_1 somiglianaGravityModel(vec_3_1& ecef_pos)
+    vec_3_1 ecefGravitation(vec_3_1& ecef_pos)
     {
         vec_3_1 inner;
         double term_x,term_y,term_z,common_term;
         double abs_pos = ecef_pos.norm();
+        double pos_3,R02,pos_2;
+        double outer_lump,inner_lump;
 
         common_term = 5*pow((ecef_pos[2]/abs_pos),2);
         term_x = (1-common_term)*ecef_pos[0];
@@ -166,10 +168,37 @@ namespace cpp_nav_filt
         term_z = (3-common_term)*ecef_pos[2];
 
         inner<<term_x,term_y,term_z;
+    
+        pos_3 = pow(abs_pos,3);
+        pos_2 = pow(abs_pos,2);
+        R02 = pow(Ro,2);
 
-        inner = (1.5*cpp_nav_filt::J2*pow(cpp_nav_filt::Ro,2)/(pow(abs_pos,2)))*inner;
-        inner = ecef_pos + inner;
-        return -(cpp_nav_filt::mu_g/pow(abs_pos,3))*inner;
+        outer_lump = mu_g/pos_3; // lumped together constants 
+        inner_lump = 1.5*J2*R02/pos_2; // lumped together constants
+
+        return -outer_lump*(ecef_pos + inner_lump*inner);
+    }
+
+    vec_3_1 ecefGravity(vec_3_1& ecef_pos)
+    {
+        vec_3_1 ecef_gravitation,ecef_gravity;
+        mat_3_3 C;
+        
+        C.setZero();
+        C(0,0) = 1;
+        C(1,1) = 1;
+
+        ecef_gravitation = ecefGravitation(ecef_pos);
+        
+        if(ecef_pos.norm() == 0)
+        {
+            ecef_gravity.setZero();
+        }
+        else
+        {
+            ecef_gravity = ecef_gravitation + w_e*w_e*C*ecef_pos;
+        }
+        return  ecef_gravity;
     }
 
     double meridianRadiusOfCurvature(double& lat)

@@ -84,7 +84,7 @@ namespace cpp_nav_filt
             generateErrorStateSTM(); // generate error state state transition matrix
             generateProcessCovarMat(); // generate current process covariance matrix
 
-            propagateErrorState();
+            propagateErrorState(); // propagate error state estimate
 
             setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
         }
@@ -185,17 +185,15 @@ namespace cpp_nav_filt
 
             C_n_b_minus_ = cpp_nav_filt::eul2Rotm(minus_att_);
             Omega_b_ = cpp_nav_filt::makeSkewSymmetic(wb_b_);
-            gamma_b_n_ = cpp_nav_filt::somiglianaGravityModel(minus_pos_);
+            gamma_b_n_ = cpp_nav_filt::ecefGravity(minus_pos_);
 
             C_b_n_minus_ = C_n_b_minus_.transpose();
 
             // state propagation
-            C_b_n_plus_ = C_b_n_minus_*(I_3_ + Omega_b_*dt_); // - Omega_e_*C_b_n_minus_*dt_; // Attitude Update
-            fb_n_ = 0.5*(C_b_n_minus_ + C_b_n_plus_)*fb_b_; // rotating specific force into nav frame
+            C_b_n_plus_ = C_b_n_minus_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_n_minus_*dt_; // - Omega_e_*C_b_n_minus_*dt_; // Attitude Update
+            fb_n_ = C_b_n_plus_*fb_b_; // rotating specific force into nav frame
             
-            gamma_b_n_ << 0,0,9.81; // this is wrong look into a better model
-
-            plus_vel_ = minus_vel_ + (fb_n_ + gamma_b_n_)*dt_; // velocity update
+            plus_vel_ = minus_vel_ + (fb_n_ - gamma_b_n_ - 2*Omega_e_*minus_vel_)*dt_; // velocity update
             plus_pos_ = minus_pos_ + plus_vel_*dt_; // position update
                 // note: pos update assumes velocity varies linearly over integration period [groves 175]
 
@@ -219,7 +217,7 @@ namespace cpp_nav_filt
         Cbn = Cnb.transpose();
         fb_n_ = Cbn*fb_b_; // nav frame specific fornces
 
-        gamma_b_n_ = cpp_nav_filt::somiglianaGravityModel(current_pos);
+        gamma_b_n_ = cpp_nav_filt::ecefGravity(current_pos);
         lla = cpp_nav_filt::ecef2llaPos(current_pos);
         lla.block<2,1>(0,0) = lla.block<2,1>(0,0)*cpp_nav_filt::D2R;
         geocentric_radius_ = cpp_nav_filt::geocentricRadius(lla[0]);

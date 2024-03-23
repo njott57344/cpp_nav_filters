@@ -83,6 +83,8 @@ int main(int argc,char **argv)
     vec_3_1 fb_b,wb_b;
     vec_3_1 ins_pos,ins_vel,ins_att; // ecef pos states
     vec_3_1 ins_ned,ins_ned_vel;
+    vec_3_1 ins_lla_pos;
+
     double t_current;
 
     std::vector<double> ins_x,ins_y,ins_z,ins_dx,ins_dy,ins_dz,ins_r,ins_p,ins_h;
@@ -112,11 +114,13 @@ int main(int argc,char **argv)
         ins.setAttSol(ins_att);
 
         ins_ned = cpp_nav_filt::ecef2nedPos(ins_pos,ins_lla_0);
+        ins_lla_pos = cpp_nav_filt::ecef2llaPos(ins_pos);
+
         ins_ned_vel = cpp_nav_filt::ecef2nedVel(ins_vel,ins_lla_0);
 
-        ins_x.push_back(ins_ned[0]);
-        ins_y.push_back(ins_ned[1]);
-        ins_z.push_back(ins_ned[2]);
+        ins_x.push_back(ins_lla_pos[0]);
+        ins_y.push_back(ins_lla_pos[1]);
+        ins_z.push_back(ins_lla_pos[2]);
         
         ins_dx.push_back(ins_ned_vel[0]);
         ins_dy.push_back(ins_ned_vel[1]);
@@ -143,9 +147,10 @@ int main(int argc,char **argv)
     }    
 
     plt::plot(ins_y,ins_x);
-    plt::title("INS NED E vs N Position (m)");
+    plt::title("INS LLA [DEG]");
     plt::show();
 
+    /*
     plt::plot(ins_dx);
     plt::title("INS E Vel (m/s)");
     plt::show();
@@ -153,6 +158,7 @@ int main(int argc,char **argv)
     plt::plot(ins_dy);
     plt::title("INS N Vel (m/s)");
     plt::show();
+    */
 
     plt::plot(ins_r);
     plt::title("INS Roll");

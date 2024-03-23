@@ -44,7 +44,7 @@ namespace cpp_nav_filt
     const double c = 299792458.0; // [m/s] speed of light
     const double J2 = 1.082627*pow(10,-3); // J2 gravity constant (from Groves p. 72);
     const double mu_g = 3.986004418*pow(10,14); // Earth gravity constant (from Goves p. 71)
-    const double w_e = 7.292115*pow(1,-5); // rotation rate of earth [rad/s]
+    const double w_e = 7.292115*pow(10,-5); // rotation rate of earth [rad/s]
     
     // Parameters of WGS84 Ellipsoid
     const double Ro = 6378137.0; // WGS84 equatorial radius [m]
@@ -108,8 +108,9 @@ namespace cpp_nav_filt
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in);
 
     // gravity model
-    vec_3_1 somiglianaGravityModel(vec_3_1& ecef_pos); // see groves p. 72
-    
+    vec_3_1 ecefGravitation(vec_3_1& ecef_pos); // see groves p. 72
+    vec_3_1 ecefGravity(vec_3_1& ecef_pos); // see groves p. 70
+
     // WGS Ellipoidal Earth Stuff
     double transverseRadiusOfCurvature(double& lat); // groves 2.106 (Re(L))
     double meridianRadiusOfCurvature(double& lat); // groves 2.105 (Rn(L))
