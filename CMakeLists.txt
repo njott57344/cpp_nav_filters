@@ -33,15 +33,24 @@ add_library(${PROJECT_NAME}
     src/cpp_nav_filt_lib.cpp
 )
 
-add_executable(SvPvtTest
-    src/main.cpp
+add_executable(DemoLeastSquares
+    src/demo/gps_least_squares_demo.cpp
+)
+
+add_executable(DemoLooselyCoupledIns
+    src/demo/loose_coupled_ins_demo.cpp
 )
 
 target_link_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/../build
 )
 
-target_link_libraries(SvPvtTest PUBLIC matplot
+target_link_libraries(DemoLeastSquares PUBLIC matplot
+    ${PROJECT_NAME}
+    ${PYTHON_LIBRARIES}
+)
+
+target_link_libraries(DemoLooselyCoupledIns PUBLIC matplot
     ${PROJECT_NAME}
     ${PYTHON_LIBRARIES}
 )
