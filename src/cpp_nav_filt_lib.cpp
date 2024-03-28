@@ -2,6 +2,9 @@
 
 namespace cpp_nav_filt
 {
+
+    // =========== Measurement Functions ======== //
+
     Eigen::MatrixXd calcPsr(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b)
     {
         int num_sv = SvPVT.rows();
@@ -94,6 +97,8 @@ namespace cpp_nav_filt
 
         return Y_hat;
     }
+
+    // ======== Nav Functions ======== //
 
     mat_3_3 eul2Rotm(vec_3_1& euler_angles)
     {
@@ -240,6 +245,8 @@ namespace cpp_nav_filt
         roll_pitch[1] = std::atan(samp_mean[0]/sqrt(pow(samp_mean[1],2) + pow(samp_mean[2],2)));
         return roll_pitch;
     }   
+
+    // ========= Frame Transformations ======== //
 
     vec_3_1 convertEnu2NED(vec_3_1& enu_pos)
     {
@@ -477,6 +484,7 @@ namespace cpp_nav_filt
         
         mat_3_3 Cen,Cne; // rotation matrix ecef 2 ned
         vec_3_1 ecef_vel;
+        vec_3_1 temp;
 
         Cen << -std::sin(lat_0)*std::cos(lon_0), -std::sin(lat_0)*std::sin(lon_0),  std::cos(lat_0),
                -std::sin(lon_0),                  std::cos(lon_0),                  0,
@@ -485,7 +493,7 @@ namespace cpp_nav_filt
         Cne = Cen.transpose();
 
         ecef_vel = Cne*ned_vel;
-
+        
         return ecef_vel;
     }
 
@@ -503,6 +511,93 @@ namespace cpp_nav_filt
         ned_vel = enu2nedPos(enu_vel);
         ecef_vel = ned2ecefVel(ned_vel,ref_lla);    
         return ecef_vel;
+    }
+
+    mat_3_3 ecef2nedDCM(vec_3_1& lla_pos)
+    {
+        mat_3_3 C;
+
+        double lat,lon,alt;
+        double clat,slat,clon,slon;
+        lat = lla_pos[0]*D2R;
+        lon = lla_pos[1]*D2R;
+
+        clat = std::cos(lat);
+        slat = std::sin(lat);
+        clon = std::cos(lon);
+        slon = std::sin(lon);
+
+        C << -slat*clon, -slat*slon, clat,
+             -slon,       clon,      0,
+             -clat*clon, -clat*slon, -slat;
+
+        return C;
+    }
+    
+    mat_3_3 ned2ecefDCM(vec_3_1& lla_pos)
+    {
+        mat_3_3 C;
+
+        double lat,lon;
+        double clat,slat,clon,slon; // sin and cos of lat/lon
+        lat = lla_pos[0]*D2R;
+        lon = lla_pos[1]*D2R;
+
+        clat = std::cos(lat);
+        slat = std::sin(lat);
+        clon = std::cos(lon);
+        slon = std::sin(lon);
+
+        C << -slat*clon, -slat*slon, clat,
+             -slon,       clon,      0,
+             -clat*clon, -clat*slon, -slat;
+
+        return C.transpose();
+    }
+
+    mat_3_3 ecef2enuDCM(vec_3_1& lla_pos)
+    {
+        mat_3_3 C;
+
+        double lat,lon,alt;
+        double clat,slat,clon,slon;
+
+        lat = lla_pos[0]*D2R;
+        lon = lla_pos[1]*D2R;
+        alt = lla_pos[2];
+
+        clat = std::cos(lat);
+        slat = std::sin(lat);
+        clon = std::cos(lon);
+        slon = std::sin(lon);
+
+        C << -slon,       clon,      0,
+             -slat*clon, -slat*slon, clat,
+              clat*clon,  clat*slon, slat;
+
+        return C;
+    }
+
+    mat_3_3 enu2ecefDCM(vec_3_1& lla_pos)
+    {
+        mat_3_3 C; 
+        
+        double lat,lon,alt;
+        double clat,slat,clon,slon;
+        lat = lla_pos[0]*D2R;
+        lon = lla_pos[1]*D2R;
+        alt = lla_pos[2];
+
+        clat = std::cos(lat);
+        slat = std::sin(lat);
+        clon = std::cos(lon);
+        slon = std::sin(lon);
+
+        C << -slon,       clon,      0,
+             -slat*clon, -slat*slon, clat,
+              clat*clon,  clat*slon, slat;
+
+        return C.transpose();
     }
 
 } // end of namespace

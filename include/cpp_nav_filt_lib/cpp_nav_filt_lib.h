@@ -94,11 +94,20 @@ namespace cpp_nav_filt
     vec_3_1 enu2llaPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
     
     // ---------- Velocities --------------------------- //
+    // ecef to/from ned velocities
     vec_3_1 ecef2nedVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
     vec_3_1 ned2ecefVel(vec_3_1& ned_vel,vec_3_1& ref_lla);
 
+    // ecef to/from enu velocities
     vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
     vec_3_1 enu2ecefVel(vec_3_1& enu_vel,vec_3_1& ref_lla);
+
+    // DCM transformations
+    mat_3_3 ned2ecefDCM(vec_3_1& lla_pos); // assume lla is in degrees
+    mat_3_3 ecef2nedDCM(vec_3_1& lla_pos);
+
+    mat_3_3 ecef2enuDCM(vec_3_1& lla_pos);
+    mat_3_3 enu2ecefDCM(vec_3_1& lla_pos);
 
     // ============ Nav Functions ========== //
     

@@ -115,7 +115,7 @@ namespace cpp_nav_filt
     void LooselyCoupledIns::setInitialPosState(vec_3_1& pos_init,mat_3_3& pos_P)
     {
         x_hat_.block<3,1>(3,0) = pos_init;
-        std::cout<<"pos: "<<x_hat_.block<3,1>(3,0).transpose()<<std::endl;
+        std::cout<<"Initial pos: "<<x_hat_.block<3,1>(3,0).transpose()<<std::endl;
         P_hat_.block<3,3>(3,3) = pos_P;
         pos_init_ = true;
         checkInitStatus();
@@ -124,7 +124,7 @@ namespace cpp_nav_filt
     void LooselyCoupledIns::setInitialVelState(vec_3_1& vel_init,mat_3_3& vel_P)
     {
         x_hat_.block<3,1>(0,0) = vel_init;
-        std::cout<<"vel: "<<x_hat_.block<3,1>(0,0).transpose()<<std::endl;
+        std::cout<<"Initial vel: "<<x_hat_.block<3,1>(0,0).transpose()<<std::endl;
         P_hat_.block<3,3>(0,0) = vel_P;
         vel_init_ = true;
         checkInitStatus();
@@ -133,7 +133,7 @@ namespace cpp_nav_filt
     void LooselyCoupledIns::setInitialAttState(vec_3_1& att_init,mat_3_3& att_P)
     {
         x_hat_.block<3,1>(6,0) = att_init;
-        std::cout<<"att: "<<x_hat_.block<3,1>(6,0).transpose()<<std::endl;
+        std::cout<<"Initial att: "<<x_hat_.block<3,1>(6,0).transpose()<<std::endl;
         P_hat_.block<3,3>(6,6) = att_P;
         att_init_ = true;
         checkInitStatus();
@@ -193,7 +193,10 @@ namespace cpp_nav_filt
             C_b_n_plus_ = C_b_n_minus_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_n_minus_*dt_; // - Omega_e_*C_b_n_minus_*dt_; // Attitude Update
             fb_n_ = C_b_n_plus_*fb_b_; // rotating specific force into nav frame
             
-            plus_vel_ = minus_vel_ + (fb_n_ - gamma_b_n_ - 2*Omega_e_*minus_vel_)*dt_; // velocity update
+            plus_vel_ = minus_vel_ + (fb_n_ + gamma_b_n_ - 2*Omega_e_*minus_vel_)*dt_; // velocity update
+
+            std::cout<<<<std::endl<<std::endl;
+
             plus_pos_ = minus_pos_ + plus_vel_*dt_; // position update
                 // note: pos update assumes velocity varies linearly over integration period [groves 175]
 
