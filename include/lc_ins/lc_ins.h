@@ -93,6 +93,8 @@ namespace cpp_nav_filt
             */
 
             vec_15_1 x_hat_; // full state mean solution
+            vec_3_1 lla_pos_;
+
             vec_15_1 dx_hat_; // estimate of error in full state
             mat_15_15 P_hat_; // full state error covariance
 
@@ -108,17 +110,15 @@ namespace cpp_nav_filt
             mat_3_3 F23_;
             
             vec_3_1 fb_b_; // body frame specific force in body frame
-            vec_3_1 fb_n_; // body frame specific force in nav frame
-            vec_3_1 gamma_b_n_; // gravity acting on body in nav frame
+            vec_3_1 fb_e_; // body frame specific force in nav frame
+            vec_3_1 grav_b_e_; // gravity acting on body in nav frame
             vec_3_1 gnss_meas_;
 
             vec_3_1 plus_pos_;
             vec_3_1 plus_vel_;
-            vec_3_1 plus_att_;
 
             vec_3_1 minus_pos_;
             vec_3_1 minus_vel_;
-            vec_3_1 minus_att_;
 
             vec_3_1 bg_hat_; // estimate of bias in gyro
             vec_3_1 ba_hat_; // estimate of bias in accel
@@ -129,11 +129,17 @@ namespace cpp_nav_filt
             vec_3_1 we_i_; // rotation rate of earth
             mat_3_3 Omega_e_; // skew symmetric of rotation rate of earth
 
-            mat_3_3 C_b_n_plus_; // rotation matrix from body to nav frame (based on attitude estimate)
-            mat_3_3 C_n_b_plus_; // rotation matrix from nav to body frame (based on attitude estimate)
+            mat_3_3 C_b_e_plus_; // rotation matrix from body to ecef frame
+            mat_3_3 C_e_b_plus_; // rotation matrix from ecef to body frame
 
-            mat_3_3 C_b_n_minus_;
-            mat_3_3 C_n_b_minus_;
+            mat_3_3 C_b_e_minus_; // rotation matrix from body to ecef frame
+            mat_3_3 C_e_b_minus_; // rotation matrix from ecef to body frame
+
+            mat_3_3 C_b_n_; // rotation matrix body to local nav frame
+            mat_3_3 C_n_b_; // rotation matrix local nav to body frame
+
+            mat_3_3 C_n_e_; // rotation matrix nav to ecef
+            mat_3_3 C_e_n_; // rotation matrix ecef to nav
 
             vec_3_1 pos_; // ECEF GPS position solution
             vec_3_1 vel_; // ECEF GPS velocity solution
@@ -163,7 +169,7 @@ namespace cpp_nav_filt
             void errorStateCorrection();
 
             // private setters
-            void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att);
+            void setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,mat_3_3& att);
 
         protected:
 

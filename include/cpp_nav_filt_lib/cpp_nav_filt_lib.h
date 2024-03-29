@@ -126,7 +126,7 @@ namespace cpp_nav_filt
     double geocentricRadius(double& lat);
 
     // Init Roll Pitch
-    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b);
+    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b); // groves p. 670
 }
 
 #endif

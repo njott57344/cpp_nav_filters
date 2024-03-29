@@ -102,15 +102,20 @@ namespace cpp_nav_filt
 
     mat_3_3 eul2Rotm(vec_3_1& euler_angles)
     {
-        // assumes euler angles are ordered roll pitch yaw
+        // assumes euler angles are ordered roll pitch yaw (and in rad)
         // see groves p. 38
-        mat_3_3 C_x,C_y,C_z;
 
+        //unknown if use 2.22 or 2.24
         vec_3_1 c;
         vec_3_1 s;
 
         c << std::cos(euler_angles[0]),std::cos(euler_angles[1]),std::cos(euler_angles[2]);
         s << std::sin(euler_angles[0]),std::sin(euler_angles[1]),std::sin(euler_angles[2]);
+
+        /*
+        mat_3_3 C_x,C_y,C_z;
+
+
 
         C_x << 1,  0,    0,
                 0,  c[0], s[0],
@@ -125,15 +130,32 @@ namespace cpp_nav_filt
                 0,    0,    1;
 
         return C_x*C_y*C_z; // rotation nav to body        
+        */
+
+        mat_3_3 C;
+        C(0,0) =  c(1)*c(2); // cos(pitch)cos(yaw)
+        C(1,0) =  c(1)*s(2); // cos(pitch)sin(yaw)
+        C(2,0) = -s(1);     // -sin(pitch)
+
+        C(0,1) = -c(0)*s(2)+s(0)*s(1)*c(2); // -cos(roll)sin(yaw)+sin(roll)sin(pitch)cos(yaw)
+        C(1,1) =  c(0)*c(2)+s(0)*s(1)*s(2); //  cos(roll)cos(yaw)+sin(roll)sin(pitch)sin(yaw)
+        C(2,1) =  s(0)*c(1);                //  sin(roll)cos(pitch)
+    
+        C(0,2) =  s(0)*s(2)+c(0)*s(1)*c(2); //  sin(roll)sin(yaw)+cos(roll)sin(pitch)cos(yaw)
+        C(1,2) = -s(0)*c(2)+c(0)*s(1)*s(2); // -sin(roll)cos(yaw)+cos(roll)sin(pitch)sin(yaw)
+        C(2,2) =  c(0)*c(1);                //  cos(roll)cos(pitch)
+
+        return C; // rotation body to nav
     }
 
     vec_3_1 rotm2Eul(mat_3_3& C)
     {
+        // groves 2.25
         vec_3_1 euler_angles;
 
-        euler_angles[0] = std::atan2(C(1,2),C(2,2)); // roll
-        euler_angles[1] = -std::asin(C(0,2));        // pitch
-        euler_angles[2] = std::atan2(C(0,1),C(0,0)); // yaw
+        euler_angles[0] =  std::atan2(C(2,1),C(2,2)); // roll
+        euler_angles[1] = -std::asin(C(2,0));        // pitch
+        euler_angles[2] =  std::atan2(C(1,0),C(0,0)); // yaw
     
         return euler_angles;
     }
@@ -142,20 +164,10 @@ namespace cpp_nav_filt
     {
         mat_3_3 skew_out;
 
-        skew_out.setZero();
-
-        // Z
-        skew_out(0,1) = -vec_in[2];
-        skew_out(1,0) = vec_in[2];
-
-        //Y
-        skew_out(0,2) = vec_in[1];
-        skew_out(2,0) = -vec_in[1];
-
-        //X
-        skew_out(2,1) = vec_in[0];
-        skew_out(1,2) = -vec_in[0];     
-
+        skew_out << 0,        -vec_in[2], vec_in[1],
+                    vec_in[2], 0,        -vec_in[0],
+                   -vec_in[1], vec_in[0], 0;
+                   
         return skew_out;   
     }
 

@@ -86,7 +86,7 @@ namespace cpp_nav_filt
 
             propagateErrorState(); // propagate error state estimate
 
-            setFullStateEstimate(plus_pos_,plus_vel_,plus_att_);
+            setFullStateEstimate(plus_pos_,plus_vel_,C_b_e_plus_); // To-Do: Cbe to euler angles
         }
     }
 
@@ -117,6 +117,10 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(3,0) = pos_init;
         std::cout<<"Initial pos: "<<x_hat_.block<3,1>(3,0).transpose()<<std::endl;
         P_hat_.block<3,3>(3,3) = pos_P;
+        
+        lla_pos_ = ecef2llaPos(pos_init);
+        C_n_e_ = ned2ecefDCM(lla_pos_);
+
         pos_init_ = true;
         checkInitStatus();
     }
@@ -162,11 +166,17 @@ namespace cpp_nav_filt
         checkInitStatus();
     }
 
-    void LooselyCoupledIns::setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,vec_3_1& att)
+    void LooselyCoupledIns::setFullStateEstimate(vec_3_1& pos,vec_3_1& vel,mat_3_3& att)
     {
+        lla_pos_ = ecef2llaPos(pos);
+        C_n_e_ = ned2ecefDCM(lla_pos_);
+        C_e_n_ = C_n_e_.transpose();
+        C_b_n_ = C_e_n_*att;
+        C_n_b_ = C_b_n_.transpose();
+
         x_hat_.block<3,1>(0,0) = vel;
         x_hat_.block<3,1>(3,0) = pos;
-        x_hat_.block<3,1>(6,0) = att;
+        x_hat_.block<3,1>(6,0) = rotm2Eul(C_n_b_);
     }
 
     // =============== Loose INS ============== //
@@ -175,33 +185,21 @@ namespace cpp_nav_filt
         // propagate full state
         if(filt_init_)
         {
-            /*
-                See groves p.173-175 for equations (ECEF full state propagation)
-            */
-
             setPosSol(minus_pos_); // get position state before propagation
-            setAttSol(minus_att_); // get attitude state before propagation
             setVelSol(minus_vel_); // get velocity state before propagation
 
-            C_n_b_minus_ = cpp_nav_filt::eul2Rotm(minus_att_);
             Omega_b_ = cpp_nav_filt::makeSkewSymmetic(wb_b_);
-            gamma_b_n_ = cpp_nav_filt::ecefGravity(minus_pos_);
-
-            C_b_n_minus_ = C_n_b_minus_.transpose();
+            grav_b_e_ = cpp_nav_filt::ecefGravity(minus_pos_);
 
             // state propagation
-            C_b_n_plus_ = C_b_n_minus_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_n_minus_*dt_; // - Omega_e_*C_b_n_minus_*dt_; // Attitude Update
-            fb_n_ = C_b_n_plus_*fb_b_; // rotating specific force into nav frame
+            C_b_e_plus_ = C_b_e_minus_*(I_3_ + Omega_b_*dt_) - Omega_e_*C_b_e_minus_*dt_; // 5.27
+            C_e_b_plus_ = C_b_e_plus_.transpose();
+
+            fb_e_ = 0.5*(C_b_e_plus_+C_b_e_minus_)*fb_b_; // 5.28
             
-            plus_vel_ = minus_vel_ + (fb_n_ + gamma_b_n_ - 2*Omega_e_*minus_vel_)*dt_; // velocity update
-
-            std::cout<<<<std::endl<<std::endl;
-
-            plus_pos_ = minus_pos_ + plus_vel_*dt_; // position update
-                // note: pos update assumes velocity varies linearly over integration period [groves 175]
-
-            C_n_b_plus_ = C_b_n_plus_.transpose();
-            plus_att_ = cpp_nav_filt::rotm2Eul(C_n_b_plus_);
+            plus_vel_ = minus_vel_ + (fb_e_ - grav_b_e_ - 2*Omega_e_*minus_vel_)*dt_; // 5.36
+            
+            plus_pos_ = minus_pos_ + (plus_vel_+minus_vel_)*0.5*dt_; // 5.38
         }
     }
 
@@ -218,15 +216,15 @@ namespace cpp_nav_filt
         setAttSol(current_att);
         Cnb = cpp_nav_filt::eul2Rotm(current_att);
         Cbn = Cnb.transpose();
-        fb_n_ = Cbn*fb_b_; // nav frame specific fornces
+        fb_e_ = Cbn*fb_b_; // nav frame specific fornces
 
-        gamma_b_n_ = cpp_nav_filt::ecefGravity(current_pos);
+        grav_b_e_ = cpp_nav_filt::ecefGravity(current_pos);
         lla = cpp_nav_filt::ecef2llaPos(current_pos);
         lla.block<2,1>(0,0) = lla.block<2,1>(0,0)*cpp_nav_filt::D2R;
         geocentric_radius_ = cpp_nav_filt::geocentricRadius(lla[0]);
 
-        F23_ = (-2*gamma_b_n_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
-        F21_ = cpp_nav_filt::makeSkewSymmetic(fb_n_);
+        F23_ = (-2*grav_b_e_*(current_pos.transpose()))/(geocentric_radius_*current_pos.norm());
+        F21_ = cpp_nav_filt::makeSkewSymmetic(fb_e_);
         F21_ = -F21_;
 
         // velocity
@@ -395,7 +393,8 @@ namespace cpp_nav_filt
         x_hat_.block<3,1>(9,0) = dx_hat_.block<3,1>(9,0);
         x_hat_.block<3,1>(12,0) = dx_hat_.block<3,1>(12,0);
         
-        setFullStateEstimate(pos,vel,att);
+        // To-Do
+        // setFullStateEstimate(pos,vel,att);
     }
 
     void LooselyCoupledIns::checkInitStatus()
@@ -403,6 +402,15 @@ namespace cpp_nav_filt
         filt_init_ = pos_init_&&vel_init_&&att_init_&&time_init_&&bg_init_&&ba_init_;
         if(filt_init_)
         {
+            vec_3_1 att;
+            att = x_hat_.block<3,1>(6,0);
+
+            C_n_b_ = eul2Rotm(att);
+            C_b_n_ = C_n_b_.transpose();
+
+            C_b_e_minus_ = C_n_e_*C_b_n_;
+            C_e_b_minus_ = C_b_e_minus_.transpose();
+
             std::cout<<"Loosely Coupled INS has been initialized!"<<std::endl;
         }
     }

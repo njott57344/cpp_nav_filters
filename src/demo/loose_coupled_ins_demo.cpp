@@ -131,75 +131,75 @@ int main(int argc,char **argv)
         cur_time = temp(0,0);
         current_imu_meas.clear();
 
-        if(j<100)
+        if(j<24000)
         {
-        // send imu measurements to class (triggers time update)
-        ins.getImuMeasurements(fb_b,wb_b,cur_time); 
+            // send imu measurements to class (triggers time update)
+            ins.getImuMeasurements(fb_b,wb_b,cur_time); 
 
-        // get current estimate of PVA
-        ins.setPosSol(x_hat);
-        ins.setVelSol(dx_hat);
-        ins.setAttSol(ecef_att_hat);
+            // get current estimate of PVA
+            ins.setPosSol(x_hat);
+            ins.setVelSol(dx_hat);
+            ins.setAttSol(ecef_att_hat);
 
-        lla_hat = cpp_nav_filt::ecef2llaPos(x_hat);
-        Cne = cpp_nav_filt::ecef2nedDCM(lla_hat);
-        ned_vel_hat = Cne*dx_hat;
-        ned_att_hat = Cne*ecef_att_hat;
+            lla_hat = cpp_nav_filt::ecef2llaPos(x_hat);
+            Cne = cpp_nav_filt::ecef2nedDCM(lla_hat);
+            ned_vel_hat = Cne*dx_hat;
+            ned_att_hat = Cne*ecef_att_hat;
 
-        lla_truth << lat_true[j],lon_true[j],alt_true[j];
-        ned_truth = cpp_nav_filt::lla2nedPos(lla_truth,lla_0);
-        ned_hat = cpp_nav_filt::ecef2nedPos(x_hat,lla_0);
+            lla_truth << lat_true[j],lon_true[j],alt_true[j];
+            ned_truth = cpp_nav_filt::lla2nedPos(lla_truth,lla_0);
+            ned_hat = cpp_nav_filt::ecef2nedPos(x_hat,lla_0);
 
-        lat_hat.push_back(lla_hat[0]);
-        lon_hat.push_back(lla_hat[1]);
-        alt_hat.push_back(lla_hat[2]);
+            lat_hat.push_back(lla_hat[0]);
+            lon_hat.push_back(lla_hat[1]);
+            alt_hat.push_back(lla_hat[2]);
 
-        lat_err.push_back(lat_true[j]-lat_hat[j]);
-        lon_err.push_back(lon_true[j]-lon_hat[j]);
-        alt_err.push_back(alt_true[j]-alt_hat[j]);
+            lat_err.push_back(lat_true[j]-lat_hat[j]);
+            lon_err.push_back(lon_true[j]-lon_hat[j]);
+            alt_err.push_back(alt_true[j]-alt_hat[j]);
 
-        n_hat.push_back(ned_hat[0]);
-        e_hat.push_back(ned_hat[0]);
-        d_hat.push_back(ned_hat[2]);
+            n_hat.push_back(ned_hat[0]);
+            e_hat.push_back(ned_hat[1]);
+            d_hat.push_back(ned_hat[2]);
 
-        n_true.push_back(ned_truth[0]);
-        e_true.push_back(ned_truth[1]);
-        d_true.push_back(ned_truth[2]);
+            n_true.push_back(ned_truth[0]);
+            e_true.push_back(ned_truth[1]);
+            d_true.push_back(ned_truth[2]);
 
-        n_err.push_back(n_true[j]-n_hat[j]);
-        e_err.push_back(e_true[j]-e_hat[j]);
-        d_err.push_back(d_true[j]-d_hat[j]);
+            n_err.push_back(n_true[j]-n_hat[j]);
+            e_err.push_back(e_true[j]-e_hat[j]);
+            d_err.push_back(d_true[j]-d_hat[j]);
 
-        dn_hat.push_back(ned_vel_hat[0]);
-        de_hat.push_back(ned_vel_hat[1]);
-        dd_hat.push_back(ned_vel_hat[2]);
+            dn_hat.push_back(ned_vel_hat[0]);
+            de_hat.push_back(ned_vel_hat[1]);
+            dd_hat.push_back(ned_vel_hat[2]);
 
-        dn_err.push_back(dn_true[j]-dn_hat[j]);
-        de_err.push_back(de_true[j]-de_hat[j]);
-        dd_err.push_back(dd_true[j]-dd_hat[j]);
+            dn_err.push_back(dn_true[j]-dn_hat[j]);
+            de_err.push_back(de_true[j]-de_hat[j]);
+            dd_err.push_back(dd_true[j]-dd_hat[j]);
 
-        roll_hat.push_back(ned_att_hat[0]);
-        pitch_hat.push_back(ned_att_hat[1]);
-        yaw_hat.push_back(ned_att_hat[2]);
+            roll_hat.push_back(ned_att_hat[0]);
+            pitch_hat.push_back(ned_att_hat[1]);
+            yaw_hat.push_back(ned_att_hat[2]);
 
-        roll_err.push_back(roll_true[j] - roll_hat[j]);
-        pitch_err.push_back(pitch_true[j]-pitch_hat[j]);
-        yaw_err.push_back(yaw_true[j]-yaw_hat[j]);
+            roll_err.push_back(roll_true[j] - roll_hat[j]);
+            pitch_err.push_back(pitch_true[j]-pitch_hat[j]);
+            yaw_err.push_back(yaw_true[j]-yaw_hat[j]);
         }
 
         j++;
     }   
 
-//    plt::suptitle("Positioning Error");
-//    plt::subplot(3,1,1);
-//    plt::plot(time,e_err);
-//    plt::title("East Error (m)");
-//    plt::subplot(3,1,2);
-//    plt::plot(time,n_err);
-//    plt::title("North Error (m)");
-//    plt::subplot(3,1,3);
-//    plt::plot(time,d_err);
-//    plt::title("Down Error (m)");
-//    plt::show();
+    plt::suptitle("Positioning");
+    plt::subplot(3,1,1);
+    plt::plot(e_err);
+    plt::title("East (m)");
+    plt::subplot(3,1,2);
+    plt::plot(n_err);
+    plt::title("North (m)");
+    plt::subplot(3,1,3);
+    plt::plot(d_err);
+    plt::title("Down (m)");
+    plt::show();
     
 }
