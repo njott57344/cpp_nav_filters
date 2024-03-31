@@ -25,8 +25,8 @@ int main(int argc,char **argv)
     std::fstream imu_meas;
     std::fstream imu_truth;
 
-    std::string imu_file = "/home/njo0004/devel/cpp_nav_filters_data/sim/straight_line_imu.csv";
-    std::string imu_truth_file = "/home/njo0004/devel/cpp_nav_filters_data/sim/straight_line_truth.csv";
+    std::string imu_file = "/home/njo0004/devel/cpp_nav_filters_data/sim/turn_imu.csv";
+    std::string imu_truth_file = "/home/njo0004/devel/cpp_nav_filters_data/sim/turn_truth.csv";
 
     imu_meas.open(imu_file,std::ios::in);
     imu_truth.open(imu_truth_file,std::ios::in);

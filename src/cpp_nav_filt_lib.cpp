@@ -105,32 +105,12 @@ namespace cpp_nav_filt
         // assumes euler angles are ordered roll pitch yaw (and in rad)
         // see groves p. 38
 
-        //unknown if use 2.22 or 2.24
+        // groves 2.24
         vec_3_1 c;
         vec_3_1 s;
 
         c << std::cos(euler_angles[0]),std::cos(euler_angles[1]),std::cos(euler_angles[2]);
         s << std::sin(euler_angles[0]),std::sin(euler_angles[1]),std::sin(euler_angles[2]);
-
-        /*
-        mat_3_3 C_x,C_y,C_z;
-
-
-
-        C_x << 1,  0,    0,
-                0,  c[0], s[0],
-                0, -s[0], c[0];
-
-        C_y << c[1], 0, -s[1],
-                0,    1,  0,
-                s[1], 0,  c[1];
-
-        C_z << c[2], s[2], 0,
-                -s[2], c[2], 0,
-                0,    0,    1;
-
-        return C_x*C_y*C_z; // rotation nav to body        
-        */
 
         mat_3_3 C;
         C(0,0) =  c(1)*c(2); // cos(pitch)cos(yaw)
