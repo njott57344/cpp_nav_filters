@@ -73,7 +73,7 @@ int main(int argc,char **argv)
     // ========== IMU Mechanization ========= //
     vec_3_1 init_pos,init_vel,init_att,init_ba,init_bg;
     vec_3_1 ned_att,lla_pos;
-    vec_3_1 x_hat,dx_hat,ecef_att_hat,ned_att_hat;
+    vec_3_1 x_hat,dx_hat,att_hat;
     vec_3_1 ned_hat,ned_truth,lla_0,lla_truth;
     vec_3_1 lla_hat,ned_vel_hat;
     mat_3_3 Cne; // DCM ned to ecef
@@ -137,12 +137,11 @@ int main(int argc,char **argv)
         // get current estimate of PVA
         ins.setPosSol(x_hat);
         ins.setVelSol(dx_hat);
-        ins.setAttSol(ecef_att_hat);
+        ins.setAttSol(att_hat);
 
         lla_hat = cpp_nav_filt::ecef2llaPos(x_hat);
         Cne = cpp_nav_filt::ecef2nedDCM(lla_hat);
         ned_vel_hat = Cne*dx_hat;
-        ned_att_hat = Cne*ecef_att_hat;
 
         lla_truth << lat_true[j],lon_true[j],alt_true[j];
         ned_truth = cpp_nav_filt::lla2nedPos(lla_truth,lla_0);
@@ -176,9 +175,9 @@ int main(int argc,char **argv)
         de_err.push_back(de_true[j]-de_hat[j]);
         dd_err.push_back(dd_true[j]-dd_hat[j]);
 
-        roll_hat.push_back(ned_att_hat[0]);
-        pitch_hat.push_back(ned_att_hat[1]);
-        yaw_hat.push_back(ned_att_hat[2]);
+        roll_hat.push_back(att_hat[0]*cpp_nav_filt::R2D);
+        pitch_hat.push_back(att_hat[1]*cpp_nav_filt::R2D);
+        yaw_hat.push_back(att_hat[2]*cpp_nav_filt::R2D);
 
         roll_err.push_back(roll_true[j] - roll_hat[j]);
         pitch_err.push_back(pitch_true[j]-pitch_hat[j]);
@@ -199,6 +198,30 @@ int main(int argc,char **argv)
     plt::title("Down (m)");
     plt::show();
     
+    plt::suptitle("Velocity");
+    plt::subplot(3,1,1);
+    plt::plot(time,de_err);
+    plt::title("East (m/s)");
+    plt::subplot(3,1,2);
+    plt::plot(time,dn_err);
+    plt::title("North (m/s)");
+    plt::subplot(3,1,3);
+    plt::plot(time,dd_err);
+    plt::title("Down (m/s)");
+    plt::show();
+
+    plt::suptitle("Attitude");
+    plt::subplot(3,1,1);
+    plt::plot(time,roll_err);
+    plt::title("Roll (deg)");
+    plt::subplot(3,1,2);
+    plt::plot(time,pitch_err);
+    plt::title("Pitch (deg)");
+    plt::subplot(3,1,3);
+    plt::plot(time,yaw_err);
+    plt::title("Yaw (deg)");
+    plt::show();
+
     plt::named_plot("Truth",e_true,n_true);
     plt::named_plot("Estimate",e_hat,n_hat);
     plt::title("East Vs North Position");
