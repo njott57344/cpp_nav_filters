@@ -128,6 +128,19 @@ namespace cpp_nav_filt
         return C; // rotation body to nav
     }
 
+    mat_3_3 eul2EcefDCM(vec_3_1& euler_angles,vec_3_1& lla_pos)
+    {
+        // return rotation matrix from body to ecef
+        mat_3_3 C_n_b,C_b_n,C_b_e,C_n_e;
+
+        C_n_b = eul2Rotm(euler_angles); // DCM from local nav to body
+        C_b_n = C_n_b.transpose(); // DCM from body to local nav
+
+        C_n_e = ned2ecefDCM(lla_pos); // DCM from local nav to ecef
+        C_b_e = C_n_e*C_b_n;
+        return C_b_e;
+    }
+
     vec_3_1 rotm2Eul(mat_3_3& C)
     {
         // groves 2.25

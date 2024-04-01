@@ -188,6 +188,8 @@ namespace cpp_nav_filt
             setPosSol(minus_pos_); // get position state before propagation
             setVelSol(minus_vel_); // get velocity state before propagation
 
+            C_b_e_minus_ = C_b_e_plus_;
+
             Omega_b_ = cpp_nav_filt::makeSkewSymmetic(wb_b_);
             grav_b_e_ = cpp_nav_filt::ecefGravity(minus_pos_);
 
@@ -197,7 +199,7 @@ namespace cpp_nav_filt
 
             fb_e_ = 0.5*(C_b_e_plus_+C_b_e_minus_)*fb_b_; // 5.28
             
-            plus_vel_ = minus_vel_ + (fb_e_ - grav_b_e_ - 2*Omega_e_*minus_vel_)*dt_; // 5.36
+            plus_vel_ = minus_vel_ + (fb_e_ + grav_b_e_ - 2*Omega_e_*minus_vel_)*dt_; // 5.36
             
             plus_pos_ = minus_pos_ + (plus_vel_+minus_vel_)*0.5*dt_; // 5.38
         }
@@ -408,8 +410,7 @@ namespace cpp_nav_filt
             C_n_b_ = eul2Rotm(att);
             C_b_n_ = C_n_b_.transpose();
 
-            C_b_e_minus_ = C_n_e_*C_b_n_;
-            C_e_b_minus_ = C_b_e_minus_.transpose();
+            C_b_e_plus_ = C_n_e_*C_b_n_;
 
             std::cout<<"Loosely Coupled INS has been initialized!"<<std::endl;
         }

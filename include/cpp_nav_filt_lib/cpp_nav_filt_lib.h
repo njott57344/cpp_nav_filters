@@ -113,6 +113,8 @@ namespace cpp_nav_filt
     
     // dealing with euler angles
     mat_3_3 eul2Rotm(vec_3_1& euler_angles);
+    mat_3_3 eul2EcefDCM(vec_3_1& euler_angles,vec_3_1& lla_pos);
+
     vec_3_1 rotm2Eul(mat_3_3& C);
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in);
 
