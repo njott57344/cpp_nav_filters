@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../cpp_nav_filt_src/include/cpp_nav_filt_lib.h
+eigen3/Eigen/Core
+../cpp_nav_filt_src/include/eigen3/Eigen/Core
+eigen3/Eigen/Dense
+../cpp_nav_filt_src/include/eigen3/Eigen/Dense
+iostream
+-
+cmath
+-
+vector
+-
+map
+-
+
+../cpp_nav_filt_src/include/gps_least_squares.h
+cpp_nav_filt_lib.h
+../cpp_nav_filt_src/include/cpp_nav_filt_lib.h
+
+../cpp_nav_filt_src/include/sv_manager.h
+cpp_nav_filt_lib.h
+../cpp_nav_filt_src/include/cpp_nav_filt_lib.h
+
+/home/njo0004/devel/cpp_nav_filters/demo/gps_least_squares_demo.cpp
+cpp_nav_filt_lib.h
+/home/njo0004/devel/cpp_nav_filters/demo/cpp_nav_filt_lib.h
+sv_manager.h
+/home/njo0004/devel/cpp_nav_filters/demo/sv_manager.h
+gps_least_squares.h
+/home/njo0004/devel/cpp_nav_filters/demo/gps_least_squares.h
+fstream
+-
+

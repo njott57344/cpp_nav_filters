@@ -74,5 +74,5 @@
         "codecvt": "cpp",
         "unordered_set": "cpp"
     },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "disabled"
 }

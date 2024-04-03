@@ -1,0 +1,2 @@
+/usr/bin/ar qc libCppNavFiltSrc.a  CMakeFiles/CppNavFiltSrc.dir/src/cpp_nav_filt_lib.cpp.o CMakeFiles/CppNavFiltSrc.dir/src/gps_least_squares.cpp.o CMakeFiles/CppNavFiltSrc.dir/src/lc_ins.cpp.o CMakeFiles/CppNavFiltSrc.dir/src/sv_manager.cpp.o
+/usr/bin/ranlib libCppNavFiltSrc.a
