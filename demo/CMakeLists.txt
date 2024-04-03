@@ -10,16 +10,16 @@ add_executable(DemoGpsLeastSquares
     gps_least_squares_demo.cpp
 )
 
-# add_executable(DemoLooselyCoupledIns
-#     loose_coupled_ins_demo.cpp
-# )
+add_executable(DemoLooselyCoupledIns
+    loose_coupled_ins_demo.cpp
+)
 
 target_link_libraries(DemoGpsLeastSquares PUBLIC
     CppNavFiltSrc
     ${PYTHON_LIBRARIES}
 )
 
-# target_link_libraries(DemoLooselyCoupledIns PUBLIC
-#     CppNavFiltSrc
-#     ${PYTHON_LIBRARIES}
-# )
+target_link_libraries(DemoLooselyCoupledIns PUBLIC
+    CppNavFiltSrc
+    ${PYTHON_LIBRARIES}
+)
