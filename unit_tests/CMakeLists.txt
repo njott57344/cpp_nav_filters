@@ -3,13 +3,21 @@ cmake_minimum_required(VERSION 3.16.3)
 project(CppNavFiltUnitTests)
 set(CMAKE_CXX_STANDARD 17)
 
-set(Test1 UnitTestsGpsLeastSquares)
-set(Test2 UnitTestsLooselyCoupledINS)
+if(BUILD_TESTING)
 
-add_executable(Test1
-    gps_least_squares_tests.cpp
-)
+    add_executable(${PROJECT_NAME}
+        cpp_nav_filt_unit_tests.cpp
+    )
 
-target_link_libraries(Test1 PUBLIC
-    CppNavFiltSrc
-)
+    target_link_libraries(${PROJECT_NAME} PUBLIC
+        CppNavFiltSrc
+    )
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        GTest::gtest_main
+    )
+
+    include(GoogleTest)
+    gtest_discover_tests(${PROJECT_NAME})
+
+endif()

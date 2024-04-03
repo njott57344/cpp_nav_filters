@@ -4,7 +4,8 @@ project(CppNavFilt)
 set(CMAKE_CXX_STANDARD 17)
 
 # Update Git Submodules
-include(cmake/UpdateSubmodules.cmake)
+include(cmake/UpdateSubmodules.cmake) # update git submodules
+include(CTest)
 
 # Submodules
 add_subdirectory(cpp_nav_filt_src)
