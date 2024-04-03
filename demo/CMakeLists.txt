@@ -16,10 +16,8 @@ add_executable(DemoLooselyCoupledIns
 
 target_link_libraries(DemoGpsLeastSquares PUBLIC
     CppNavFiltSrc
-    ${PYTHON_LIBRARIES}
 )
 
 target_link_libraries(DemoLooselyCoupledIns PUBLIC
     CppNavFiltSrc
-    ${PYTHON_LIBRARIES}
 )
