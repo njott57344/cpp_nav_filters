@@ -27,6 +27,7 @@ typedef Eigen::Matrix<double,15,1> vec_15_1;
 typedef Eigen::Matrix<double,15,15> mat_15_15;
 typedef Eigen::Matrix<double,2,1> vec_2_1;
 typedef Eigen::Matrix<double,3,15> mat_3_15;
+typedef Eigen::Matrix<double,9,1> vec_9_1;
 
 namespace cpp_nav_filt
 {
@@ -68,9 +69,12 @@ namespace cpp_nav_filt
   
     // ========= Frame Conversion Functions ============= //
 
-    // ------------ Positions ------------------------------ //
-    // ecef to/from lla
+    /*! @brief function converts Earth Frame Positions to LLA Positions
+
+        @param[in] ecef_pos Earth Frame Position to be converted to LLA position
+    */
     vec_3_1 ecef2llaPos(vec_3_1& ecef_pos);
+    
     vec_3_1 lla2ecefPos(vec_3_1& lla_pos);
     
     // ecef to/from ned

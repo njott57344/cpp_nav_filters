@@ -12,6 +12,7 @@ set(Headers
     include/gps_least_squares.h
     include/lc_ins.h
     include/sv_manager.h
+    include/imu_mech.h
 )
 
 set(Sources
@@ -19,6 +20,7 @@ set(Sources
     src/gps_least_squares.cpp
     src/lc_ins.cpp
     src/sv_manager.cpp
+    src/imu_mech.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${Sources} ${Headers})
