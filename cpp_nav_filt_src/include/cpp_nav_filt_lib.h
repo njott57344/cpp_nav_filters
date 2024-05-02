@@ -11,22 +11,55 @@
 #include <vector>
 #include <map>
 
+/*! @brief variable type 3 by 1 matrix */
 typedef Eigen::Matrix<double,3,1> vec_3_1;
+
+/*! @brief variable type 1 by 3 matrix */
 typedef Eigen::Matrix<double,1,3> vec_1_3;
+
+/*! @brief variable type 32 by 3 matrix */
 typedef Eigen::Matrix<double,32,3> mat_32_3;
+
+/*! @brief variable type 32 by 37 matrix*/
 typedef Eigen::Matrix<double,32,27> mat_32_27;
+
+/*! @brief variable type 1 by 27 matrix */
 typedef Eigen::Matrix<double,1,27> vec_1_27;
+
+/*! @brief variable type 6 by 1 matrix */
 typedef Eigen::Matrix<double,6,1> vec_6_1;
+
+/*! @brief variable type 7 by 1 matrix */
 typedef Eigen::Matrix<double,7,1> vec_7_1;
+
+/*! @brief variable type 4 by 1 matrix */
 typedef Eigen::Matrix<double,4,1> vec_4_1;
+
+/*! @brief variable type 8 by 1 matrix */
 typedef Eigen::Matrix<double,8,1> vec_8_1;
+
+/*! @brief variable type 32 by 1 matrix */
 typedef Eigen::Matrix<double,32,1> vec_32_1;
+
+/*! @brief variable type 4 by 4 matrix */
 typedef Eigen::Matrix<double,4,4> mat_4_4;
+
+/*! @brief variable type 3 by 3 matrix */
 typedef Eigen::Matrix<double,3,3> mat_3_3;
+
+/*! @brief variable type 15 by 1 matrix */
 typedef Eigen::Matrix<double,15,1> vec_15_1;
+
+/*! @brief variable type 15 by 15 matrix */
 typedef Eigen::Matrix<double,15,15> mat_15_15;
+
+/*! @brief variable type 2 by 1 matrix */
 typedef Eigen::Matrix<double,2,1> vec_2_1;
+
+/*! @brief variable type 3 by 15 matrix */
 typedef Eigen::Matrix<double,3,15> mat_3_15;
+
+/*! @brief variable type 9 by 1 matrix */
 typedef Eigen::Matrix<double,9,1> vec_9_1;
 
 namespace cpp_nav_filt
@@ -60,57 +93,189 @@ namespace cpp_nav_filt
     const double f_l5 = 1.176*pow(10,9);
 
     // ============ Meas Estimate ========== //
+    /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites
+        @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
+        @param[in] ecef_pos estimate of Earth Frame Position
+        @param[in] clk_b estimate of receiver clock bias
+        @return matrix of unit vectors rows = num svs, cols = [ux,uy,uz]
+    */
     Eigen::MatrixXd calcUnitVectors(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
+
+    /*! @brief function to calculate pseudorange estimates from an antennna to a set of satellites
+        @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
+        @param[in] ecef_pos estimate of Earth Frame Position
+        @param[in] clk_b estimate of receiver clock bias
+        @return matrix of pseudoranges rows = num svs, col = pseudorange
+    */
     Eigen::MatrixXd calcPsr(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
+    
+    /*! @brief function to calculate pseudorange rate estimates from an antenna to a set of satellites
+        @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_corrections]
+        @param[in] ecef_pos estimate of Earth Frame Position
+        @param[in] ecef_vel estimate of Earth Frame Velocity
+        @param[in] clk_b estimate of receiver clock bias
+        @param[in] clk_d estimate of receiver clock drift
+        @return matrix of pseudorange rates rows = num svs, col = pseudorange rates
+    */
     Eigen::MatrixXd calcPsrRate(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
+
+    /*! @brief function to calculate a full set of measurement estimates
+        @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_corrections]
+        @param[in] ecef_pos estimate of Earth Frame Position
+        @param[in] ecef_vel estimate of Earth Frame Velocity
+        @param[in] clk_b estimate of receiver clock bias
+        @param[in] clk_d estimate of receiver clock drift
+        @return stacked vector of [pseudoranges,pseudorange rates]'
+    */
     Eigen::MatrixXd calcMeasEst(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
 
+    /*! @brief function to calculate elevation angle from a receiver antenna to a set of satellites
+        @note this is WIP
+    */
     void calcElAngle();
   
     // ========= Frame Conversion Functions ============= //
 
     /*! @brief function converts Earth Frame Positions to LLA Positions
-
         @param[in] ecef_pos Earth Frame Position to be converted to LLA position
+        @return returns lla output equivalent to Earth Frame input
     */
     vec_3_1 ecef2llaPos(vec_3_1& ecef_pos);
     
+    /*! @brief function converts LLA Position to Earth Frame Position
+        @param[in] lla_pos lat lon altitude Position to be converted to Earth Frame Position
+        @return returns Earth Frame position from lla input
+    */
     vec_3_1 lla2ecefPos(vec_3_1& lla_pos);
     
     // ecef to/from ned
+
+    /*! @brief function converts Earth Frame Position to North East Down Position
+        @param[in] ecef_pos Earth Frame Position to be converted to North East Down Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns North East Down position from Earth Frame input
+    */
     vec_3_1 ecef2nedPos(vec_3_1& ecef_pos,vec_3_1& ref_lla);
+
+    /*! @brief function converts North East Down to an Earth Frame position
+        @param[in] ned_pos North East Down Position to be converted to Earth Frame
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Earth Frame position from North East Down Position
+    */
     vec_3_1 ned2ecefPos(vec_3_1& ned_pos,vec_3_1& ref_lla);
     
     // ecef to/from enu
+    /*! @brief function converts Earth Frame Position to East North Up Position
+        @param[in] ecef_pos Earth Frame Position to be converted to East North Up Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns East North Up position from Earth Frame Coordinate
+    */
     vec_3_1 ecef2enuPos(vec_3_1& ecef_pos,vec_3_1& ref_lla);
+
+    /*! @brief function converts East North Up Position to Earth Frame Position
+        @param[in] enu_pos East North Up Position to be converted to Earth Frame Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Earth Frame Position from East North Up Position
+    */
     vec_3_1 enu2ecefPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
 
     // enu to/from ned
+    /*! @brief function converts East North Up Position to North East Down Position
+        @param[in] enu_pos East North Up Position to be converted to North East Down Position
+        @return returns North East Down Position from East North Up position
+    */
     vec_3_1 enu2nedPos(vec_3_1& enu_pos);
+    
+    /*! @brief function converts North East Down Position to East North Up Position
+        @param[in] ned_pos North East Down Position to be converted to East North Up Position
+        @return returns East North Up Position from North East Down Position
+    */
     vec_3_1 ned2enuPos(vec_3_1& ned_pos);
     
     // lla to/from ned
+    /*! @brief functions converts Latitude Longitude Altitude position to North East Down Position
+        @param[in] lla_pos Latitude Longitude Altitude position to be converted to North East Down Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns North East Down Position from Latitude Longitude Altitude Position
+     */
     vec_3_1 lla2nedPos(vec_3_1& lla_pos,vec_3_1& ref_lla);
+
+    /*! @brief function converts North East Down Position to a Latitude Longitude Altitude Position
+        @param[in] ned_pos North East Down Position to be converted to Latitude Longitude Altitude Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Latitude Longitude Altitude Position from North East Down Position
+    */
     vec_3_1 ned2llaPos(vec_3_1& ned_pos,vec_3_1& ref_lla);
 
     // lla to/from enu
+    /*! @brief functions converts Latitude Longitude Altitude position to East North Up Position
+        @param[in] lla_pos Latitude Longitude Altitude position to be converted to East North Up Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns East North Up Position from Latitude Longitude Altitude Position
+     */
     vec_3_1 lla2enuPos(vec_3_1& lla_pos,vec_3_1& ref_lla);
+    
+    /*! @brief function converts East North Up Position to a Latitude Longitude Altitude Position
+        @param[in] enu_pos East North Up Position to be converted to Latitude Longitude Altitude Position
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Latitude Longitude Altitude Position from East North Up Position
+    */    
     vec_3_1 enu2llaPos(vec_3_1& enu_pos,vec_3_1& ref_lla);
     
     // ---------- Velocities --------------------------- //
     // ecef to/from ned velocities
+    /*! @brief function converts a Earth Frame Velocity to a North East Down Velocity
+        @param[in] ecef_vel Earth Frame Velocity to be converted to North East Down Velocity
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns North East Down Velocity from Earth Frame Velocity
+    */
     vec_3_1 ecef2nedVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
+
+    /*! @brief function converts a North East Down Velocity to an Earth Frame Velocity
+        @param[in] ned_vel North East Down Velocity to be converted to Earth Frame Velocity
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Earth Frame Velocity from North East Down Velocity
+    */
     vec_3_1 ned2ecefVel(vec_3_1& ned_vel,vec_3_1& ref_lla);
 
     // ecef to/from enu velocities
+    /*! @brief function converts a Earth Frame Velocity to a East North Up Velocity
+        @param[in] ecef_vel Earth Frame Velocity to be converted to East North Up Velocity
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns East North Up Velocity from Earth Frame Velocity
+    */
     vec_3_1 ecef2enuVel(vec_3_1& ecef_vel,vec_3_1& ref_lla);
+    
+    /*! @brief function converts a East North Up Velocity to an Earth Frame Velocity
+        @param[in] enu_vel East North Up Velocity to be converted to Earth Frame Velocity
+        @param[in] ref_lla reference latitude longitude altitude coordinate defining local tangent frame
+        @return returns Earth Frame Velocity from East North Up Velocity
+    */    
     vec_3_1 enu2ecefVel(vec_3_1& enu_vel,vec_3_1& ref_lla);
 
     // DCM transformations
-    mat_3_3 ned2ecefDCM(vec_3_1& lla_pos); // assume lla is in degrees
+    /*! @brief function calculates the DCM to go from a local tangent frame in NED to the Earth Frame
+        @param[in] lla_pos Latitude Longitude Altitude position to calculate DCM from
+        @return returns the DCM to rotate FROM a North East Down reference frame TO Earth Frame
+    */
+    mat_3_3 ned2ecefDCM(vec_3_1& lla_pos);
+
+    /*! @brief function calculates the DCM to go from Earth Frame to a local tangent frame in NED
+        @param[in] lla_pos Latitude Longitude Altitude position to calculate DCM from
+        @return returns the DCM to rotate FROM an Earth Frame TO a North East Down frame 
+    */
     mat_3_3 ecef2nedDCM(vec_3_1& lla_pos);
 
+    /*! @brief function calculates the DCM to go from an Earth Frame to a local tangent frame in ENU
+        @param[in] lla_pos Latitude Longitude Altitude position to calculate DCM from
+        @return returns the DCM to rotate FROM an Earth Frame TO a East North Up frame
+    */
     mat_3_3 ecef2enuDCM(vec_3_1& lla_pos);
+
+    /*! @brief function to calculate the DCM to go from a local tangent frame in ENU to an Earth Frame
+        @param[in] lla_pos Latitude Longitude Altitude position to calculate DCM from
+        @return returns the DCM to rotate FROM an East North Up tangent frame TO an Earth Frame
+    */
     mat_3_3 enu2ecefDCM(vec_3_1& lla_pos);
 
     // ============ Nav Functions ========== //
