@@ -3,6 +3,10 @@
 
 #include "cpp_nav_filt_lib.h"
 
+/*! @brief struct for containing all of the ephemeris of a particular sv
+    @param ephem_map std::map from an ephermide string name to it's double value
+    @param sv integer for which SV this is
+*/
 typedef struct
 {
     std::map<std::string,double> ephem_map;
@@ -18,12 +22,16 @@ namespace cpp_nav_filt
 
             SvManager();
             ~SvManager();
-
-            void sendUnitVectors(vec_3_1& pos,double& clk,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& H);
-            void sendMeasEst(vec_3_1& pos,vec_3_1& vel,double& clk,double& clk_drift,Eigen::MatrixXd& SvPVT,Eigen::MatrixXd& Yhat);
-            void sendElAngles(Eigen::MatrixXd& SvPVT,vec_3_1& pos,Eigen::MatrixXd& el_angles);
+  
+            /*! @brief function to send SV states from Satellite Ephemeris
+                @param[in] sv_in index of satellite you want the States of
+                @param[in] transmit_time time the satellite transmitted 
+                @param[in] transit_time time the satellite message was in transit 
+                @return Satellite states [x,y,z,dx,dy,dz,clk_corrections]
+            */
             vec_7_1 sendSvStates(const int& sv_in,const double& transmit_time,const double& transit_time);
 
+            /*! @brief vector of Satellite ephemeris structs */
             std::vector<SatEphemeris> ephem_vect;
       
         private:
@@ -32,7 +40,6 @@ namespace cpp_nav_filt
 
             // Internal Variables
             int desired_sv_;
-            int num_fb_b_meas_;
             
             double T_transmit_;
             double T_transit_;
@@ -47,10 +54,21 @@ namespace cpp_nav_filt
             std::map<std::string,double> current_ephem_;
 
             // Internal Functions
-            void calcSvPVStates(vec_7_1& sv_state); // this is adapted from Dr. Bevly's provided class code
-            void setCurrentEphem(const int& sv);
-            double checkT(double time);
+            /*! @brief function that calculates the SV States
+                @param[out] sv_state is the output state of SV pos,vel,clk_corrections
+            */
+            void calcSvPVStates(vec_7_1& sv_state);
 
+            /*! @brief function that sets the current ephemeris map to the SV under consideration
+                @param[in] sv is the integer id for the satellite under current consideration
+            */
+            void setCurrentEphem(const int& sv);
+
+            /*! @brief function to check half week time
+                @param[in] time time to run check on
+                @return returns checked time
+            */
+            double checkT(double time);
 
             void nanEphemerisMap();
 

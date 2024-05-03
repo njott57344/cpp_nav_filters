@@ -238,10 +238,10 @@ namespace cpp_nav_filt
 
     vec_2_1 levelInsAccel(Eigen::MatrixXd& f_ib_b)
     {
-        int num_meas = fb_b.rows();
+        int num_meas = f_ib_b.rows();
         vec_2_1 roll_pitch;
 
-        vec_1_3 samp_mean = fb_b.colwise().mean();
+        vec_1_3 samp_mean = f_ib_b.colwise().mean();
 
         roll_pitch[0] = std::atan2(-samp_mean[1],-samp_mean[2]);
         roll_pitch[1] = std::atan(samp_mean[0]/sqrt(pow(samp_mean[1],2) + pow(samp_mean[2],2)));
