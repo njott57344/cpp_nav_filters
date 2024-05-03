@@ -213,7 +213,6 @@ namespace cpp_nav_filt
 
     double meridianRadiusOfCurvature(double& lat)
     {
-        // see groves p. 59
         double num,den;
 
         num = cpp_nav_filt::Ro*(1-pow(cpp_nav_filt::e,2));
@@ -224,14 +223,12 @@ namespace cpp_nav_filt
 
     double transverseRadiusOfCurvature(double& lat)
     {
-        // see groves p. 59
         double denom = 1-pow(cpp_nav_filt::e,2)*pow(sin(lat),2);
         return cpp_nav_filt::Ro/sqrt(denom);        
     }
 
     double geocentricRadius(double& lat)
     {
-        // groves p. 71
         double radius_of_curvature;
         radius_of_curvature = transverseRadiusOfCurvature(lat);
 
@@ -239,7 +236,7 @@ namespace cpp_nav_filt
         return radius_of_curvature*sqrt(sqrt_arg);        
     }
 
-    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b)
+    vec_2_1 levelInsAccel(Eigen::MatrixXd& f_ib_b)
     {
         int num_meas = fb_b.rows();
         vec_2_1 roll_pitch;

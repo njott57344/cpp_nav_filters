@@ -281,23 +281,78 @@ namespace cpp_nav_filt
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
+    /*! @brief function to calculate a DCM from a vector of roll pitch yaw euler angles
+        @param[in] euler_angles vector ordered [roll,pitch,yaw]' of euler angles
+        @return returns the DCM equivalent of a vector of euler angles
+    */
     mat_3_3 eul2Rotm(vec_3_1& euler_angles);
+
+    /*! @brief function to calculate the DCM from a set of roll pitch yaw euler angles and lla position to an Earth Frame
+        @param[in] euler_angles vector ordered [roll,pitch,yaw]' of euler angles for body to nav DCM
+        @param[in] lla_pos Latitude Longitude Altitude position to calculate DCM for nav to ecef DCM
+        @return returns the DCM to go from euler angles to an Earth Frame coordinate
+        @note See Paul Groves p. 38 eq 2.22
+    */
     mat_3_3 eul2EcefDCM(vec_3_1& euler_angles,vec_3_1& lla_pos);
 
+    /*! @brief function to calculate a set of euler angles from a local tangent frame DCM
+        @param[in] C DCM from body frame to local tangent navigation frame 
+        @return returns euler angles [roll,pitch,yaw]
+        @note see Paul Groves p. 38 eqs 2.24-2.25
+    */
     vec_3_1 rotm2Eul(mat_3_3& C);
+
+    /*! @brief function to get the skew symmetric equivalent of a 3x1 vector
+        @param[in] vec_in vector to make the skew symmetric of
+        @return returns the skew symmetric model
+    */
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in);
 
     // gravity model
-    vec_3_1 ecefGravitation(vec_3_1& ecef_pos); // see groves p. 72
-    vec_3_1 ecefGravity(vec_3_1& ecef_pos); // see groves p. 70
+    /*! @brief function to find the gravitational force in the ecef frame at a given position
+        @param[in] ecef_pos Earth Frame Postition to find the gravitational force at
+        @return returns a 3x1 vector of gravitational force
+        @note See Paul Groves p. 72 eq 2.142
+    */
+    vec_3_1 ecefGravitation(vec_3_1& ecef_pos);
+
+    /*! @brief function to find the acceleration due to gravity in the Earth Frame at an Earth Frame Position
+        @param[in] ecef_pos Earth Frame Position to find acceleration due to gravity at
+        @return acceleration due to gravity in the Earth Frame
+        @note See Paul Groves p. 70 eq 2.133
+    */
+    vec_3_1 ecefGravity(vec_3_1& ecef_pos);
 
     // WGS Ellipoidal Earth Stuff
-    double transverseRadiusOfCurvature(double& lat); // groves 2.106 (Re(L))
-    double meridianRadiusOfCurvature(double& lat); // groves 2.105 (Rn(L))
+    /*! @brief function to find the Transverse Radius of Curvature 
+        @param[in] lat latitude to find Trasverse Radius of Curvature at
+        @return Transverse Radius of Curvature
+        @note See Paul Groves p. 59 eq 2.106
+    */
+    double transverseRadiusOfCurvature(double& lat);
+
+    /*! @brief function to calculate Meridian Radius of Curvature
+        @param[in] lat latitude to find Meridian Radius of Curvature at
+        @return Meridian Radius of Curvature
+        @note See Paul Groves p. 59 eq 2.105
+    */
+    double meridianRadiusOfCurvature(double& lat);
+
+    /*! @brief function to calculate Geocentric Radius
+        @param[in] lat latitude to find Geocentric Radius at
+        @return Geocentric Radius
+        @note See Paul Groves p. 71 eq 2.137
+    */
     double geocentricRadius(double& lat);
 
     // Init Roll Pitch
-    vec_2_1 levelInsAccel(Eigen::MatrixXd& fb_b); // groves p. 670
+    /*! @brief function to calculate levelling paramters roll and pitch from specific force measurements
+        @param[in] f_ib_b specific force of body wrt inertial frame in body frame
+        @return returns roll and pitch from specific forces
+        @note See Paul Groves p. 670 eq 16.27
+        @note assumes body is static
+    */
+    vec_2_1 levelInsAccel(Eigen::MatrixXd& f_ib_b); // groves p. 670
 }
 
 #endif
