@@ -91,7 +91,7 @@ namespace cpp_nav_filt
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);
     const double f_l5 = 1.176*pow(10,9);
-
+    
     // ============ Meas Estimate ========== //
     /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
