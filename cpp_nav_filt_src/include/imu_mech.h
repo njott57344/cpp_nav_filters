@@ -5,16 +5,12 @@
 
 namespace cpp_nav_filt
 {
-    typedef struct
-    {
-        std::string mechanization_frame;
-    } ImuMechanizationSettings;
 
     class ImuMechanization
     {
         public:
             
-            ImuMechanization(ImuMechanizationSettings& settings_in);
+            ImuMechanization();
             ~ImuMechanization();
 
             // Getters (to class) and senders (from class)
@@ -27,14 +23,12 @@ namespace cpp_nav_filt
             void sendPos(vec_3_1& pos); // send pos to outside class
             void sendVel(vec_3_1& vel); // send vel to outside class
             void sendAtt(vec_3_1& att); // send att to outside class
-            void sendCbm(mat_3_3& Cbm); // send Cbm (rotation from body to mech frame) to outside class
+            void sendCbm(mat_3_3& Cbe); // send Cbm (rotation from body to mech frame) to outside class
 
             void correctPVA(vec_3_1& del_pos,vec_3_1& del_vel,vec_3_1& del_att);
 
         private:
             
-            ImuMechanizationSettings settings_;
-
             vec_3_1 r_ib_e_prior_;
             vec_3_1 r_ib_e_posterior_;
 

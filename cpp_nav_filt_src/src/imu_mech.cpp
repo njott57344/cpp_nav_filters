@@ -2,10 +2,8 @@
 
 namespace cpp_nav_filt
 {
-    ImuMechanization::ImuMechanization(ImuMechanizationSettings& settings_in)
+    ImuMechanization::ImuMechanization()
     {
-        settings_ = settings_in;
-
         state_is_init_ = false;
         pos_is_init_ = false;
         vel_is_init_ = false;
@@ -76,22 +74,22 @@ namespace cpp_nav_filt
     // ===================== Senders ==================== //
     void ImuMechanization::sendPos(vec_3_1& pos)
     {
-
+        pos = r_ib_e_posterior_;
     }
 
     void ImuMechanization::sendVel(vec_3_1& vel)
     {
-
+        vel = v_ib_e_posterior_;
     }
 
     void ImuMechanization::sendAtt(vec_3_1& att)
     {
-
+        // to-do
     }
 
-    void ImuMechanization::sendCbm(mat_3_3& Cbm)
+    void ImuMechanization::sendCbm(mat_3_3& Cbe)
     {
-        
+        Cbe = C_be_posterior_;
     }
 
     // =================== Interaction Functions ============ //
