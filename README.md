@@ -1,7 +1,12 @@
 # cpp_nav_filters
 A collection of C-Plus-Plus INS filters to perform fusion of GNSS and INS nav solutions
 
-## To-Do
+## Contents of CPP Nav Filt
+- cpp_nav_filt_lib.cpp
+- sv_manager.cpp
+- gps_least_squares.cpp
+- ins.cpp
+
 - [ ] Loosely Coupled INS EKF
     - [ ] Full state mechanization needs to be tested
 - [ ] Tightly Coupled INS EKF
