@@ -110,7 +110,7 @@ namespace cpp_nav_filt
             double r = A*(1-e*cos(E)) + C_rc*cos(2*phi) + C_rs*sin(2*phi);
             double i = i_0 + I_dot * tk + C_ic * cos(2*phi) + C_is*sin(2*phi);
 
-            double Omega = Omega_0 + (dot_Omega - omega_e_dot)*tk - omega_e_dot*t_oe-omega_e_dot*T_transit_;
+            double Omega = Omega_0 + (dot_Omega - w_e)*tk - w_e*t_oe-w_e*T_transit_;
             Omega = remainder(Omega + 2*gps_pi,2*gps_pi);
 
             double X = r*cos(u);
@@ -131,7 +131,7 @@ namespace cpp_nav_filt
             double i_dot = 2*(C_is*cos(2*phi)-C_ic*sin(2*phi))*phi_dot + I_dot;
             double Xdot = r_dot*cos(u) - r*sin(u)*u_dot;
             double Ydot = r_dot*sin(u) + r*cos(u)*u_dot;
-            double Omega_dot  = dot_Omega - omega_e_dot;
+            double Omega_dot  = dot_Omega - w_e;
 
             sv_state(3) = Xdot*cos(Omega) - Ydot*cos(i)*sin(Omega) + Y*sin(i)*sin(Omega)*i_dot - y*Omega_dot;
             sv_state(4) = Xdot*sin(Omega) + Ydot*cos(i)*cos(Omega) - Y*sin(i)*cos(Omega)*i_dot + x*Omega_dot;

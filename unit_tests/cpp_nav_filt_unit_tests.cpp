@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "cpp_nav_filt_lib.h"
-#include "lc_ins.h"
 
 /*
     I am confident that functions like calcPsr,calcUnitVectors,calcPsrRate,calcMeasEst already work from
