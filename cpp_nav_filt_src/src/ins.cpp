@@ -50,6 +50,8 @@ namespace cpp_nav_filt
         f_ib_b_ = f_ib_b;
         w_ib_b_ = w_ib_b;
         dt_ = dt;
+
+        mechanizeFullState();
     }
 
     void Ins::initCheck()
@@ -61,11 +63,26 @@ namespace cpp_nav_filt
     {
         if(full_state_init_)
         {
-            Omega_ib_b_ = makeSkewSymmetic(w_ib_b_);
-            g_be_ = ecefGravity(r_eb_e_);
+            // prior state (before propagation)
+            vec_3_1 r_eb_e_min,v_eb_e_min;
+            mat_3_3 C_be_min;
 
-            C_be_ = C_be_*(I3_ + Omega_ib_b_*dt_) - Omega_ie_e_*C_be_*dt_;
-            v_
+            r_eb_e_min = r_eb_e_;
+            v_eb_e_min = v_eb_e_;
+            C_be_min   = C_be_;
+
+            Omega_ib_b_ = makeSkewSymmetic(w_ib_b_);
+            g_be_ = ecefGravity(r_eb_e_min);
+
+            // DCM Propagation
+            C_be_ = C_be_min*(I3_ + Omega_ib_b_*dt_) - Omega_ie_e_*C_be_min*dt_;
+            
+            // Specific Force Rotation
+            f_ib_e_ = 0.5*(C_be_ + C_be_min)*f_ib_b_;
+
+            v_eb_e_ = v_eb_e_min + (f_ib_e_ + g_be_ - 2*Omega_ie_e_*v_eb_e_min)*dt_;
+
+            r_eb_e_ = r_eb_e_min + 0.5*dt_*(v_eb_e_ + v_eb_e_min);
         }
     }
 

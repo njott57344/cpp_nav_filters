@@ -25,12 +25,16 @@ namespace cpp_nav_filt
             // to-do: correct for bias estimate
             void getInertialMeasurements(vec_3_1& f_ib_b,vec_3_1& w_ib_b,double& dt);
 
+            void sendPosition(vec_3_1& pos_out){pos_out = r_eb_e_;}
+            void sendVelocity(vec_3_1& vel_out){vel_out = v_eb_e_;};
+            void sendEcefDCM(mat_3_3& dcm_out){dcm_out = C_be_;}
+
         private:
 
             // full states
             vec_3_1 r_eb_e_;
             vec_3_1 v_eb_e_;
-            mat_3_3 C_be_;
+            mat_3_3 C_be_,C_eb_;
             vec_3_1 g_be_;
 
             // inertial measurements
@@ -48,7 +52,7 @@ namespace cpp_nav_filt
             // misc
             mat_3_3 I3_;
             mat_3_3 Omega_ie_e_;
-            vec_3_3 omega_ie_e_;
+            vec_3_1 omega_ie_e_;
         protected:
 
     };
