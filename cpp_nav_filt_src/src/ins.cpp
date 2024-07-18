@@ -54,6 +54,26 @@ namespace cpp_nav_filt
         mechanizeFullState();
     }
 
+    void Ins::sendPosition(vec_3_1& pos_out)
+    {
+        pos_out = r_eb_e_;
+    }
+
+    void Ins::sendVelocity(vec_3_1& vel_out)
+    {
+        vel_out = v_eb_e_;
+    }
+
+    void Ins::sendEcefECM(mat_3_3& dcm_out)
+    {
+        dcm_out = C_be_;
+    }
+
+    void Ins::sendEulerAngles(mat_3_3& eul_out)
+    {
+        
+    }
+
     void Ins::initCheck()
     {
         full_state_init_ = pos_init_&&vel_init_&&att_init_;

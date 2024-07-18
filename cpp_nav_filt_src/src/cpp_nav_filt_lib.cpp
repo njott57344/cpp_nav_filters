@@ -153,6 +153,11 @@ namespace cpp_nav_filt
         return euler_angles;
     }
 
+    vec_3_1 ecefDCM2EulerAngles(mat_3_3& C_be,vec_3_1& lla_pos)
+    {
+        
+    }
+
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in)
     {
         mat_3_3 skew_out;

@@ -301,6 +301,13 @@ namespace cpp_nav_filt
     */
     vec_3_1 rotm2Eul(mat_3_3& C);
 
+    /*! @brief function to calculate euler angles from a LLA Position and orientaion in ECEF frame
+        @param[in] C_be DCM from body frame to ECEF frame
+        @param[in] lla_pos lla position of body frame
+        @return euler angles of body w.r.t. local tangent frame
+    */
+    vec_3_1 ecefDCM2EulerAngles(mat_3_3& C_be,vec_3_1& lla_pos);
+
     /*! @brief function to get the skew symmetric equivalent of a 3x1 vector
         @param[in] vec_in vector to make the skew symmetric of
         @return returns the skew symmetric model
