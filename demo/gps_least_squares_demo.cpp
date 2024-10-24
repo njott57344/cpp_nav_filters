@@ -26,7 +26,7 @@ int main(int argc,char **argv)
     std::vector<double> ephem_vect;
     double ephemeride;
 
-    std::cout<<"Reading SV Ephemeris and Passing to Common"<<std::endl;
+    std::cout<<"Reading SV Ephemeris"<<std::endl;
 
     int i = 0; // ctr
     int j = 0; // ctr 2
