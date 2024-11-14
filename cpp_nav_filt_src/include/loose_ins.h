@@ -1,17 +1,17 @@
-#ifndef INS_H
-#define INS_H
+#ifndef LOOSE_INS_H
+#define LOOSE_INS_H
 
 #include "cpp_nav_filt_lib.h"
 
 namespace cpp_nav_filt
 {
 
-    class Ins
+    class LooseIns
     {
         public:
             
-            Ins();
-            ~Ins();
+            LooseIns();
+            ~LooseIns();
 
             /* convention: 
                 a get function is the class GETTING something
@@ -54,6 +54,10 @@ namespace cpp_nav_filt
             mat_3_3 I3_;
             mat_3_3 Omega_ie_e_;
             vec_3_1 omega_ie_e_;
+
+            mat_3_3 normalizeDCM(mat_3_3& dcm_in);
+
+            
         protected:
 
     };

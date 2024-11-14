@@ -9,14 +9,14 @@ set(Headers
     include/cpp_nav_filt_lib.h
     include/gps_least_squares.h
     include/sv_manager.h
-    # include/ins.h
+    include/loose_ins.h
 )
 
 set(Sources
     src/cpp_nav_filt_lib.cpp
     src/gps_least_squares.cpp
     src/sv_manager.cpp
-    # src/ins.cpp
+    src/loose_ins.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${Sources} ${Headers})
