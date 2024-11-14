@@ -25,6 +25,9 @@ namespace cpp_nav_filt
             // to-do: correct for bias estimate
             void getInertialMeasurements(vec_3_1& f_ib_b,vec_3_1& w_ib_b,double& dt);
 
+            void getPVMeasurements(vec_3_1& r_eb_e_tilde,vec_3_1& v_eb_e_tilde,vec_3_1 w_ib_b,
+                                   vec_3_1& r_ab_b,mat_3_3& R_pos,mat_3_3& R_vel);
+
             void sendPosition(vec_3_1& pos_out);
             void sendVelocity(vec_3_1& vel_out);
             void sendEcefDCM(mat_3_3& dcm_out);
@@ -33,6 +36,11 @@ namespace cpp_nav_filt
         private:
 
             void mechanizeFullState();
+            void mechanizeErrorState();
+
+            void kalmanUpdate();
+            void feedbackErrorState();
+
             void initCheck();
         
             // full states
@@ -56,7 +64,6 @@ namespace cpp_nav_filt
             vec_3_1 omega_ie_e_;
 
             mat_3_3 normalizeDCM(mat_3_3& dcm_in);
-
             
         protected:
 
