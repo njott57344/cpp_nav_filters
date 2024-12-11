@@ -1,9 +1,12 @@
 #include "gtest/gtest.h"
 #include "cpp_nav_filt_lib.h"
+#include "gps_least_squares.h"
+#include "loose_ins.h"
+#include "sv_manager.h"
 
 /*
-    I am confident that functions like calcPsr,calcUnitVectors,calcPsrRate,calcMeasEst already work from
-    gps least squares demo. I am going to focus on testing stuff relating to the Loosely Coupled INS for now
+    genera nav functions are not tested, but should be easy to unit test.
+    I will do that
 */
 
 TEST(eul2Rotm,RowsColsMagOne)
@@ -41,7 +44,7 @@ TEST(eul2Rotm,C_CtranposeEqualIdenity)
     
     C = cpp_nav_filt::eul2Rotm(euler_angles);
 
-    
+
 }
 
 int main(int argc, char **argv)
