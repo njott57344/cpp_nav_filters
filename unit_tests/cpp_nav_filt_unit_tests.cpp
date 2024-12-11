@@ -24,8 +24,6 @@ TEST(eul2Rotm,RowsColsMagOne)
 
         row_mag = sqrt(pow(C(j,0),2) + pow(C(j,1),2) + pow(C(j,2),2));
 
-        std::cout<<col_mag<<" "<<row_mag<<std::endl;
-
         EXPECT_LT(std::abs(1-col_mag),0.00001) << "Column not Mag 1";
         EXPECT_LT(std::abs(1-row_mag),0.00001) << "Row not Mag 1";
     }

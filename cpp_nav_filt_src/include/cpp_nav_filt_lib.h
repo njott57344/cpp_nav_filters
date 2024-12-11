@@ -359,6 +359,13 @@ namespace cpp_nav_filt
         @note assumes body is static
     */
     vec_2_1 levelInsAccel(Eigen::MatrixXd& f_ib_b); // groves p. 670
+
+    /*! @brief function to normalize a Directino Cosine Matrix
+        @param[in] dcm_in un_normalized DCM that needs to be normalized
+        @return normalized_dcm
+        @note from this stack exchange: 
+    */
+   mat_3_3 normalizeDCM(mat_3_3& dcm_in);
 }
 
 #endif

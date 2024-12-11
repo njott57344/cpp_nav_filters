@@ -155,7 +155,13 @@ namespace cpp_nav_filt
 
     vec_3_1 ecefDCM2EulerAngles(mat_3_3& C_be,vec_3_1& lla_pos)
     {
-        
+        vec_3_1 eul_angles;
+        mat_3_3 C_ne = ned2ecefDCM(lla_pos);
+        mat_3_3 C_bn = C_be*C_ne.transpose();
+
+        eul_angles = rotm2Eul(C_bn);
+
+        return eul_angles;
     }
 
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in)
@@ -607,4 +613,33 @@ namespace cpp_nav_filt
         return C.transpose();
     }
 
+    mat_3_3 normalizeDCM(mat_3_3& dcm_in)
+    {
+        mat_3_3 normalized_dcm;
+
+        vec_3_1 x,y,z;
+        vec_3_1 x_ort,y_ort,z_ort;
+        vec_3_1 x_new,y_new,z_new;
+        double error;
+
+        x = dcm_in.block(0,0,3,1);
+        y = dcm_in.block(0,1,3,1);
+        z = dcm_in.block(0,2,3,1);
+
+        error = x.dot(y);
+
+        x_ort = x - (0.5*error)*y;
+        y_ort = y - (0.5*error)*x;
+        z_ort = x_ort.cross(y_ort);
+
+        x_new = 0.5*(3-x_ort.dot(x_ort))*x_ort;
+        y_new = 0.5*(3-y_ort.dot(y_ort))*y_ort;
+        z_new = 0.5*(3-z_ort.dot(z_ort))*z_ort;
+
+        normalized_dcm.block(0,0,3,1) = x_new;
+        normalized_dcm.block(0,1,3,1) = y_new;
+        normalized_dcm.block(0,2,3,1) = z_new;
+
+        return normalized_dcm;
+    }
 } // end of namespace

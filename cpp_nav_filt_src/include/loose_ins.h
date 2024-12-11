@@ -38,6 +38,7 @@ namespace cpp_nav_filt
             void mechanizeFullState();
             void mechanizeErrorState();
 
+            void MeasurementModel();
             void kalmanUpdate();
             void feedbackErrorState();
 
@@ -62,8 +63,6 @@ namespace cpp_nav_filt
             mat_3_3 I3_;
             mat_3_3 Omega_ie_e_;
             vec_3_1 omega_ie_e_;
-
-            mat_3_3 normalizeDCM(mat_3_3& dcm_in);
             
         protected:
 

@@ -52,26 +52,34 @@ namespace cpp_nav_filt
         dt_ = dt;
 
         mechanizeFullState();
+        mechanizeErrorState();
     }
 
     void LooseIns::sendPosition(vec_3_1& pos_out)
     {
+        feedbackErrorState();
         pos_out = r_eb_e_;
     }
 
     void LooseIns::sendVelocity(vec_3_1& vel_out)
     {
+        feedbackErrorState();
         vel_out = v_eb_e_;
     }
 
     void LooseIns::sendEcefDCM(mat_3_3& dcm_out)
     {
+        feedbackErrorState();
         dcm_out = C_be_;
     }
 
     void LooseIns::sendEulerAngles(vec_3_1& eul_out)
     {
+        feedbackErrorState();
         
+        vec_3_1 lla_pos = ecef2llaPos(r_eb_e_);
+
+        eul_out = ecefDCM2EulerAngles(C_be_,lla_pos);
     }
 
     void LooseIns::initCheck()
@@ -107,36 +115,26 @@ namespace cpp_nav_filt
             r_eb_e_ = r_eb_e_min + 0.5*dt_*(v_eb_e_ + v_eb_e_min);
         }
     }
-
-    mat_3_3 LooseIns::normalizeDCM(mat_3_3& dcm_in)
-    {
-        mat_3_3 normalized_dcm;
-
-        vec_3_1 x,y,z;
-        vec_3_1 x_ort,y_ort,z_ort;
-        vec_3_1 x_new,y_new,z_new;
-        double error;
-
-        x = dcm_in.block(0,0,3,1);
-        y = dcm_in.block(0,1,3,1);
-        z = dcm_in.block(0,2,3,1);
-
-        error = x.dot(y);
     
-        x_ort = x - (0.5*error)*y;
-        y_ort = y - (0.5*error)*x;
-        z_ort = x_ort.cross(y_ort);
+    void LooseIns::mechanizeErrorState()
+    {
 
-        x_new = 0.5*(3-x_ort.dot(x_ort))*x_ort;
-        y_new = 0.5*(3-y_ort.dot(y_ort))*y_ort;
-        z_new = 0.5*(3-z_ort.dot(z_ort))*z_ort;
-        
-        normalized_dcm.block(0,0,3,1) = x_new;
-        normalized_dcm.block(0,1,3,1) = y_new;
-        normalized_dcm.block(0,2,3,1) = z_new;
-        
-        return normalized_dcm;
     }
 
-    
+    void LooseIns::kalmanUpdate()
+    {
+
+    }
+
+    void LooseIns::feedbackErrorState()
+    {
+
+    }
+
+    void LooseIns::MeasurementModel()
+    {
+
+    }
+
+
 }// end of namespace
