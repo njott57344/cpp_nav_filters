@@ -8,10 +8,7 @@ A collection of C-Plus-Plus INS filters to perform fusion of GNSS and INS nav so
 - ins.cpp
 
 ## To-Do
-- cpp_nav_filt_lib.cpp
-- sv_manager.cpp
-- gps_least_squares.cpp
-- ins.cpp
+- ins_mechanization
   
 ## Test Data
 Test data is pulled from Auburn University Fundamentals of GPS Navigation lab data as it is the data I am most familiar with:
