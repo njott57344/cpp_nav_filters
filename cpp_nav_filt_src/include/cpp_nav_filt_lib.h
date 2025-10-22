@@ -68,6 +68,9 @@ typedef Eigen::Matrix<double,17,17> mat_17_17;
 /*! @brief variable type 17 by 1 matrix */
 typedef Eigen::Matrix<double,17,1> vec_17_1;
 
+/*! @brief variable type 2 by 2 matrix */
+typedef Eigen::Matrix<double,2,2> mat_2_2;
+
 namespace cpp_nav_filt
 {
     // ========= Math Constants ============= //
@@ -97,6 +100,8 @@ namespace cpp_nav_filt
     const double f_l1 = 1.57542*pow(10,9);
     const double f_l2 = 1.2276*pow(10,9);
     const double f_l5 = 1.176*pow(10,9);
+
+    const mat_3_3 I3 = mat_3_3::Identity();
 
     // ============ Meas Estimate ========== //
     /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites in ECEF frame
@@ -139,7 +144,7 @@ namespace cpp_nav_filt
         @note this is WIP
     */
     void calcElAngle();
-  
+
     // ========= Frame Conversion Functions ============= //
 
     /*! @brief function converts Earth Frame Positions to LLA Positions
@@ -289,6 +294,38 @@ namespace cpp_nav_filt
     @return hamilton quaternion
     */
     vec_4_1 eul2q(const vec_3_1 & eul);
+
+    /*! @brief function to return 3,2,1 euler angles from quaternion 
+        @param[in] q
+        @return 3,2,y euler angles 
+    */
+    vec_3_1 q2eul(const vec_4_1 & q);
+
+    /*! @brief multiply two quaternions together
+        @param[in] p the first quaternion
+        @param[in] q the second quaternion
+        @return the quaternion product
+    */
+    vec_4_1 qMult(const vec_4_1 & p, const vec_4_1 & q);
+
+    /*! @brief normalize a quaternion
+        @param[in] q the quaternion to normalize
+        @return the normalized quaternion
+    */
+    vec_4_1 qNormalize(const vec_4_1 & q);
+
+    /*! @brief return norm of a quaternion
+        @param[in] q
+        @return norm of q
+    */
+    double qNorm(const vec_4_1 & q);
+
+    /*! @brief quaternion to DCM 
+        @param[in] q input quaternion
+        @return 3x3 DCM
+    */
+    mat_3_3 q2DCM(const vec_4_1 & q);
+
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
@@ -348,22 +385,39 @@ namespace cpp_nav_filt
         @return Transverse Radius of Curvature
         @note See Paul Groves p. 59 eq 2.106
     */
-    double transverseRadiusOfCurvature(double& lat);
+    double transverseRadiusOfCurvature(const double& lat);
 
     /*! @brief function to calculate Meridian Radius of Curvature
         @param[in] lat latitude to find Meridian Radius of Curvature at
         @return Meridian Radius of Curvature
         @note See Paul Groves p. 59 eq 2.105
     */
-    double meridianRadiusOfCurvature(double& lat);
+    double meridianRadiusOfCurvature(const double& lat);
 
     /*! @brief function to calculate Geocentric Radius
         @param[in] lat latitude to find Geocentric Radius at
         @return Geocentric Radius
         @note See Paul Groves p. 71 eq 2.137
     */
-    double geocentricRadius(double& lat);
+    double geocentricRadius(const double& lat);
 
+    /*! @brief return the transport rate of a local tangent frame fixed to a moving vehicle
+        @param[in] ve east velocity of the body [m/s]
+        @param[in] vn north velocity of the body [m/s]
+        @param[in] h height of body [m]
+        @param[in] lat latitude of the body [rad]
+        @return w_en_n transport rate of body
+        @note see Paul Groves eq 5.41
+    */
+    vec_3_1 transportRate(const double& ve, const double& vn, const double& h, const double& lat);
+
+    /*! @brief return the rotation rate of earth w.r.t inertial frame in nav frame
+        @param[in] lat latitude of the body [rad]
+        @return w_ie_n vector of rotation rate
+    */
+   vec_3_1 navFrameRotationRate(const double & lat);
+
+    // ======= Misc ===== //
     // Init Roll Pitch
     /*! @brief function to calculate levelling paramters roll and pitch from specific force measurements
         @param[in] f_ib_b specific force of body wrt inertial frame in body frame

@@ -51,7 +51,7 @@ namespace cpp_nav_filt{
             @param[in] dt time step to propagate over [sec]
             @return bool successful or not
             */
-            bool Dynamics(const vec_3_1 & wb, const vec_3_1& fb, const vec_3_1& dt);
+            bool Dynamics(const vec_3_1 & wb, const vec_3_1& fb, const double& dt);
 
             /*! @brief return the current nav frame state of the system
             @return NavState returns out the current nav state (see def of NavState struct)
@@ -81,6 +81,9 @@ namespace cpp_nav_filt{
              */
             bool setInitialAttitude(const vec_3_1 & a_nb);
             
+            /*! @brief set the Errors for Propagation 
+            */
+            bool setImuClockErrors(const double & ba, const double & na, const double & ka, const double & bg, const double & ng, const double & kg, const double & nd);
         private:
 
             /* Scalar's for Nav*/
@@ -96,6 +99,12 @@ namespace cpp_nav_filt{
             double clk_b_{0.0}; // clock bias [m]
             double clk_d_{0.0}; // clock drift [m/s]
 
+            vec_4_1 q_bn_;
+            mat_3_3 C_bn_;
+
+            vec_3_1 bg_;
+            vec_3_1 ba_;
+
             /*
                 error state is:
                 [r_nb_n cartesian position;
@@ -108,16 +117,15 @@ namespace cpp_nav_filt{
             */
             vec_17_1 dx_;
 
-            vec_4_1 q_nb;
-            mat_3_3 C_nb_;
-
-
-
-            vec_3_1 bg_;
-            vec_3_1 ba_;
-
             mat_17_17 P_;
+            mat_17_17 A_;
+            mat_17_17 Q_;
 
+            double Sra_;
+            double Sbad_;
+            double Srg_;
+            double Sbgd_;
+            double Scd_;
     }; // end of class
 } // end of namespace
 

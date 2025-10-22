@@ -179,6 +179,50 @@ namespace cpp_nav_filt
         return q_ret;
     }
 
+    vec_3_1 q2eul(const vec_4_1 & q)
+    {
+        vec_3_1 eul = {
+            std::atan2(2 * (q(0) * q(1) + q(2) * q(3)), 1 - 2 * (q(1) * q(1) + q(2) * q(2))),
+            std::asin(2 * (q(0) * q(2) - q(1) * q(3))),
+            std::atan2(2 * (q(0) * q(3) + q(1) * q(2)), 1 - 2 * (q(2) * q(2) + q(3) * q(3)))};
+
+        return eul;
+    }
+
+    vec_4_1 qMult(const vec_4_1 & p, const vec_4_1 & q)
+    {
+        Eigen::Vector4d q_ret = {p(0) * q(0) - p(1) * q(1) - p(2) * q(2) - p(3) * q(3),
+                                p(0) * q(1) + p(1) * q(0) + p(2) * q(3) - p(3) * q(2),
+                                p(0) * q(2) - p(1) * q(3) + p(2) * q(0) + p(3) * q(1),
+                                p(0) * q(3) + p(1) * q(2) - p(2) * q(1) + p(3) * q(0)};
+        return q_ret;
+    }
+
+    vec_4_1 qNormalize(const vec_4_1 & q)
+    {
+        double quat_norm = qNorm(q);
+        vec_4_1 q_ret = q / quat_norm;
+        return q_ret;
+    }
+
+    double qNorm(const vec_4_1 & q)
+    {
+        double squared_sum = q(0) * q(0) + q(1) * q(1) + q(2) * q(2) + q(3) * q(3);
+        double ret = sqrt(squared_sum);
+        return ret;
+    }
+
+    mat_3_3 q2DCM(const vec_4_1 & q)
+    {
+        mat_3_3 DCM_ret;
+        DCM_ret << (q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3)),
+            2 * (q(1) * q(2) - q(0) * q(3)), 2 * (q(1) * q(3) + q(0) * q(2)),
+            2 * (q(1) * q(2) + q(0) * q(3)), (q(0) * q(0) - q(1) * q(1) + q(2) * q(2) - q(3) * q(3)),
+            2 * (q(2) * q(3) - q(0) * q(1)), 2 * (q(1) * q(3) - q(0) * q(2)),
+            2 * (q(2) * q(3) + q(0) * q(1)), (q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3));
+        return DCM_ret;       
+    }
+
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in)
     {
         mat_3_3 skew_out;
@@ -237,7 +281,7 @@ namespace cpp_nav_filt
         return  ecef_gravity;
     }
 
-    double meridianRadiusOfCurvature(double& lat)
+    double meridianRadiusOfCurvature(const double& lat)
     {
         double num,den;
 
@@ -247,13 +291,13 @@ namespace cpp_nav_filt
         return num/den;
     }
 
-    double transverseRadiusOfCurvature(double& lat)
+    double transverseRadiusOfCurvature(const double& lat)
     {
         double denom = 1-pow(cpp_nav_filt::e,2)*pow(sin(lat),2);
         return cpp_nav_filt::Ro/sqrt(denom);        
     }
 
-    double geocentricRadius(double& lat)
+    double geocentricRadius(const double& lat)
     {
         double radius_of_curvature;
         radius_of_curvature = transverseRadiusOfCurvature(lat);
@@ -626,6 +670,31 @@ namespace cpp_nav_filt
               clat*clon,  clat*slon, slat;
 
         return C.transpose();
+    }
+
+    vec_3_1 transportRate(const double& ve, const double & vn,const double & h, const double & lat)
+    {
+        vec_3_1 transport_rate;
+        double Re = transverseRadiusOfCurvature(lat);
+        double Rn = meridianRadiusOfCurvature(lat);
+        double tL = std::tan(lat);
+
+        transport_rate(0) = ve / (Re + h);
+        transport_rate(1) = -vn / (Rn + h);
+        transport_rate(2) = (-ve * tL) / (Re + h);
+
+        return transport_rate;
+    }
+
+    vec_3_1 navFrameRotationRate(const double & lat)
+    {
+        vec_3_1 earth_rotation_rate;
+
+        earth_rotation_rate(0) = cpp_nav_filt::w_e * std::cos(lat);
+        earth_rotation_rate(1) = 0;
+        earth_rotation_rate(2) = cpp_nav_filt::w_e * std::sin(lat);
+
+        return earth_rotation_rate;
     }
 
     mat_3_3 normalizeDCM(mat_3_3& dcm_in)
