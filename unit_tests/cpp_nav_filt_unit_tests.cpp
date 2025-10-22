@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "cpp_nav_filt_lib.h"
 #include "gps_least_squares.h"
-#include "loose_ins.h"
 #include "sv_manager.h"
 
 /*

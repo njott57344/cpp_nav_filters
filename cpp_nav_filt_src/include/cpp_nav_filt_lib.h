@@ -62,6 +62,12 @@ typedef Eigen::Matrix<double,3,15> mat_3_15;
 /*! @brief variable type 9 by 1 matrix */
 typedef Eigen::Matrix<double,9,1> vec_9_1;
 
+/*! @brief variable type 17 by 17 matrix */
+typedef Eigen::Matrix<double,17,17> mat_17_17;
+
+/*! @brief variable type 17 by 1 matrix */
+typedef Eigen::Matrix<double,17,1> vec_17_1;
+
 namespace cpp_nav_filt
 {
     // ========= Math Constants ============= //
@@ -82,6 +88,7 @@ namespace cpp_nav_filt
     // Parameters of WGS84 Ellipsoid
     const double Ro = 6378137.0; // WGS84 equatorial radius [m]
     const double e = 0.0818191908425; // ecentricity of earth
+    const double e2 = std::pow(e,2);
     const double flattening = 1/298.257223563;
     const double Rp = 6356752.31425; // WGS84 polar radius [m]
     const double A = 6378137.0;
@@ -92,7 +99,7 @@ namespace cpp_nav_filt
     const double f_l5 = 1.176*pow(10,9);
 
     // ============ Meas Estimate ========== //
-    /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites
+    /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites in ECEF frame
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
         @param[in] ecef_pos estimate of Earth Frame Position
         @param[in] clk_b estimate of receiver clock bias
@@ -277,14 +284,20 @@ namespace cpp_nav_filt
     */
     mat_3_3 enu2ecefDCM(vec_3_1& lla_pos);
 
+    /*! @brief function to return a quaternion given 3,2,1 euler angles
+    @param[in] eul [r,p,y] euler angles (rad)
+    @return hamilton quaternion
+    */
+    vec_4_1 eul2q(const vec_3_1 & eul);
     // ============ Nav Functions ========== //
     
     // dealing with euler angles
     /*! @brief function to calculate a DCM from a vector of roll pitch yaw euler angles
         @param[in] euler_angles vector ordered [roll,pitch,yaw]' of euler angles
-        @return returns the DCM equivalent of a vector of euler angles
+        @return returns the DCM equivalent of a vector of euler angles 
+        @note DCM is FROM Body TO Nav
     */
-    mat_3_3 eul2Rotm(vec_3_1& euler_angles);
+    mat_3_3 eul2Rotm(const vec_3_1& euler_angles);
 
     /*! @brief function to calculate the DCM from a set of roll pitch yaw euler angles and lla position to an Earth Frame
         @param[in] euler_angles vector ordered [roll,pitch,yaw]' of euler angles for body to nav DCM
@@ -360,7 +373,7 @@ namespace cpp_nav_filt
     */
     vec_2_1 levelInsAccel(Eigen::MatrixXd& f_ib_b); // groves p. 670
 
-    /*! @brief function to normalize a Directino Cosine Matrix
+    /*! @brief function to normalize a Direction Cosine Matrix
         @param[in] dcm_in un_normalized DCM that needs to be normalized
         @return normalized_dcm
         @note from this stack exchange: 

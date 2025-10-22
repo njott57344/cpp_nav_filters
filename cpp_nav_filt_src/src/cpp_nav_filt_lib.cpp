@@ -100,7 +100,7 @@ namespace cpp_nav_filt
 
     // ======== Nav Functions ======== //
 
-    mat_3_3 eul2Rotm(vec_3_1& euler_angles)
+    mat_3_3 eul2Rotm(const vec_3_1& euler_angles)
     {
         // assumes euler angles are ordered roll pitch yaw (and in rad)
         // see groves p. 38
@@ -162,6 +162,21 @@ namespace cpp_nav_filt
         eul_angles = rotm2Eul(C_bn);
 
         return eul_angles;
+    }
+
+    vec_4_1 eul2q(const vec_3_1 & eul)
+    {
+        double ss1 = sin(eul(0) / 2);
+        double ss2 = sin(eul(1) / 2);
+        double ss3 = sin(eul(2) / 2);
+        double cc1 = cos(eul(0) / 2);
+        double cc2 = cos(eul(1) / 2);
+        double cc3 = cos(eul(2) / 2);
+
+        vec_4_1 q_ret = {cc1 * cc2 * cc3 + ss1 * ss2 * ss3, ss1 * cc2 * cc3 - cc1 * ss2 * ss3,
+                                 cc1 * ss2 * cc3 + ss1 * cc2 * ss3, cc1 * cc2 * ss3 - ss1 * ss2 * cc3};
+
+        return q_ret;
     }
 
     mat_3_3 makeSkewSymmetic(vec_3_1& vec_in)
@@ -642,4 +657,5 @@ namespace cpp_nav_filt
 
         return normalized_dcm;
     }
+
 } // end of namespace
