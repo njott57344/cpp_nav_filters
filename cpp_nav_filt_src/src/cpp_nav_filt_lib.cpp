@@ -5,7 +5,7 @@ namespace cpp_nav_filt
 
     // =========== Measurement Functions ======== //
 
-    Eigen::MatrixXd calcPsr(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b)
+    Eigen::MatrixXd calcPsr(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b)
     {
         int num_sv = SvPVT.rows();
 
@@ -26,7 +26,7 @@ namespace cpp_nav_filt
         return psr_hat;
     }
 
-    Eigen::MatrixXd calcUnitVectors(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b)
+    Eigen::MatrixXd calcUnitVectors(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b)
     {
         int num_sv = SvPVT.rows();
         double x_comp,y_comp,z_comp;
@@ -52,7 +52,7 @@ namespace cpp_nav_filt
         return H;
     }
 
-    Eigen::MatrixXd calcPsrRate(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d)
+    Eigen::MatrixXd calcPsrRate(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d)
     {
         int num_sv = SvPVT.rows();
         double x_comp,y_comp,z_comp;
@@ -80,7 +80,7 @@ namespace cpp_nav_filt
         return psr_rate_hat;
     }
 
-    Eigen::MatrixXd calcMeasEst(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d)
+    Eigen::MatrixXd calcMeasEst(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d)
     {
         int num_sv = SvPVT.rows();
 
@@ -125,7 +125,7 @@ namespace cpp_nav_filt
         C(1,2) = -s(0)*c(2)+c(0)*s(1)*s(2); // -sin(roll)cos(yaw)+cos(roll)sin(pitch)sin(yaw)
         C(2,2) =  c(0)*c(1);                //  cos(roll)cos(pitch)
 
-        return C; // rotation body to nav
+        return C; // rotation nav to body
     }
 
     mat_3_3 eul2EcefDCM(vec_3_1& euler_angles,vec_3_1& lla_pos)

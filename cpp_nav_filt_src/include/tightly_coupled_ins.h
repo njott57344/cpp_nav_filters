@@ -59,12 +59,15 @@ namespace cpp_nav_filt{
             NavState returnNavState();
 
             /*! @brief performs a single antenna tightly coupled correction for a given set of psr, psr rate and SvPVT states
-            @param[in] psr pseudo-range measurements from antenna to satellites [m]
-            @param[in] psr_rate pseudo-range-rate measurements from antenna to satellites [m/s]
+            @param[in] psr pseudo-range measurements from antenna to satellites (ecef) [m]
+            @param[in] psr_rate pseudo-range-rate measurements from antenna to satellites (ecef) [m/s]
             @param[in] la lever arm from IMU to antenna
+            @param[in] w_ib_b imu angular rates (no bias removed) [rad/s]
             @param[in] SvPVT satellite PVT states (needed for unit vectors)
+            @param[in] R measurement covariance
             */
-            bool tightlyCoupledCorrection(const Eigen::MatrixXd & psr, const Eigen::MatrixXd & psr_rate, const vec_3_1 & la, const Eigen::MatrixXd & SvPVT);
+            bool tightlyCoupledCorrection(const Eigen::MatrixXd & psr, const Eigen::MatrixXd & psr_rate, const vec_3_1 & la, 
+                                          const vec_3_1 & w_ib_b, const Eigen::MatrixXd & SvPVT,const Eigen::MatrixXd & R);
 
             /*! @brief set the initial position of the navigator 
             @param[in] r_nb_n [lat,lon,alt] in [rad,rad,m]
@@ -100,7 +103,6 @@ namespace cpp_nav_filt{
             double clk_d_{0.0}; // clock drift [m/s]
 
             vec_4_1 q_bn_;
-            mat_3_3 C_bn_;
 
             vec_3_1 bg_;
             vec_3_1 ba_;

@@ -110,7 +110,7 @@ namespace cpp_nav_filt
         @param[in] clk_b estimate of receiver clock bias
         @return matrix of unit vectors rows = num svs, cols = [ux,uy,uz]
     */
-    Eigen::MatrixXd calcUnitVectors(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
+    Eigen::MatrixXd calcUnitVectors(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
 
     /*! @brief function to calculate pseudorange estimates from an antennna to a set of satellites
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
@@ -118,7 +118,7 @@ namespace cpp_nav_filt
         @param[in] clk_b estimate of receiver clock bias
         @return matrix of pseudoranges rows = num svs, col = pseudorange
     */
-    Eigen::MatrixXd calcPsr(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
+    Eigen::MatrixXd calcPsr(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,double& clk_b);
     
     /*! @brief function to calculate pseudorange rate estimates from an antenna to a set of satellites
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_corrections]
@@ -128,7 +128,7 @@ namespace cpp_nav_filt
         @param[in] clk_d estimate of receiver clock drift
         @return matrix of pseudorange rates rows = num svs, col = pseudorange rates
     */
-    Eigen::MatrixXd calcPsrRate(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
+    Eigen::MatrixXd calcPsrRate(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
 
     /*! @brief function to calculate a full set of measurement estimates
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_corrections]
@@ -138,7 +138,7 @@ namespace cpp_nav_filt
         @param[in] clk_d estimate of receiver clock drift
         @return stacked vector of [pseudoranges,pseudorange rates]'
     */
-    Eigen::MatrixXd calcMeasEst(Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
+    Eigen::MatrixXd calcMeasEst(const Eigen::MatrixXd& SvPVT,vec_3_1& ecef_pos,vec_3_1& ecef_vel,double& clk_b,double& clk_d);
 
     /*! @brief function to calculate elevation angle from a receiver antenna to a set of satellites
         @note this is WIP

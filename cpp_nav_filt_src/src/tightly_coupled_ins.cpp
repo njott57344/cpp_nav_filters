@@ -102,7 +102,6 @@ namespace cpp_nav_filt
 
             //* ===== SAVE PROPAGETED VALUES =====
             q_bn_ = q_new;
-            C_bn_ = q2DCM(q_bn_);
             vec_3_1 rpy = q2eul(q_bn_);
             r_ = rpy(0);
             p_ = rpy(1);
@@ -260,10 +259,62 @@ namespace cpp_nav_filt
         
     }
 
-    bool tightlyCoupledNavigator::tightlyCoupledCorrection(const Eigen::MatrixXd & psr, const Eigen::MatrixXd & psr_rate, const vec_3_1 & la, const Eigen::MatrixXd & SvPVT)
+    bool tightlyCoupledNavigator::tightlyCoupledCorrection(const Eigen::MatrixXd & psr, const Eigen::MatrixXd & psr_rate, const vec_3_1 & la,
+                                                           const vec_3_1 & w_ib_b, const Eigen::MatrixXd & SvPVT, const Eigen::MatrixXd & R)
     {
+        /* Order of Operations
+        1) Remove biases from angular rates [done]
+        2) Put lla estimate in ECEF frame [done]
+        3) Put ned velocity in ECEF frame [done]
+        4) Estimate Pseudoranges and Pseudorange Rates [done]
+        5) Form innovation and jacobian
+        6) Kalman Update
+        */
         try
         {
+            int num_sv = SvPVT.rows();
+
+            vec_3_1 wb = w_ib_b - bg_;
+
+            vec_3_1 r_nb_n{phi_ * cpp_nav_filt::R2D,lamb_ * cpp_nav_filt::R2D ,h_};
+            vec_3_1 v_nb_n{vn_,ve_,vd_};
+            vec_3_1 a_nb{r_,p_,y_};
+
+            vec_3_1 r_nb_e = lla2ecefPos(r_nb_e); // position of antenna in ecef frame
+            vec_3_1 v_nb_e = ned2ecefVel(v_nb_n,r_nb_n); // velocity of antenna in ecef frame
+            mat_3_3 C_be = eul2EcefDCM(a_nb,r_nb_n); // DCM body to ecef frame
+
+            vec_3_1 r_no_e = r_nb_e + C_be * la;
+            vec_3_1 v_no_e = v_nb_e + C_be * (makeSkewSymmetic(wb) * la);
+
+            mat_3_3 C_ne = ned2ecefDCM(r_nb_n);
+            mat_3_3 C_en = C_ne.transpose();
+
+            Eigen::MatrixXd Y_hat = calcMeasEst(SvPVT,r_no_e,v_no_e,clk_b_,clk_d_);
+            Eigen::MatrixXd Y,dz;
+
+            Y.resize(num_sv,1);
+            dz.resize(num_sv,1);
+
+            Y_hat.block(0,0,num_sv,1) = psr;
+            Y_hat.block(num_sv,0,num_sv,1) = psr_rate;
+
+            dz = Y - Y_hat;
+
+            Eigen::MatrixXd U = calcUnitVectors(SvPVT,r_no_e,clk_b_);
+            
+            Eigen::MatrixXd H;
+            H.resize(num_sv * 2,17);
+
+            H.block(0,15,num_sv,1) = U.block(0,3,num_sv,1);
+            H.block(num_sv,16,num_sv,1) = U.block(0,3,num_sv,1);
+
+            for (int i = 0;i<num_sv;i++)
+            {
+                vec_1_3 ned_U = (C_en * (U.block<1,3>(i,0).transpose())).transpose();
+                H.block<1,3>(i,0) = ned_U;
+                H.block<1,3>(i+num_sv,3) = ned_U;
+            }
             return true;
         }
         catch(const std::exception& e)
@@ -317,7 +368,6 @@ namespace cpp_nav_filt
             y_ = a_nb(2);
             
             q_bn_ = eul2q(a_nb);
-            C_bn_ = eul2Rotm(a_nb);
             return true;
         }
         catch(const std::exception& e)
