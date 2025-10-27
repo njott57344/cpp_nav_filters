@@ -243,18 +243,50 @@ namespace cpp_nav_filt
         }
     }
 
-    NavState tightlyCoupledNavigator::returnNavState()
+    bool tightlyCoupledNavigator::returnNavState(NavState & out)
     {
         try
         {
-            NavState out;
+            out.lat = phi_;
+            out.lat_stdev = std::sqrt(P_(0,0));
+            
+            out.lon = lamb_;
+            out.lon_stdev = std::sqrt(P_(1,1));
 
+            out.alt = h_;
+            out.alt_stdev = std::sqrt(P_(2,2));
 
-            return out;
+            out.vn = vn_;
+            out.vn_stdev = std::sqrt(P_(3,3));
+
+            out.ve = ve_;
+            out.ve_stdev = std::sqrt(P_(4,4));
+
+            out.vd = vd_;
+            out.vd_stdev = std::sqrt(P_(5,5));
+
+            out.r = r_;
+            out.r_stdev = std::sqrt(P_(6,6));
+
+            out.p = p_;
+            out.p_stdev = std::sqrt(P_(7,7));
+
+            out.y = y_;
+            out.y_stdev = std::sqrt(P_(8,8));
+
+            out.clk_b = clk_b_;
+            out.clk_b_stdev = std::sqrt(P_(15,15));
+
+            out.clk_d = clk_d_;
+            out.clk_d_stdev = std::sqrt(P_(16,16));
+
+            return true;
         }
         catch(const std::exception& e)
         {
             std::cerr << e.what() << std::endl;
+
+            return false;
         }
         
     }
@@ -315,7 +347,9 @@ namespace cpp_nav_filt
                 H.block<1,3>(i,0) = ned_U;
                 H.block<1,3>(i+num_sv,3) = ned_U;
             }
-            return true;
+
+
+            return kalmanUpdate(H,R,dz);
         }
         catch(const std::exception& e)
         {
@@ -325,6 +359,86 @@ namespace cpp_nav_filt
         
     }
 
+    bool tightlyCoupledNavigator::kalmanUpdate(const Eigen::MatrixXd & H, const Eigen::MatrixXd & R, const Eigen::MatrixXd & dz)
+    {
+        // TODO: Normalized Innovation Filtering (make sure normal works first)
+        try
+        {
+            Eigen::MatrixXd S = H + P_ + H.transpose() + R;
+
+            Eigen::MatrixXd K = P_ * H.transpose() * S.inverse();
+
+            Eigen::MatrixXd L = I17 - K * H;
+
+            P_ = L * P_ * L.transpose() + K * R * K.transpose();
+
+            dx_ = K * dz;
+
+            return closedLoopCorrection();
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+            return false;
+        }
+        
+    }
+
+    bool tightlyCoupledNavigator::closedLoopCorrection()
+    {
+        try
+        {
+            double cL = std::cos(phi_);
+            double sL = std::sin(phi_);
+
+            double Re = transverseRadiusOfCurvature(phi_);
+            double Rn = meridianRadiusOfCurvature(phi_);
+
+            vec_3_1 Tpr{Rn + h_,cL * (Re + h_),-1.0};
+
+            vec_4_1 att_err{1.0, -0.5 * dx_(6), -0.5 * dx_(7), -0.5 * dx_(8)};
+
+            // correct atttitude
+            q_bn_ = qMult(att_err,q_bn_);
+            q_bn_ = qNormalize(q_bn_);
+            mat_3_3 C_bn = q2DCM(q_bn_);
+            r_ = std::atan2(C_bn(2, 1), C_bn(2, 2));
+            p_ = -std::asin(C_bn(2, 0));
+            y_ = std::atan2(C_bn(1, 0), C_bn(0, 0));
+
+            // correct velocity 
+            vn_ -= dx_(3);
+            ve_ -= dx_(4);
+            vd_ -= dx_(5);
+            
+            // correct position
+            phi_ -= dx_(0) / Tpr(0);
+            lamb_ -= dx_(1) / Tpr(1);
+            h_ -= dx_(2) / Tpr(2);
+
+            // update bias estimates
+            ba_(0) += dx_(9);
+            ba_(1) += dx_(10);
+            ba_(2) += dx_(11);
+
+            bg_(0) += dx_(12);
+            bg_(1) += dx_(13);
+            bg_(2) += dx_(14);
+
+            clk_b_ += dx_(15);
+            clk_d_ += dx_(16);
+
+            dx_.setZero();
+
+            return true;
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+            return false;
+        }
+        
+    }
     bool tightlyCoupledNavigator::setInitialPosition(const vec_3_1 & r_nb_n)
     {
         try

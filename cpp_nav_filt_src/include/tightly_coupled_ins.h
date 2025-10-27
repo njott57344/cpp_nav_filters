@@ -56,7 +56,7 @@ namespace cpp_nav_filt{
             /*! @brief return the current nav frame state of the system
             @return NavState returns out the current nav state (see def of NavState struct)
             */
-            NavState returnNavState();
+            bool returnNavState(NavState & out);
 
             /*! @brief performs a single antenna tightly coupled correction for a given set of psr, psr rate and SvPVT states
             @param[in] psr pseudo-range measurements from antenna to satellites (ecef) [m]
@@ -112,8 +112,8 @@ namespace cpp_nav_filt{
                 [r_nb_n cartesian position;
                  v_nb_n cartesian velocity;
                  a_nb r,p,y euler angles
-                 bg gyro bias error
                  ba accel bias error
+                 bg gyro bias error
                  clk_b clock bias
                  clk_d clock drift]
             */
@@ -128,6 +128,10 @@ namespace cpp_nav_filt{
             double Srg_;
             double Sbgd_;
             double Scd_;
+
+            bool kalmanUpdate(const Eigen::MatrixXd & H, const Eigen::MatrixXd & R, const Eigen::MatrixXd & dz);
+            bool closedLoopCorrection();
+
     }; // end of class
 } // end of namespace
 

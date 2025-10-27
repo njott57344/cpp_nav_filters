@@ -88,7 +88,7 @@ namespace cpp_nav_filt
         }
         else
         {
-            std::cout<<"WARNING: NOT ENOUGH SVS TO COMPUTE SOLUTION SKIPPING EPOCH!!"<<std::endl;
+            std::cout<<"WARNING: NOT ENOUGH SV'S TO COMPUTE SOLUTION SKIPPING EPOCH!!"<<std::endl;
             X = NAN*ones_8_1;
         }
     }

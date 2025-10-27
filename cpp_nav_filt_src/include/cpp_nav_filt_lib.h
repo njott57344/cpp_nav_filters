@@ -102,7 +102,8 @@ namespace cpp_nav_filt
     const double f_l5 = 1.176*pow(10,9);
 
     const mat_3_3 I3 = mat_3_3::Identity();
-
+    const mat_17_17 I17 = mat_17_17::Identity();
+    
     // ============ Meas Estimate ========== //
     /*! @brief function to calculate a matrix of unit vectors from an antenna to a set of satellites in ECEF frame
         @param[in] SvPVT matrix of SV states ordered [x,y,z,dx,dy,dz,clk_correction]
